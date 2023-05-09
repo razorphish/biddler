@@ -15,7 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@whoosh/whoosh-db": ["libs/whoosh-db/src/index.ts"]
+      "@whoosh/db": ["libs/db/src/index.ts"],
+      "@whoosh/logging": ["libs/logging/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
