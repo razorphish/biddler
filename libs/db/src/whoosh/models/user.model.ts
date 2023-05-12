@@ -1,22 +1,22 @@
-import { DataTypes, Model, Optional, Sequelize } from 'sequelize';
-import BeastLibrary from '../../global/beast';
+import { DataTypes, Model, Optional } from 'sequelize';
+import WhooshLibrary from '../../global/whoosh';
+import {
+  COLUMN_ALIAS,
+  COLUMN_NAME,
+  COLUMN_VALIDATION,
+  DEFAULT_VALUE,
+} from '../common/db.enum';
+import { TimestampAttributes } from '../interfaces/timestampAttributes.interface';
 
-interface UserAttributes {
+interface UserAttributes extends TimestampAttributes {
   id: number;
   firstName: string;
   lastName: string;
   email: string;
-
-  //Timestamps
-  createdDate: Date;
-  createdBy?: string;
-  lastUpdatedDate?: Date;
-  lastUpdatedBy?: string;
 }
 
-export interface UserInput
-  extends Optional<UserAttributes, 'id' | 'createdDate'> {}
-export interface UserOutput extends Required<UserAttributes> {}
+export type UserInput = Optional<UserAttributes, 'id' | 'createdDate'>;
+export type UserOutput = Required<UserAttributes>;
 
 class User extends Model<UserAttributes, UserInput> implements UserAttributes {
   public id!: number;
@@ -24,20 +24,14 @@ class User extends Model<UserAttributes, UserInput> implements UserAttributes {
   public lastName!: string;
   public email!: string;
 
-  // timestamps
+  // User stamps
+  public createdBy!: string;
+  public lastUpdatedBy!: string;
+
+  // Timestamps
   public readonly createdDate!: Date;
-  public readonly createdBy!: string;
   public readonly lastUpdatedDate!: Date;
-  public readonly lastUpdatedBy!: string;
-
-
-  static byId = async (id: string | number) => {
-    return this.findOne({
-      where: {
-        id: id
-      }
-    });
-  };
+  public readonly deletedAt!: Date;
 }
 
 User.init(
@@ -47,7 +41,7 @@ User.init(
       allowNull: false,
       field: 'USER_ID',
       primaryKey: true,
-      autoIncrement: false
+      autoIncrement: false,
     },
     firstName: {
       type: DataTypes.STRING,
@@ -56,9 +50,9 @@ User.init(
       validate: {
         len: {
           args: [0, 32],
-          msg: 'String length is not in this range'
-        }
-      }
+          msg: 'String length is not in this range',
+        },
+      },
     },
     lastName: {
       type: DataTypes.STRING,
@@ -67,9 +61,9 @@ User.init(
       validate: {
         len: {
           args: [0, 64],
-          msg: 'String length is not in this range'
-        }
-      }
+          msg: 'String length is not in this range',
+        },
+      },
     },
     email: {
       type: DataTypes.STRING,
@@ -78,51 +72,56 @@ User.init(
       validate: {
         len: {
           args: [0, 64],
-          msg: 'String length is not in this range'
-        }
-      }
+          msg: 'String length is not in this range',
+        },
+      },
+    },
+    createdBy: {
+      type: DataTypes.STRING(48),
+      validate: {
+        len: {
+          args: [0, 48],
+          msg: COLUMN_VALIDATION.LENGTH,
+        },
+      },
+      field: COLUMN_NAME.CREATED_BY,
+      defaultValue: DEFAULT_VALUE.BY,
+    },
+    lastUpdatedBy: {
+      type: DataTypes.STRING(48),
+      field: COLUMN_NAME.LAST_UPDATED_BY,
+      defaultValue: DEFAULT_VALUE.BY,
+      validate: {
+        len: {
+          args: [0, 48],
+          msg: COLUMN_VALIDATION.LENGTH,
+        },
+      },
     },
     createdDate: {
       type: DataTypes.DATE,
       allowNull: false,
-      field: 'CREATD_DT',
-      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
-    },
-    createdBy: {
-      type: DataTypes.STRING,
-      validate: {
-        len: {
-          args: [0, 48],
-          msg: 'String length is not in this range'
-        }
-      },
-      field: 'CREATD_BY',
-      defaultValue: 'SYSTEM'
+      field: COLUMN_NAME.CREATED_DT,
     },
     lastUpdatedDate: {
       type: DataTypes.DATE,
-      field: 'LAST_UPDATD_DT',
-      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+      field: COLUMN_NAME.LAST_UPDATED_DATE,
     },
-    lastUpdatedBy: {
-      type: DataTypes.STRING,
-      field: 'LAST_UPDATD_BY',
-      defaultValue: 'SYSTEM',
-      validate: {
-        len: {
-          args: [0, 48],
-          msg: 'String length is not in this range'
-        }
-      }
-    }
+    deletedAt: {
+      type: DataTypes.DATE,
+      field: COLUMN_NAME.DELETED_AT,
+    },
   },
   {
-    sequelize: BeastLibrary.dbs.hpt_db,
+    sequelize: WhooshLibrary.dbs.hpt_db,
     tableName: 'USER_INFO',
     modelName: 'User',
     freezeTableName: true,
-    timestamps: false,
-    schema: 'HPT_DB'
+    timestamps: true,
+    deletedAt: COLUMN_ALIAS.DLTD_AT,
+    updatedAt: COLUMN_ALIAS.LAST_UPDATED_DATE,
+    createdAt: COLUMN_ALIAS.CREATD_DT,
+    paranoid: true,
   }
 );
 
