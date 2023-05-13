@@ -1,20 +1,20 @@
 import { DataTypes, Model, Optional } from 'sequelize';
-import BeastLibrary from '../../global/beast';
-import { Permission, Role } from '.';
+import WhooshLibrary from '../../global/whoosh';
 import { COLUMN_NAME, COLUMN_VALIDATION, DEFAULT_VALUE } from '../../common/db.enum';
 import { PermissionInput, PermissionOutput } from './permission.model';
 import { RoleInput, RoleOutput } from './role.model';
 import { TimestampAttributes } from '../interfaces/timeStampAttributes.interface';
+import { Status, Permission, Role } from '.';
 
 interface RolePermissionAttributes extends TimestampAttributes {
-  // Primary Key
+  // Primary Key(s)
   roleId: string;
   permissionId: string;
 
-  // Foreign Key
+  // Foreign Key(s)
   statusId: string;
 
-  // Attributes
+  // Attribute(s)
   effectiveStartDate?: Date;
   effectiveEndDate?: Date;
 }
@@ -33,22 +33,23 @@ class RolePermission
   extends Model<RolePermissionAttributes, RolePermissionInput>
   implements RolePermissionAttributes
 {
-  // Primary Key
+  // Primary Key(s)
+  // Foreign Key(s)
   roleId!: string;
   permissionId!: string;
 
-  // Foreign keys
+  // Foreign Key(s)
   public statusId!: string;
 
-  // Attributes
+  // Attribute(s)
   public effectiveStartDate!: Date;
   public effectiveEndDate!: Date;
 
-  // User stamps
+  // User stamp(s)
   public createdBy!: string;
   public lastUpdatedBy!: string;
 
-  // Timestamps
+  // Timestamp(s)
   public readonly createdDate!: Date;
   public readonly lastUpdatedDate!: Date;
   public readonly deletedAt!: Date;
@@ -104,12 +105,26 @@ RolePermission.init(
           msg: COLUMN_VALIDATION.LENGTH
         }
       }
+    },
+    createdDate: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      field: COLUMN_NAME.CREATED_DT
+    },
+    lastUpdatedDate: {
+      type: DataTypes.DATE,
+      field: COLUMN_NAME.LAST_UPDATED_DATE
+    },
+    deletedAt: {
+      type: DataTypes.DATE,
+      field: COLUMN_NAME.DELETED_AT
     }
   },
   {
-    sequelize: BeastLibrary.dbs.hpt_idm_db,
+    sequelize: WhooshLibrary.dbs.whoosh_idm_db,
     tableName: 'ROLE_PERMSN',
     modelName: 'RolePermission',
+    schema: 'WHOOSH_IDM_DB',
     freezeTableName: true,
     timestamps: true,
     deletedAt: COLUMN_NAME.DELETED_AT,
@@ -119,6 +134,8 @@ RolePermission.init(
   }
 );
 
+// Hooks
+// References
 Role.belongsToMany(Permission, {
   through: RolePermission,
   foreignKey: 'roleId',
@@ -133,6 +150,10 @@ Permission.belongsToMany(Role, {
   constraints: false
 });
 
-// Hooks
-// References
+RolePermission.belongsTo(Status, {
+  foreignKey: 'id',
+  targetKey: 'statusId',
+  as: 'status'
+});
+
 export default RolePermission;

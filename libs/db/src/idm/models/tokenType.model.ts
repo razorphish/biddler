@@ -1,32 +1,31 @@
 import { DataTypes, Model } from 'sequelize';
 import WhooshLibrary from '../../global/whoosh';
-import {
-  COLUMN_NAME,
-  COLUMN_VALIDATION,
-  DEFAULT_VALUE,
-} from '../../common/db.enum';
+import { COLUMN_NAME, COLUMN_VALIDATION, DEFAULT_VALUE } from '../../common/db.enum';
 import { TimestampAttributes } from '../interfaces/timeStampAttributes.interface';
 
 interface TokenTypeAttributes
   extends Omit<TimestampAttributes, 'lastUpdatedDate' | 'lastUpdatedBy'> {
+  // Primary Key(s)
   id: string;
+
+  // Attribute(s)
   description?: string;
 }
 
 export type TokenTypeInput = TokenTypeAttributes;
 export type TokenTypeOutput = TokenTypeAttributes;
 
-class TokenType
-  extends Model<TokenTypeAttributes, TokenTypeInput>
-  implements TokenTypeAttributes
-{
+class TokenType extends Model<TokenTypeAttributes, TokenTypeInput> implements TokenTypeAttributes {
+  // Primary Key(s)
   public id!: string;
+
+  // Attribute(s)
   public description!: string;
 
-  // User stamps
+  // User stamp(s)
   public readonly createdBy!: string;
 
-  // Timestamps
+  // Timestamp(s)
   public readonly createdDate!: Date;
 }
 
@@ -40,9 +39,9 @@ TokenType.init(
       validate: {
         max: {
           args: [32],
-          msg: COLUMN_VALIDATION.MAX,
-        },
-      },
+          msg: COLUMN_VALIDATION.MAX
+        }
+      }
     },
     description: {
       type: DataTypes.STRING(64),
@@ -51,32 +50,33 @@ TokenType.init(
       validate: {
         max: {
           args: [64],
-          msg: COLUMN_VALIDATION.MAX,
-        },
-      },
+          msg: COLUMN_VALIDATION.MAX
+        }
+      }
     },
     createdBy: {
       type: DataTypes.STRING(48),
       validate: {
         len: {
           args: [0, 48],
-          msg: COLUMN_VALIDATION.LENGTH,
-        },
+          msg: COLUMN_VALIDATION.LENGTH
+        }
       },
       field: COLUMN_NAME.CREATED_BY,
-      defaultValue: DEFAULT_VALUE.BY,
-    },
+      defaultValue: DEFAULT_VALUE.BY
+    }
   },
   {
     sequelize: WhooshLibrary.dbs.hpt_idm_db,
     tableName: 'TOKN_TYPE_LKP',
     modelName: 'TokenType',
+    schema: 'WHOOSH_IDM_DB',
     freezeTableName: true,
     timestamps: true,
     deletedAt: false,
     updatedAt: false,
     createdAt: COLUMN_NAME.CREATED_DT,
-    paranoid: false,
+    paranoid: false
   }
 );
 

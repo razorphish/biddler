@@ -1,10 +1,14 @@
+/* eslint-disable @typescript-eslint/no-empty-interface */
 import { DataTypes, Model } from 'sequelize';
-import BeastLibrary from '../../global/beast';
+import WhooshLibrary from '../../global/whoosh';
 import { COLUMN_NAME, COLUMN_VALIDATION, DEFAULT_VALUE } from '../../common/db.enum';
 import { TimestampAttributes } from '../interfaces/timeStampAttributes.interface';
 
 interface StatusAttributes extends Omit<TimestampAttributes, 'lastUpdatedDate' | 'lastUpdatedBy'> {
+  // Primary Key(s)
   id: string;
+
+  // Attribute(s)
   description?: string;
 }
 
@@ -12,13 +16,16 @@ export interface StatusInput extends StatusAttributes {}
 export interface StatusOutput extends StatusAttributes {}
 
 class Status extends Model<StatusAttributes, StatusInput> implements StatusAttributes {
+  // Primary Key(s)
   public id!: string;
+
+  // Attribute(s)
   public description!: string;
 
-  // User stamps
+  // User stamp(s)
   public readonly createdBy!: string;
 
-  // Timestamps
+  // Timestamp(s)
   public readonly createdDate!: Date;
 }
 
@@ -60,9 +67,10 @@ Status.init(
     }
   },
   {
-    sequelize: BeastLibrary.dbs.hpt_idm_db,
+    sequelize: WhooshLibrary.dbs.whoosh_idm_db,
     tableName: 'STUS_TYPE_LKP',
     modelName: 'Status',
+    schema: 'WHOOSH_IDM_DB',
     freezeTableName: true,
     timestamps: true,
     createdAt: COLUMN_NAME.CREATED_DT,

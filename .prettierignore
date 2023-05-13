@@ -2,3 +2,21 @@
 /dist
 /coverage
 .angular
+
+build
+.github
+.nyc_output
+.vscode
+docs
+
+# Ignore files
+TESTING.md
+README.md
+package.json
+package-lock.json
+commitlint.config.js
+CODE_OF_CONDUCT.md
+.eslintrc
+.prettierrc
+.eslintrc.json
+

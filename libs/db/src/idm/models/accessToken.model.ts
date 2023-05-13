@@ -1,17 +1,23 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import WhooshLibrary from '../../global/whoosh';
-import { User } from '../../whoosh/models';
+import { Status, User } from '../../whoosh/models';
 import { TimestampAttributes } from '../interfaces/timeStampAttributes.interface';
-import { COLUMN_ALIAS } from '../../whoosh/common/db.enum';
+import {
+  COLUMN_ALIAS,
+  COLUMN_NAME,
+  COLUMN_VALIDATION,
+  DEFAULT_VALUE
+} from '../../whoosh/common/db.enum';
 
 interface AccessTokenAttributes extends TimestampAttributes {
-  // Primary Key
+  // Primary Key(s)
   id: number;
 
-  // Foreign Keys
+  // Foreign Key(s)
   userId: number;
+  statusId: string;
 
-  // Properties
+  // Attribute(s)
   name: string;
   accessToken: string;
   timeToLive?: number;
@@ -27,7 +33,7 @@ interface AccessTokenAttributes extends TimestampAttributes {
 
 export type AccessTokenInput = Optional<
   AccessTokenAttributes,
-  'id' | 'accessToken'
+  'id' | 'accessToken' | 'createdDate' | 'lastUpdatedDate'
 >;
 export type AccessTokenOutput = Required<AccessTokenAttributes>;
 
@@ -35,12 +41,14 @@ class AccessToken
   extends Model<AccessTokenAttributes, AccessTokenInput>
   implements AccessTokenAttributes
 {
-  // Primary Key
+  // Primary Key(s)
   public id!: number;
 
-  // Foreign Key
+  // Foreign Key(s)
   public userId!: number;
+  public statusId!: string;
 
+  // Attribute(s)
   public name!: string;
   public accessToken!: string;
   public timeToLive!: number;
@@ -53,11 +61,11 @@ class AccessToken
   public ipAddress!: string;
   public expireDate!: Date;
 
-  // User stamps
+  // User stamp(s)
   public createdBy!: string;
   public lastUpdatedBy!: string;
 
-  // Timestamps
+  // Timestamp(s)
   public readonly createdDate!: Date;
   public readonly lastUpdatedDate!: Date;
   public readonly deletedAt!: Date;
@@ -70,17 +78,22 @@ AccessToken.init(
       field: 'ACS_ID',
       allowNull: false,
       autoIncrement: true,
-      primaryKey: true,
+      primaryKey: true
     },
     userId: {
       type: DataTypes.INTEGER,
       field: 'USER_ID',
+      allowNull: false
+    },
+    statusId: {
+      type: DataTypes.STRING(32),
       allowNull: false,
+      field: COLUMN_NAME.STATUS_ID
     },
     name: {
       type: DataTypes.STRING(32),
       field: 'ACS_NAME',
-      allowNull: false,
+      allowNull: false
     },
     accessToken: {
       type: DataTypes.STRING(256),
@@ -89,14 +102,13 @@ AccessToken.init(
       validate: {
         len: {
           args: [0, 256],
-          msg: 'String length is not in this range',
-        },
-      },
+          msg: COLUMN_VALIDATION.LENGTH
+        }
+      }
     },
     timeToLive: {
       type: DataTypes.DECIMAL,
-      allowNull: true,
-      field: 'TTL',
+      field: 'TTL'
     },
     scope: {
       type: DataTypes.STRING(256),
@@ -104,81 +116,104 @@ AccessToken.init(
       validate: {
         len: {
           args: [0, 256],
-          msg: 'String length is not in this range',
-        },
-      },
+          msg: COLUMN_VALIDATION.LENGTH
+        }
+      }
     },
     type: {
       type: DataTypes.STRING(32),
       field: 'ACS_TYPE',
       validate: {
         len: {
-          args: [0, 32],
-          msg: 'String length is not in this range',
-        },
-      },
+          args: [0, 128],
+          msg: COLUMN_VALIDATION.LENGTH
+        }
+      }
     },
     expiresIn: {
       type: DataTypes.INTEGER,
-      field: 'ACS_EXPRS_IN',
+      field: 'ACS_EXPRS_IN'
     },
     origin: {
       type: DataTypes.STRING(256),
       field: 'ACS_ORGN',
       validate: {
         len: {
-          args: [0, 256],
-          msg: 'String length not in this range',
-        },
-      },
+          args: [0, 128],
+          msg: COLUMN_VALIDATION.LENGTH
+        }
+      }
     },
     forceRefresh: {
       type: DataTypes.BOOLEAN,
       field: 'FORCE_RFRSH',
+      defaultValue: true
     },
     cookie: {
       type: DataTypes.STRING(256),
       field: 'CKIE',
       validate: {
         len: {
-          args: [0, 256],
-          msg: 'String length not in this range',
-        },
-      },
+          args: [0, 128],
+          msg: COLUMN_VALIDATION.LENGTH
+        }
+      }
     },
     ipAddress: {
       type: DataTypes.STRING(1024),
-      field: 'IP_ADDR',
+      field: 'IP_ADDR'
     },
     expireDate: {
       type: DataTypes.DATE,
-      field: 'EXP_DT',
-    },
-    createdDate: {
-      type: DataTypes.DATE,
-      field: 'CREATD_DT',
+      field: 'EXP_DT'
     },
     createdBy: {
-      type: DataTypes.STRING,
-      field: 'CREATD_BY',
+      type: DataTypes.STRING(48),
       validate: {
         len: {
           args: [0, 48],
-          msg: 'String length not in this range',
-        },
+          msg: COLUMN_VALIDATION.LENGTH
+        }
       },
+      field: COLUMN_NAME.CREATED_BY,
+      defaultValue: DEFAULT_VALUE.BY
     },
+    lastUpdatedBy: {
+      type: DataTypes.STRING(48),
+      field: COLUMN_NAME.LAST_UPDATED_BY,
+      defaultValue: DEFAULT_VALUE.BY,
+      validate: {
+        len: {
+          args: [0, 48],
+          msg: COLUMN_VALIDATION.LENGTH
+        }
+      }
+    },
+    createdDate: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      field: COLUMN_NAME.CREATED_DT
+    },
+    lastUpdatedDate: {
+      type: DataTypes.DATE,
+      field: COLUMN_NAME.LAST_UPDATED_DATE
+    },
+    deletedAt: {
+      type: DataTypes.DATE,
+      field: COLUMN_NAME.DELETED_AT
+    }
   },
   {
-    sequelize: WhooshLibrary.dbs.hpt_db,
+    sequelize: WhooshLibrary.dbs.whoosh_idm_db,
     tableName: 'ACS_TOKN',
     modelName: 'AccessToken',
+    schema: 'WHOOSH_IDM_DB',
     freezeTableName: true,
     timestamps: true,
     deletedAt: COLUMN_ALIAS.DLTD_AT,
     updatedAt: COLUMN_ALIAS.LAST_UPDATED_DATE,
     createdAt: COLUMN_ALIAS.CREATD_DT,
-    paranoid: true,
+    paranoid: true
   }
 );
 
@@ -187,8 +222,13 @@ AccessToken.init(
 AccessToken.belongsTo(User, {
   targetKey: 'id',
   foreignKey: 'userId',
-  as: 'user',
-  constraints: false,
+  as: 'user'
+});
+
+AccessToken.belongsTo(Status, {
+  foreignKey: 'id',
+  targetKey: 'statusId',
+  as: 'status'
 });
 
 export default AccessToken;

@@ -1,28 +1,24 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import WhooshLibrary from '../../global/whoosh';
-import {
-  COLUMN_NAME,
-  COLUMN_VALIDATION,
-  DEFAULT_VALUE,
-} from '../../common/db.enum';
+import { COLUMN_NAME, COLUMN_VALIDATION, DEFAULT_VALUE } from '../../common/db.enum';
 import { TimestampAttributes } from '../interfaces/timeStampAttributes.interface';
 import Status from './status.model';
 
 interface ApplicationAttributes extends TimestampAttributes {
-  // Primary Key
+  // Primary Key(s)
   id: string;
 
-  // Foreign keys
+  // Foreign Key(s)
   statusId: string;
 
-  // Properties
+  // Attribute(s)
   name: string;
   description?: string;
 }
 
 export type ApplicationInput = Optional<
   ApplicationAttributes,
-  'createdDate' | 'lastUpdatedDate'
+  'id' | 'createdDate' | 'lastUpdatedDate'
 >;
 export type ApplicationOutput = ApplicationAttributes;
 
@@ -30,16 +26,21 @@ class Application
   extends Model<ApplicationAttributes, ApplicationInput>
   implements ApplicationAttributes
 {
+  // Primary Key(s)
   public id!: string;
+
+  // Foreign Key(s)
   public statusId!: string;
+
+  // Attribute(s)
   public name!: string;
   public description!: string;
 
-  // User stamps
+  // User stamp(s)
   public createdBy!: string;
   public lastUpdatedBy!: string;
 
-  // Timestamps
+  // Timestamp(s)
   public readonly createdDate!: Date;
   public readonly lastUpdatedDate!: Date;
   public readonly deletedAt!: Date;
@@ -52,12 +53,12 @@ Application.init(
       allowNull: false,
       field: 'APLCTN_ID',
       primaryKey: true,
-      autoIncrement: true,
+      autoIncrement: true
     },
     statusId: {
       type: DataTypes.STRING(32),
       allowNull: false,
-      field: COLUMN_NAME.STATUS_ID,
+      field: COLUMN_NAME.STATUS_ID
     },
     name: {
       type: DataTypes.STRING(64),
@@ -66,9 +67,9 @@ Application.init(
       validate: {
         max: {
           args: [64],
-          msg: COLUMN_VALIDATION.MAX,
-        },
-      },
+          msg: COLUMN_VALIDATION.MAX
+        }
+      }
     },
     description: {
       type: DataTypes.STRING(128),
@@ -77,20 +78,20 @@ Application.init(
       validate: {
         len: {
           args: [0, 128],
-          msg: COLUMN_VALIDATION.LENGTH,
-        },
-      },
+          msg: COLUMN_VALIDATION.LENGTH
+        }
+      }
     },
     createdBy: {
       type: DataTypes.STRING(48),
       validate: {
         len: {
           args: [0, 48],
-          msg: COLUMN_VALIDATION.LENGTH,
-        },
+          msg: COLUMN_VALIDATION.LENGTH
+        }
       },
       field: COLUMN_NAME.CREATED_BY,
-      defaultValue: DEFAULT_VALUE.BY,
+      defaultValue: DEFAULT_VALUE.BY
     },
     lastUpdatedBy: {
       type: DataTypes.STRING(48),
@@ -99,31 +100,45 @@ Application.init(
       validate: {
         len: {
           args: [0, 48],
-          msg: COLUMN_VALIDATION.LENGTH,
-        },
-      },
+          msg: COLUMN_VALIDATION.LENGTH
+        }
+      }
     },
+    createdDate: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      field: COLUMN_NAME.CREATED_DT
+    },
+    lastUpdatedDate: {
+      type: DataTypes.DATE,
+      field: COLUMN_NAME.LAST_UPDATED_DATE
+    },
+    deletedAt: {
+      type: DataTypes.DATE,
+      field: COLUMN_NAME.DELETED_AT
+    }
   },
   {
-    sequelize: WhooshLibrary.dbs.hpt_idm_db,
+    sequelize: WhooshLibrary.dbs.whoosh_idm_db,
     tableName: 'PERMSN_INFO',
     modelName: 'Application',
+    schema: 'WHOOSH_IDM_DB',
     freezeTableName: true,
     timestamps: true,
     deletedAt: COLUMN_NAME.DELETED_AT,
     updatedAt: COLUMN_NAME.LAST_UPDATED_DATE,
     createdAt: COLUMN_NAME.CREATED_DT,
-    paranoid: true,
+    paranoid: true
   }
 );
 
 // Hooks
 
 // References
-Application.hasOne(Status, {
+Application.belongsTo(Status, {
   foreignKey: 'id',
-  sourceKey: 'statusId',
-  as: 'status',
+  targetKey: 'statusId',
+  as: 'status'
 });
 
 export default Application;

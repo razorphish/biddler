@@ -1,5 +1,5 @@
-import { DataTypes, Model, Optional, Sequelize } from 'sequelize';
-import BeastLibrary from '../../global/beast';
+import { DataTypes, Model, Optional } from 'sequelize';
+import WhooshLibrary from '../../global/whoosh';
 import { COLUMN_NAME, COLUMN_VALIDATION, DEFAULT_VALUE } from '../../common/db.enum';
 import { TimestampAttributes } from '../interfaces/timeStampAttributes.interface';
 import { RoleInput, RoleOutput } from './role.model';
@@ -7,14 +7,15 @@ import Status from './status.model';
 import { UserInput, UserOutput } from './user.model';
 
 interface UserRoleAttributes extends TimestampAttributes {
-  // Primary Key
+  // Primary Key(s)
+  // Foreign Key(s)
   userId: number;
   roleId: string;
 
-  //Foreign keys
+  // Foreign Key(s)
   statusId: string;
 
-  //Attributes
+  // Attribute(s)
   effectiveStartDate?: Date;
   effectiveEndDate?: Date;
 }
@@ -29,19 +30,23 @@ export interface UserRoleOutput extends UserRoleInput {
 }
 
 class UserRole extends Model<UserRoleAttributes, UserRoleInput> implements UserRoleAttributes {
+  // Primary Key(s)
+  // Foreign Key(s)
   public userId!: number;
   public roleId!: string;
 
+  // Foreign Key(s)
   public statusId!: string;
 
+  // Attribute(s)
   public effectiveStartDate!: Date;
   public effectiveEndDate!: Date;
 
-  // User stamps
+  // User stamp(s)
   public createdBy!: string;
   public lastUpdatedBy!: string;
 
-  // Timestamps
+  // Timestamp(s)
   public readonly createdDate!: Date;
   public readonly lastUpdatedDate!: Date;
   public readonly deletedAt!: Date;
@@ -100,9 +105,10 @@ UserRole.init(
     }
   },
   {
-    sequelize: BeastLibrary.dbs.hpt_idm_db,
+    sequelize: WhooshLibrary.dbs.whoosh_idm_db,
     tableName: 'USER_ROLES',
     modelName: 'UserRole',
+    schema: 'WHOOSH_IDM_DB',
     freezeTableName: true,
     timestamps: true,
     deletedAt: COLUMN_NAME.DELETED_AT,
@@ -114,9 +120,9 @@ UserRole.init(
 
 // Hooks
 // References
-UserRole.hasOne(Status, {
+UserRole.belongsTo(Status, {
   foreignKey: 'id',
-  sourceKey: 'statusId',
+  targetKey: 'statusId',
   as: 'status'
 });
 

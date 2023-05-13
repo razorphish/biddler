@@ -1,17 +1,18 @@
+/* eslint-disable @typescript-eslint/no-empty-interface */
 import { DataTypes, Model, Optional } from 'sequelize';
-import BeastLibrary from '../../global/beast';
+import WhooshLibrary from '../../global/whoosh';
 import { COLUMN_NAME, COLUMN_VALIDATION, DEFAULT_VALUE } from '../../common/db.enum';
 import { TimestampAttributes } from '../interfaces/timeStampAttributes.interface';
 import Status from './status.model';
 
 interface PermissionAttributes extends TimestampAttributes {
-  // Primary Key
+  // Primary Key(s)
   id: string;
 
-  // Foreign keys
+  // Foreign Key(s)
   statusId: string;
 
-  // Properties
+  // Attribute(s)
   description?: string;
 }
 
@@ -22,15 +23,20 @@ class Permission
   extends Model<PermissionAttributes, PermissionInput>
   implements PermissionAttributes
 {
+  // Primary Key(s)
   public id!: string;
+
+  // Foreign Key(s)
   public statusId!: string;
+
+  // Attribute(s)
   public description!: string;
 
-  // User stamps
+  // User stamp(s)
   public createdBy!: string;
   public lastUpdatedBy!: string;
 
-  // Timestamps
+  // Timestamp(s)
   public readonly createdDate!: Date;
   public readonly lastUpdatedDate!: Date;
   public readonly deletedAt!: Date;
@@ -87,12 +93,26 @@ Permission.init(
           msg: COLUMN_VALIDATION.LENGTH
         }
       }
+    },
+    createdDate: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      field: COLUMN_NAME.CREATED_DT
+    },
+    lastUpdatedDate: {
+      type: DataTypes.DATE,
+      field: COLUMN_NAME.LAST_UPDATED_DATE
+    },
+    deletedAt: {
+      type: DataTypes.DATE,
+      field: COLUMN_NAME.DELETED_AT
     }
   },
   {
-    sequelize: BeastLibrary.dbs.hpt_idm_db,
+    sequelize: WhooshLibrary.dbs.whoosh_idm_db,
     tableName: 'PERMSN_INFO',
     modelName: 'Permission',
+    schema: 'WHOOSH_IDM_DB',
     freezeTableName: true,
     timestamps: true,
     deletedAt: COLUMN_NAME.DELETED_AT,
@@ -105,9 +125,9 @@ Permission.init(
 // Hooks
 
 // References
-Permission.hasOne(Status, {
+Permission.belongsTo(Status, {
   foreignKey: 'id',
-  sourceKey: 'statusId',
+  targetKey: 'statusId',
   as: 'status'
 });
 

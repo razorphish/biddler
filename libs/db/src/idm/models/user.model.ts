@@ -1,22 +1,18 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import WhooshLibrary from '../../global/whoosh';
-import {
-  COLUMN_NAME,
-  COLUMN_VALIDATION,
-  DEFAULT_VALUE,
-} from '../../common/db.enum';
+import { COLUMN_NAME, COLUMN_VALIDATION, DEFAULT_VALUE } from '../../common/db.enum';
 import { TimestampAttributes } from '../interfaces/timeStampAttributes.interface';
 import Status from './status.model';
 import { UserRoleInput, UserRoleOutput } from './userRole.model';
 
 interface UserAttributes extends TimestampAttributes {
-  // Primary Key
+  // Primary Key(s)
   id: number;
 
-  // Foreign keys
+  // Foreign Key(s)
   statusId: string;
 
-  // Attributes
+  // Attribute(s)
   firstName: string;
   lastName: string;
   email: string;
@@ -25,8 +21,7 @@ interface UserAttributes extends TimestampAttributes {
   password?: string;
 }
 
-export interface UserInput
-  extends Optional<UserAttributes, 'id' | 'createdDate'> {
+export interface UserInput extends Optional<UserAttributes, 'id' | 'createdDate'> {
   userRoles?: UserRoleInput[];
 }
 export interface UserOutput extends Required<UserAttributes> {
@@ -34,13 +29,13 @@ export interface UserOutput extends Required<UserAttributes> {
 }
 
 class User extends Model<UserAttributes, UserInput> implements UserAttributes {
-  // Primary Keys
+  // Primary Key(s)
   public id!: number;
 
-  // Foreign Keys
+  // Foreign Key(s)
   public statusId!: string;
 
-  // Attributes
+  // Attribute(s)
   public username!: string;
   public password!: string;
   public firstName!: string;
@@ -48,11 +43,11 @@ class User extends Model<UserAttributes, UserInput> implements UserAttributes {
   public email!: string;
   public phone!: string;
 
-  // User stamps
+  // User stamp(s)
   public createdBy!: string;
   public lastUpdatedBy!: string;
 
-  // Timestamps
+  // Timestamp(s)
   public readonly createdDate!: Date;
   public readonly lastUpdatedDate!: Date;
   public readonly deletedAt!: Date;
@@ -65,12 +60,12 @@ User.init(
       allowNull: false,
       field: 'USER_ID',
       primaryKey: true,
-      autoIncrement: false,
+      autoIncrement: false
     },
     statusId: {
       type: DataTypes.STRING(32),
       allowNull: false,
-      field: COLUMN_NAME.STATUS_ID,
+      field: COLUMN_NAME.STATUS_ID
     },
     username: {
       type: DataTypes.STRING(128),
@@ -79,9 +74,9 @@ User.init(
       validate: {
         max: {
           args: [128],
-          msg: COLUMN_VALIDATION.LENGTH,
-        },
-      },
+          msg: COLUMN_VALIDATION.LENGTH
+        }
+      }
     },
     password: {
       type: DataTypes.STRING(256),
@@ -90,9 +85,9 @@ User.init(
       validate: {
         len: {
           args: [0, 256],
-          msg: COLUMN_VALIDATION.LENGTH,
-        },
-      },
+          msg: COLUMN_VALIDATION.LENGTH
+        }
+      }
     },
     firstName: {
       type: DataTypes.STRING(48),
@@ -101,9 +96,9 @@ User.init(
       validate: {
         len: {
           args: [0, 48],
-          msg: COLUMN_VALIDATION.LENGTH,
-        },
-      },
+          msg: COLUMN_VALIDATION.LENGTH
+        }
+      }
     },
     lastName: {
       type: DataTypes.STRING(96),
@@ -112,9 +107,9 @@ User.init(
       validate: {
         len: {
           args: [0, 64],
-          msg: COLUMN_VALIDATION.LENGTH,
-        },
-      },
+          msg: COLUMN_VALIDATION.LENGTH
+        }
+      }
     },
     email: {
       type: DataTypes.STRING(256),
@@ -123,9 +118,9 @@ User.init(
       validate: {
         max: {
           args: [256],
-          msg: COLUMN_VALIDATION.MAX,
-        },
-      },
+          msg: COLUMN_VALIDATION.MAX
+        }
+      }
     },
     phone: {
       type: DataTypes.STRING(15),
@@ -134,20 +129,20 @@ User.init(
       validate: {
         len: {
           args: [0, 15],
-          msg: COLUMN_VALIDATION.LENGTH,
-        },
-      },
+          msg: COLUMN_VALIDATION.LENGTH
+        }
+      }
     },
     createdBy: {
       type: DataTypes.STRING(48),
       validate: {
         len: {
           args: [0, 48],
-          msg: COLUMN_VALIDATION.LENGTH,
-        },
+          msg: COLUMN_VALIDATION.LENGTH
+        }
       },
       field: COLUMN_NAME.CREATED_BY,
-      defaultValue: DEFAULT_VALUE.BY,
+      defaultValue: DEFAULT_VALUE.BY
     },
     lastUpdatedBy: {
       type: DataTypes.STRING(48),
@@ -156,30 +151,44 @@ User.init(
       validate: {
         len: {
           args: [0, 48],
-          msg: COLUMN_VALIDATION.LENGTH,
-        },
-      },
+          msg: COLUMN_VALIDATION.LENGTH
+        }
+      }
     },
+    createdDate: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      field: COLUMN_NAME.CREATED_DT
+    },
+    lastUpdatedDate: {
+      type: DataTypes.DATE,
+      field: COLUMN_NAME.LAST_UPDATED_DATE
+    },
+    deletedAt: {
+      type: DataTypes.DATE,
+      field: COLUMN_NAME.DELETED_AT
+    }
   },
   {
     sequelize: WhooshLibrary.dbs.hpt_idm_db,
     tableName: 'USER_INFO',
     modelName: 'User',
+    schema: 'WHOOSH_IDM_DB',
     freezeTableName: true,
     timestamps: true,
     deletedAt: COLUMN_NAME.DELETED_AT,
     updatedAt: COLUMN_NAME.LAST_UPDATED_DATE,
     createdAt: COLUMN_NAME.CREATED_DT,
-    paranoid: true,
+    paranoid: true
   }
 );
 
 // Hooks
 // References
-User.hasOne(Status, {
+User.belongsTo(Status, {
   foreignKey: 'id',
-  sourceKey: 'statusId',
-  as: 'status',
+  targetKey: 'statusId',
+  as: 'status'
 });
 
 export default User;

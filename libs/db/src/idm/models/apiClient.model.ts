@@ -1,83 +1,82 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import WhooshLibrary from '../../global/whoosh';
+import { TimestampAttributes } from '../interfaces/timeStampAttributes.interface';
+import { COLUMN_NAME, COLUMN_VALIDATION, DEFAULT_VALUE } from '../../common/db.enum';
+import { COLUMN_ALIAS } from '../../whoosh/common/db.enum';
+import Status from './status.model';
 
-interface ApiClientAttributes {
-  // Primary key
+interface ApiClientAttributes extends TimestampAttributes {
+  // Primary Key(s)
   id: string;
 
-  // Foreign Keys relationships
+  // Foreign Key(s)
   applicationId: number;
   systemIssuerId: number;
   tokenTypeId: string;
   statusId: string;
 
-  // Properties
+  // Attribute(s)
   audience: string;
   secret: string;
   salt?: string;
   scopes: string;
-
-  // Timestamps
-  createdDate: Date;
-  createdBy?: string;
-  lastUpdatedDate?: Date;
-  lastUpdatedBy?: string;
-  deletedAt?: Date;
 }
 
 export type ApiClientInput = Optional<
   ApiClientAttributes,
-  'id' | 'createdDate'
+  'id' | 'createdDate' | 'lastUpdatedDate'
 >;
 export type ApiClientOutput = Required<ApiClientAttributes>;
 
-class ApiClient
-  extends Model<ApiClientAttributes, ApiClientInput>
-  implements ApiClientAttributes
-{
+class ApiClient extends Model<ApiClientAttributes, ApiClientInput> implements ApiClientAttributes {
+  // Primary Key(s)
   public id!: string;
 
+  // Foreign Key(s)
   public applicationId!: number;
   public systemIssuerId!: number;
   public tokenTypeId!: string;
   public statusId!: string;
 
+  // Attribute(s)
   public audience!: string;
   public secret!: string;
   public salt!: string;
   public scopes!: string;
 
-  // timestamps!
+  // User stamp(s)
+  public createdBy!: string;
+  public lastUpdatedBy!: string;
+
+  // Timestamp(s)
   public readonly createdDate!: Date;
-  public readonly createdBy!: string;
   public readonly lastUpdatedDate!: Date;
-  public readonly lastUpdatedBy!: string;
   public readonly deletedAt!: Date;
 }
 
 ApiClient.init(
   {
     id: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(128),
       field: 'API_CLIENT_ID',
       primaryKey: true,
       validate: {
         len: {
           args: [0, 128],
-          msg: 'String length is not in this range',
-        },
+          msg: COLUMN_VALIDATION.LENGTH
+        }
       },
-      allowNull: false,
+      allowNull: false
     },
     applicationId: {
       type: DataTypes.INTEGER,
       field: 'APLCTN_ID',
-      allowNull: false,
+      allowNull: false
     },
     systemIssuerId: {
       type: DataTypes.INTEGER,
       field: 'APLCTN_ISSUER_ID',
-      allowNull: false,
+      allowNull: false
     },
     tokenTypeId: {
       type: DataTypes.STRING(32),
@@ -85,102 +84,114 @@ ApiClient.init(
       validate: {
         len: {
           args: [0, 128],
-          msg: 'String length is not in this range',
-        },
-      },
+          msg: COLUMN_VALIDATION.LENGTH
+        }
+      }
     },
     statusId: {
       type: DataTypes.STRING(32),
-      field: 'STUS_TYPE_CD',
-      validate: {
-        len: {
-          args: [0, 32],
-          msg: 'String length is not in this range',
-        },
-      },
+      field: COLUMN_NAME.STATUS_ID,
+      allowNull: false
     },
     audience: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(128),
       field: 'SCOPES',
       validate: {
         len: {
-          args: [0, 2000],
-          msg: 'String length is not in this range',
-        },
-      },
+          args: [0, 256],
+          msg: COLUMN_VALIDATION.LENGTH
+        }
+      }
     },
     secret: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(1000),
       field: 'RESTRICTED_IPS',
       allowNull: false,
       validate: {
         len: {
           args: [0, 1000],
-          msg: 'String length is not in this range',
-        },
-      },
+          msg: COLUMN_VALIDATION.LENGTH
+        }
+      }
     },
     salt: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(128),
       field: 'KEY_SECRET_HASH',
       allowNull: false,
       validate: {
         len: {
           args: [0, 128],
-          msg: 'String length not in this range',
-        },
-      },
+          msg: COLUMN_VALIDATION.LENGTH
+        }
+      }
     },
     scopes: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(128),
       field: 'KEY_SALT',
       allowNull: false,
       validate: {
         len: {
           args: [0, 128],
-          msg: 'String length not in this range',
-        },
+          msg: COLUMN_VALIDATION.LENGTH
+        }
+      }
+    },
+    createdBy: {
+      type: DataTypes.STRING(48),
+      validate: {
+        len: {
+          args: [0, 48],
+          msg: COLUMN_VALIDATION.LENGTH
+        }
       },
+      field: COLUMN_NAME.CREATED_BY,
+      defaultValue: DEFAULT_VALUE.BY
+    },
+    lastUpdatedBy: {
+      type: DataTypes.STRING(48),
+      field: COLUMN_NAME.LAST_UPDATED_BY,
+      defaultValue: DEFAULT_VALUE.BY,
+      validate: {
+        len: {
+          args: [0, 48],
+          msg: COLUMN_VALIDATION.LENGTH
+        }
+      }
     },
     createdDate: {
       type: DataTypes.DATE,
-      field: 'CREATD_DT',
-    },
-    createdBy: {
-      type: DataTypes.STRING,
-      field: 'CREATD_BY',
-      validate: {
-        len: {
-          args: [0, 48],
-          msg: 'String length not in this range',
-        },
-      },
+      allowNull: false,
+      field: COLUMN_NAME.CREATED_DT
     },
     lastUpdatedDate: {
       type: DataTypes.DATE,
-      field: 'LAST_UPDATD_DT',
+      field: COLUMN_NAME.LAST_UPDATED_DATE
     },
-    lastUpdatedBy: {
-      type: DataTypes.STRING,
-      field: 'LAST_UPDATD_BY',
-      validate: {
-        len: {
-          args: [0, 48],
-          msg: 'String length not in this range',
-        },
-      },
-    },
-    deletedAt: 'DLTD_DT',
+    deletedAt: {
+      type: DataTypes.DATE,
+      field: COLUMN_NAME.DELETED_AT
+    }
   },
   {
     sequelize: WhooshLibrary.dbs.hpt_db,
-    tableName: 'API_CLIENTS',
+    tableName: 'API_CLIENT',
     modelName: 'ApiClient',
-    schema: 'HPT_IDM_SERVICE_DB',
+    schema: 'WHOOSH_IDM_DB',
     freezeTableName: true,
-    timestamps: false,
-    paranoid: true,
+    timestamps: true,
+    deletedAt: COLUMN_ALIAS.DLTD_AT,
+    updatedAt: COLUMN_ALIAS.LAST_UPDATED_DATE,
+    createdAt: COLUMN_ALIAS.CREATD_DT,
+    paranoid: true
   }
 );
+
+//Hooks
+//references
+ApiClient.belongsTo(Status, {
+  foreignKey: 'id',
+  targetKey: 'statusId',
+  as: 'status'
+});
 
 export default ApiClient;
