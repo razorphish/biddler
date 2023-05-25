@@ -1,6 +1,6 @@
 import { UserRoleInput, UserRoleOutput } from '../models/userRole.model';
 import { AllUserRoleFilters } from '../dal/types';
-import * as DAL from '../dal/userRole.dal';
+import * as DAL from '../dal/models/userRole.dal';
 
 export const all = (filters: AllUserRoleFilters): Promise<UserRoleOutput[]> => {
   return DAL.all(filters);
@@ -28,16 +28,11 @@ export const byRoleId = (
   return DAL.byRoleId(roleId, filters);
 };
 
-export const create = async (
-  payload: UserRoleInput
-): Promise<UserRoleOutput> => {
+export const create = async (payload: UserRoleInput): Promise<UserRoleOutput> => {
   return DAL.create(payload);
 };
 
-export const deleteById = (
-  userId: number,
-  roleId: string
-): Promise<boolean> => {
+export const deleteById = (userId: number, roleId: string): Promise<boolean> => {
   return DAL.deleteById(userId, roleId);
 };
 

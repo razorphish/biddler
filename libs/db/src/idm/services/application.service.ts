@@ -1,13 +1,8 @@
-import {
-  ApplicationInput,
-  ApplicationOutput
-} from '../models/application.model';
+import { ApplicationInput, ApplicationOutput } from '../models/application.model';
 import { AllApplicationFilters } from '../dal/types';
-import * as DAL from '../dal/application.dal';
+import * as DAL from '../dal/models/application.dal';
 
-export const all = (
-  filters: AllApplicationFilters
-): Promise<ApplicationOutput[]> => {
+export const all = (filters: AllApplicationFilters): Promise<ApplicationOutput[]> => {
   return DAL.all(filters);
 };
 
@@ -15,9 +10,7 @@ export const byId = (id: string): Promise<ApplicationOutput> => {
   return DAL.byId(id);
 };
 
-export const create = async (
-  payload: ApplicationInput
-): Promise<ApplicationOutput> => {
+export const create = async (payload: ApplicationInput): Promise<ApplicationOutput> => {
   return DAL.create(payload);
 };
 

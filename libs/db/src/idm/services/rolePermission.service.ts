@@ -1,13 +1,8 @@
-import {
-  RolePermissionInput,
-  RolePermissionOutput
-} from '../models/rolePermission.model';
+import { RolePermissionInput, RolePermissionOutput } from '../models/rolePermission.model';
 import { AllRolePermissionFilters } from '../dal/types';
-import * as DAL from '../dal/rolePermission.dal';
+import * as DAL from '../dal/models/rolePermission.dal';
 
-export const all = (
-  filters: AllRolePermissionFilters
-): Promise<RolePermissionOutput[]> => {
+export const all = (filters: AllRolePermissionFilters): Promise<RolePermissionOutput[]> => {
   return DAL.all(filters);
 };
 
@@ -33,22 +28,15 @@ export const byRoleId = (
   return DAL.byRoleId(roleId, filters);
 };
 
-export const create = async (
-  payload: RolePermissionInput
-): Promise<RolePermissionOutput> => {
+export const create = async (payload: RolePermissionInput): Promise<RolePermissionOutput> => {
   return DAL.create(payload);
 };
 
-export const deleteById = (
-  roleId: string,
-  permissionId: string
-): Promise<boolean> => {
+export const deleteById = (roleId: string, permissionId: string): Promise<boolean> => {
   return DAL.deleteById(roleId, permissionId);
 };
 
-export const deleteByPermissionId = (
-  permissionId: string
-): Promise<boolean> => {
+export const deleteByPermissionId = (permissionId: string): Promise<boolean> => {
   return DAL.deleteByPermissionId(permissionId);
 };
 

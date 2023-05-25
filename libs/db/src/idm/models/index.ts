@@ -1,15 +1,25 @@
+import Status from './status.model';
+import System from './system.model';
 import AccessToken from './accessToken.model';
-//import ApiClient from './apiClient.model';
-//Junction Tables
 import User from './user.model';
 import UserRole from './userRole.model';
-import Status from './status.model';
 import Role from './role.model';
 import Permission from './permission.model';
-
 import RolePermission from './rolePermission.model';
 import ApiClient from './apiClient.model';
+import Application from './application.model';
 
-export { AccessToken, ApiClient, Role, Permission, RolePermission, Status, User, UserRole };
+export {
+  AccessToken,
+  ApiClient,
+  Application,
+  Role,
+  Permission,
+  RolePermission,
+  Status,
+  System,
+  User,
+  UserRole
+};
 
 // External relationships

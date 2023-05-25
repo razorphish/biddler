@@ -1,7 +1,7 @@
 import * as dotenv from 'dotenv';
 
 dotenv.config({
-  path: '.env',
+  path: '.env'
 });
 
 const {
@@ -16,7 +16,7 @@ const {
   WHOOSH_IDM_DB_DATABASE_PASSWORD,
   WHOOSH_IDM_DB_DATABASE_SERVER,
   WHOOSH_IDM_DB_DATABASE_PORT,
-  WHOOSH_IDM_DB_DIALECT,
+  WHOOSH_IDM_DB_DIALECT
 } = process.env;
 
 type DatabasePath = {
@@ -39,19 +39,19 @@ export default {
       host: WHOOSH_DB_DATABASE_SERVER,
       port: WHOOSH_DB_DATABASE_PORT,
       dialectOptions: {
-        connectTimeout: 60000,
+        connectTimeout: 60000
       },
       pool: {
         max: 100,
         min: 0,
         acquire: 100 * 1000,
         idle: 120000,
-        evict: 120000,
+        evict: 120000
       },
       meta: {
-        useSchemas: true,
-      },
-    },
+        useSchemas: true
+      }
+    }
   },
   whoosh_idm_db: {
     path: {
@@ -62,19 +62,18 @@ export default {
       host: WHOOSH_IDM_DB_DATABASE_SERVER,
       port: WHOOSH_IDM_DB_DATABASE_PORT,
       dialectOptions: {
-        connectTimeout: 60000,
+        connectTimeout: 60000
       },
       pool: {
         max: 100,
         min: 0,
         acquire: 100 * 1000,
         idle: 120000,
-        evict: 120000,
+        evict: 120000
       },
       meta: {
-        useSchemas: true,
-        customCert: '',
-      },
-    },
-  },
+        useSchemas: true
+      }
+    }
+  }
 };
