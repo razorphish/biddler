@@ -2,7 +2,7 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import WhooshLibrary from '../../global/whoosh';
 import { COLUMN_NAME, COLUMN_VALIDATION, DEFAULT_VALUE } from '../../common/db.enum';
-import { TimestampAttributes } from '../interfaces/timeStampAttributes.interface';
+import { TimestampAttributes } from '../../global/interfaces/timeStampAttributes.interface';
 import Status from './status.model';
 
 interface SystemAttributes extends TimestampAttributes {

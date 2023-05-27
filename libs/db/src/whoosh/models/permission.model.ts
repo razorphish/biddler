@@ -1,30 +1,30 @@
-/* eslint-disable @typescript-eslint/no-empty-interface */
 import { DataTypes, Model, Optional } from 'sequelize';
 import WhooshLibrary from '../../global/whoosh';
-import { COLUMN_NAME, COLUMN_VALIDATION, DEFAULT_VALUE } from '../../common/db.enum';
+import { Status } from '../../whoosh/models';
+import { COLUMN_ALIAS, COLUMN_NAME, COLUMN_VALIDATION, DEFAULT_VALUE } from '../../common/db.enum';
 import { TimestampAttributes } from '../../global/interfaces/timeStampAttributes.interface';
-import Status from './status.model';
 
-interface PermissionAttributes extends TimestampAttributes {
+interface PermissionAttributes
+  extends Omit<TimestampAttributes, 'lastUpdatedDate' | 'lastUpdatedBy'> {
   // Primary Key(s)
-  id: string;
+  id: number;
 
   // Foreign Key(s)
   statusId: string;
 
   // Attribute(s)
-  description?: string;
+  description: string;
 }
 
-export interface PermissionInput extends Optional<PermissionAttributes, 'createdDate'> {}
-export interface PermissionOutput extends PermissionAttributes {}
+export type PermissionInput = Optional<PermissionAttributes, 'createdDate'>;
+export type PermissionOutput = Required<PermissionAttributes>;
 
 class Permission
   extends Model<PermissionAttributes, PermissionInput>
   implements PermissionAttributes
 {
   // Primary Key(s)
-  public id!: string;
+  public id!: number;
 
   // Foreign Key(s)
   public statusId!: string;
@@ -34,27 +34,20 @@ class Permission
 
   // User stamp(s)
   public createdBy!: string;
-  public lastUpdatedBy!: string;
 
   // Timestamp(s)
   public readonly createdDate!: Date;
-  public readonly lastUpdatedDate!: Date;
   public readonly deletedAt!: Date;
 }
 
 Permission.init(
   {
     id: {
-      type: DataTypes.STRING(24),
-      allowNull: false,
+      type: DataTypes.INTEGER,
       field: 'PERMSN_ID',
-      primaryKey: true,
-      validate: {
-        max: {
-          args: [24],
-          msg: COLUMN_VALIDATION.MAX
-        }
-      }
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true
     },
     statusId: {
       type: DataTypes.STRING(32),
@@ -64,13 +57,7 @@ Permission.init(
     description: {
       type: DataTypes.STRING(128),
       field: 'PERMSN_DESC',
-      allowNull: true,
-      validate: {
-        len: {
-          args: [0, 128],
-          msg: COLUMN_VALIDATION.LENGTH
-        }
-      }
+      allowNull: false
     },
     createdBy: {
       type: DataTypes.STRING(48),
@@ -83,25 +70,10 @@ Permission.init(
       field: COLUMN_NAME.CREATED_BY,
       defaultValue: DEFAULT_VALUE.BY
     },
-    lastUpdatedBy: {
-      type: DataTypes.STRING(48),
-      field: COLUMN_NAME.LAST_UPDATED_BY,
-      defaultValue: DEFAULT_VALUE.BY,
-      validate: {
-        len: {
-          args: [0, 48],
-          msg: COLUMN_VALIDATION.LENGTH
-        }
-      }
-    },
     createdDate: {
       type: DataTypes.DATE,
       allowNull: false,
       field: COLUMN_NAME.CREATED_DT
-    },
-    lastUpdatedDate: {
-      type: DataTypes.DATE,
-      field: COLUMN_NAME.LAST_UPDATED_DATE
     },
     deletedAt: {
       type: DataTypes.DATE,
@@ -109,22 +81,21 @@ Permission.init(
     }
   },
   {
-    sequelize: WhooshLibrary.dbs.whoosh_idm_db,
+    sequelize: WhooshLibrary.dbs.whoosh_db,
     tableName: 'PERMSN_INFO',
     modelName: 'Permission',
-    schema: 'WHOOSH_IDM_DB',
+    schema: 'WHOOSH_DB',
     freezeTableName: true,
     timestamps: true,
-    deletedAt: COLUMN_NAME.DELETED_AT,
-    updatedAt: COLUMN_NAME.LAST_UPDATED_DATE,
-    createdAt: COLUMN_NAME.CREATED_DT,
+    deletedAt: COLUMN_ALIAS.DLTD_AT,
+    updatedAt: false,
+    createdAt: COLUMN_ALIAS.CREATD_DT,
     paranoid: true
   }
 );
 
-// Hooks
-
-// References
+//Hooks
+//references
 Permission.belongsTo(Status, {
   foreignKey: 'id',
   targetKey: 'statusId',

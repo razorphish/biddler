@@ -3,7 +3,7 @@ import { DataTypes, Model, Optional } from 'sequelize';
 import WhooshLibrary from '../../global/whoosh';
 import { PermissionInput, PermissionOutput } from './permission.model';
 import Status from './status.model';
-import { TimestampAttributes } from '../interfaces/timeStampAttributes.interface';
+import { TimestampAttributes } from '../../global/interfaces/timeStampAttributes.interface';
 
 interface RoleAttributes extends TimestampAttributes {
   // Primary Key(s)

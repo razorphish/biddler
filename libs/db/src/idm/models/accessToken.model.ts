@@ -1,7 +1,7 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import WhooshLibrary from '../../global/whoosh';
 import { Status, User } from '../../whoosh/models';
-import { TimestampAttributes } from '../interfaces/timeStampAttributes.interface';
+import { TimestampAttributes } from '../../global/interfaces/timeStampAttributes.interface';
 import {
   COLUMN_ALIAS,
   COLUMN_NAME,

@@ -1,39 +1,32 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import WhooshLibrary from '../../global/whoosh';
-import { COLUMN_NAME, COLUMN_VALIDATION, DEFAULT_VALUE } from '../../common/db.enum';
+import { Status } from '../../whoosh/models';
+import { COLUMN_ALIAS, COLUMN_NAME, COLUMN_VALIDATION, DEFAULT_VALUE } from '../../common/db.enum';
 import { TimestampAttributes } from '../../global/interfaces/timeStampAttributes.interface';
-import { RoleInput, RoleOutput } from './role.model';
-import Status from './status.model';
-import { UserInput, UserOutput } from './user.model';
 
-interface UserRoleAttributes extends TimestampAttributes {
+interface AccountUserAttributes extends TimestampAttributes {
   // Primary Key(s)
-  // Foreign Key(s)
   userId: number;
-  roleId: string;
+  accountId: number;
 
   // Foreign Key(s)
   statusId: string;
 
   // Attribute(s)
-  effectiveStartDate?: Date;
-  effectiveEndDate?: Date;
+  effectiveStartDate: Date;
+  effectiveEndDate: Date;
 }
 
-export interface UserRoleInput extends Optional<UserRoleAttributes, 'createdDate'> {
-  role?: RoleInput;
-  user?: UserInput;
-}
-export interface UserRoleOutput extends UserRoleInput {
-  role?: RoleOutput;
-  user?: UserOutput;
-}
+export type AccountUserInput = Optional<AccountUserAttributes, 'createdDate' | 'lastUpdatedDate'>;
+export type AccountUserOutput = Required<AccountUserAttributes>;
 
-class UserRole extends Model<UserRoleAttributes, UserRoleInput> implements UserRoleAttributes {
+class AccountUser
+  extends Model<AccountUserAttributes, AccountUserInput>
+  implements AccountUserAttributes
+{
   // Primary Key(s)
-  // Foreign Key(s)
+  public accountId!: number;
   public userId!: number;
-  public roleId!: string;
 
   // Foreign Key(s)
   public statusId!: string;
@@ -52,18 +45,18 @@ class UserRole extends Model<UserRoleAttributes, UserRoleInput> implements UserR
   public readonly deletedAt!: Date;
 }
 
-UserRole.init(
+AccountUser.init(
   {
-    userId: {
+    accountId: {
       type: DataTypes.INTEGER,
+      field: 'ACNT_ID',
       allowNull: false,
-      field: 'USER_ID',
       primaryKey: true
     },
-    roleId: {
-      type: DataTypes.STRING(24),
+    userId: {
+      type: DataTypes.INTEGER,
+      field: 'USER_ID',
       allowNull: false,
-      field: 'ROLE_ID',
       primaryKey: true
     },
     statusId: {
@@ -73,12 +66,10 @@ UserRole.init(
     },
     effectiveStartDate: {
       type: DataTypes.DATE,
-      allowNull: true,
       field: COLUMN_NAME.EFFECTIVE_START_DATE
     },
     effectiveEndDate: {
       type: DataTypes.DATE,
-      allowNull: true,
       field: COLUMN_NAME.EFFECTIVE_END_DATE
     },
     createdBy: {
@@ -102,28 +93,41 @@ UserRole.init(
           msg: COLUMN_VALIDATION.LENGTH
         }
       }
+    },
+    createdDate: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      field: COLUMN_NAME.CREATED_DT
+    },
+    lastUpdatedDate: {
+      type: DataTypes.DATE,
+      field: COLUMN_NAME.LAST_UPDATED_DATE
+    },
+    deletedAt: {
+      type: DataTypes.DATE,
+      field: COLUMN_NAME.DELETED_AT
     }
   },
   {
-    sequelize: WhooshLibrary.dbs.whoosh_idm_db,
-    tableName: 'USER_ROLES',
-    modelName: 'UserRole',
-    schema: 'WHOOSH_IDM_DB',
+    sequelize: WhooshLibrary.dbs.whoosh_db,
+    tableName: 'ACNT_USER',
+    modelName: 'AccountUser',
+    schema: 'WHOOSH_DB',
     freezeTableName: true,
     timestamps: true,
-    deletedAt: COLUMN_NAME.DELETED_AT,
-    updatedAt: COLUMN_NAME.LAST_UPDATED_DATE,
-    createdAt: COLUMN_NAME.CREATED_DT,
+    deletedAt: COLUMN_ALIAS.DLTD_AT,
+    updatedAt: COLUMN_ALIAS.LAST_UPDATED_DATE,
+    createdAt: COLUMN_ALIAS.CREATD_DT,
     paranoid: true
   }
 );
 
-// Hooks
-// References
-UserRole.belongsTo(Status, {
+//Hooks
+//references
+AccountUser.belongsTo(Status, {
   foreignKey: 'id',
   targetKey: 'statusId',
   as: 'status'
 });
 
-export default UserRole;
+export default AccountUser;

@@ -1,7 +1,7 @@
-import { COLUMN_ALIAS } from './../common/db.enum';
+/* eslint-disable @typescript-eslint/no-empty-interface */
 import { DataTypes, Model, Optional } from 'sequelize';
-import BeastLibrary from '../../global/beast';
-import { COLUMN_NAME, COLUMN_VALIDATION, DEFAULT_VALUE } from '../common/db.enum';
+import WhooshLibrary from '../../global/whoosh';
+import { COLUMN_NAME, COLUMN_VALIDATION, DEFAULT_VALUE, COLUMN_ALIAS } from '../../common/db.enum';
 import { TimestampAttributes } from '../interfaces/timestampAttributes.interface';
 
 interface StatusAttributes extends Omit<TimestampAttributes, 'lastUpdatedDate' | 'lastUpdatedBy'> {
@@ -66,15 +66,15 @@ Status.init(
     }
   },
   {
-    sequelize: BeastLibrary.dbs.hpt_db,
+    sequelize: WhooshLibrary.dbs.whoosh_db,
     tableName: 'STUS_TYPE_LKP',
     modelName: 'Status',
     freezeTableName: true,
     timestamps: true,
     createdAt: COLUMN_ALIAS.CREATD_DT,
     updatedAt: false,
-    deletedAt: false,
-    paranoid: false
+    deletedAt: COLUMN_ALIAS.DLTD_AT,
+    paranoid: true
   }
 );
 // Hooks

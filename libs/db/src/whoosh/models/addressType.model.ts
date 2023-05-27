@@ -1,7 +1,11 @@
+/* eslint-disable @typescript-eslint/no-empty-interface */
 import { DataTypes, Model, Sequelize } from 'sequelize';
-import BeastLibrary from '../../global/beast';
+import WhooshLibrary from '../../global/whoosh';
+import { COLUMN_ALIAS, COLUMN_NAME } from '../../common/db.enum';
+import { TimestampAttributes } from '../interfaces/timestampAttributes.interface';
 
-interface AddressTypeAttributes {
+interface AddressTypeAttributes
+  extends Omit<TimestampAttributes, 'lastUpdatedDate' | 'lastUpdatedBy'> {
   id: string;
   description?: string;
 
@@ -22,6 +26,9 @@ class AddressType
   // timestamps
   public readonly createdDate!: Date;
   public readonly createdBy!: string;
+
+  // Timestamp(s)
+  public readonly deletedAt!: Date;
 }
 
 AddressType.init(
@@ -65,14 +72,22 @@ AddressType.init(
       },
       field: 'CREATD_BY',
       defaultValue: 'SYSTEM'
+    },
+    deletedAt: {
+      type: DataTypes.DATE,
+      field: COLUMN_NAME.DELETED_AT
     }
   },
   {
-    sequelize: BeastLibrary.dbs.hpt_db,
+    sequelize: WhooshLibrary.dbs.whoosh_db,
     tableName: 'ADDR_TYPE_LKP',
     modelName: 'AddressType',
     freezeTableName: true,
-    timestamps: false
+    timestamps: true,
+    createdAt: COLUMN_ALIAS.CREATD_DT,
+    updatedAt: false,
+    deletedAt: COLUMN_ALIAS.DLTD_AT,
+    paranoid: true
   }
 );
 // Hooks

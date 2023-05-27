@@ -2,7 +2,11 @@
   "name": "whoosh",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "db:setup": "./scripts/db-setup.sh",
+    "db:remove": "./scripts/remove-db.sh",
+    "db:reset": "./scripts/reset-db.sh"
+  },
   "private": true,
   "dependencies": {
     "@angular/animations": "~16.0.0",

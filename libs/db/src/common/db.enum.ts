@@ -15,6 +15,13 @@ export enum COLUMN_NAME {
   EFFECTIVE_END_DATE = 'EFCTV_END_DT'
 }
 
+export enum COLUMN_ALIAS {
+  DLTD_DT = 'deletedDate',
+  DLTD_AT = 'deletedAt',
+  CREATD_DT = 'createdDate',
+  LAST_UPDATED_DATE = 'lastUpdatedDate'
+}
+
 export enum DEFAULT_VALUE {
   BY = 'SYSTEM'
 }

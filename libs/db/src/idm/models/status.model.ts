@@ -2,7 +2,7 @@
 import { DataTypes, Model } from 'sequelize';
 import WhooshLibrary from '../../global/whoosh';
 import { COLUMN_NAME, COLUMN_VALIDATION, DEFAULT_VALUE } from '../../common/db.enum';
-import { TimestampAttributes } from '../interfaces/timeStampAttributes.interface';
+import { TimestampAttributes } from '../../global/interfaces/timeStampAttributes.interface';
 
 interface StatusAttributes extends Omit<TimestampAttributes, 'lastUpdatedDate' | 'lastUpdatedBy'> {
   // Primary Key(s)

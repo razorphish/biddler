@@ -3,7 +3,7 @@ import WhooshLibrary from '../../global/whoosh';
 import { COLUMN_NAME, COLUMN_VALIDATION, DEFAULT_VALUE } from '../../common/db.enum';
 import { PermissionInput, PermissionOutput } from './permission.model';
 import { RoleInput, RoleOutput } from './role.model';
-import { TimestampAttributes } from '../interfaces/timeStampAttributes.interface';
+import { TimestampAttributes } from '../../global/interfaces/timeStampAttributes.interface';
 import { Status, Permission, Role } from '.';
 
 interface RolePermissionAttributes extends TimestampAttributes {

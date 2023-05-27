@@ -1,14 +1,9 @@
+/* eslint-disable @typescript-eslint/no-empty-interface */
 import { DataTypes, Model, Optional } from 'sequelize';
 import { Status } from '.';
-import Whoosh from '../../global/whoosh';
-import {
-  COLUMN_ALIAS,
-  COLUMN_NAME,
-  COLUMN_VALIDATION,
-  DEFAULT_VALUE,
-} from '../common/db.enum';
+import WhooshLibrary from '../../global/whoosh';
+import { COLUMN_ALIAS, COLUMN_NAME, COLUMN_VALIDATION, DEFAULT_VALUE } from '../../common/db.enum';
 import { TimestampAttributes } from '../interfaces/timestampAttributes.interface';
-import { ruleMapRegionByState } from '../rules/address.rule';
 
 interface AddressAttributes extends TimestampAttributes {
   id: number;
@@ -29,22 +24,12 @@ interface AddressAttributes extends TimestampAttributes {
   latitude?: number;
   longitude?: number;
   density?: string;
-
-  /**
-   * @description Automatically created in hook
-   * @memberof AddressAttributes
-   */
-  cmsRegion?: string;
 }
 
-export interface AddressInput
-  extends Optional<AddressAttributes, 'id' | 'cmsRegion'> {}
+export interface AddressInput extends Optional<AddressAttributes, 'id'> {}
 export interface AddressOutput extends Required<AddressAttributes> {}
 
-class Address
-  extends Model<AddressAttributes, AddressInput>
-  implements AddressAttributes
-{
+class Address extends Model<AddressAttributes, AddressInput> implements AddressAttributes {
   public id!: number;
   public typeId!: string;
   public statusId!: string;
@@ -63,7 +48,6 @@ class Address
   public latitude!: number;
   public longitude!: number;
   public density!: string;
-  public cmsRegion!: string;
 
   // User stamps
   public createdBy!: string;
@@ -82,17 +66,17 @@ Address.init(
       allowNull: false,
       field: 'ADR_ID',
       primaryKey: true,
-      autoIncrement: true,
+      autoIncrement: true
     },
     typeId: {
       type: DataTypes.STRING(32),
       allowNull: false,
-      field: 'ADDR_TYPE_CD',
+      field: 'ADDR_TYPE_CD'
     },
     statusId: {
       type: DataTypes.STRING(32),
       allowNull: false,
-      field: COLUMN_NAME.STATUS_ID,
+      field: COLUMN_NAME.STATUS_ID
     },
     line1: {
       type: DataTypes.STRING,
@@ -101,9 +85,9 @@ Address.init(
       validate: {
         len: {
           args: [0, 128],
-          msg: COLUMN_VALIDATION.LENGTH,
-        },
-      },
+          msg: COLUMN_VALIDATION.LENGTH
+        }
+      }
     },
     line2: {
       type: DataTypes.STRING(128),
@@ -111,9 +95,9 @@ Address.init(
       validate: {
         len: {
           args: [0, 128],
-          msg: COLUMN_VALIDATION.LENGTH,
-        },
-      },
+          msg: COLUMN_VALIDATION.LENGTH
+        }
+      }
     },
     line3: {
       type: DataTypes.STRING(128),
@@ -121,9 +105,9 @@ Address.init(
       validate: {
         len: {
           args: [0, 128],
-          msg: COLUMN_VALIDATION.LENGTH,
-        },
-      },
+          msg: COLUMN_VALIDATION.LENGTH
+        }
+      }
     },
     city: {
       type: DataTypes.STRING(56),
@@ -131,9 +115,9 @@ Address.init(
       validate: {
         len: {
           args: [0, 56],
-          msg: COLUMN_VALIDATION.LENGTH,
-        },
-      },
+          msg: COLUMN_VALIDATION.LENGTH
+        }
+      }
     },
     state: {
       type: DataTypes.STRING(48),
@@ -141,9 +125,9 @@ Address.init(
       validate: {
         len: {
           args: [0, 48],
-          msg: COLUMN_VALIDATION.LENGTH,
-        },
-      },
+          msg: COLUMN_VALIDATION.LENGTH
+        }
+      }
     },
     stateFips: {
       type: DataTypes.STRING(32),
@@ -151,9 +135,9 @@ Address.init(
       validate: {
         len: {
           args: [0, 32],
-          msg: COLUMN_VALIDATION.LENGTH,
-        },
-      },
+          msg: COLUMN_VALIDATION.LENGTH
+        }
+      }
     },
     stateId: {
       type: DataTypes.STRING(32),
@@ -161,9 +145,9 @@ Address.init(
       validate: {
         len: {
           args: [0, 32],
-          msg: COLUMN_VALIDATION.LENGTH,
-        },
-      },
+          msg: COLUMN_VALIDATION.LENGTH
+        }
+      }
     },
     county: {
       type: DataTypes.STRING(96),
@@ -171,9 +155,9 @@ Address.init(
       validate: {
         len: {
           args: [0, 96],
-          msg: COLUMN_VALIDATION.LENGTH,
-        },
-      },
+          msg: COLUMN_VALIDATION.LENGTH
+        }
+      }
     },
     countyFips: {
       type: DataTypes.STRING(32),
@@ -181,9 +165,9 @@ Address.init(
       validate: {
         len: {
           args: [0, 32],
-          msg: COLUMN_VALIDATION.LENGTH,
-        },
-      },
+          msg: COLUMN_VALIDATION.LENGTH
+        }
+      }
     },
     country: {
       type: DataTypes.STRING(96),
@@ -191,9 +175,9 @@ Address.init(
       validate: {
         len: {
           args: [0, 96],
-          msg: COLUMN_VALIDATION.LENGTH,
-        },
-      },
+          msg: COLUMN_VALIDATION.LENGTH
+        }
+      }
     },
     postalCode: {
       type: DataTypes.STRING(20),
@@ -201,9 +185,9 @@ Address.init(
       validate: {
         len: {
           args: [0, 20],
-          msg: COLUMN_VALIDATION.LENGTH,
-        },
-      },
+          msg: COLUMN_VALIDATION.LENGTH
+        }
+      }
     },
     postalCode4: {
       type: DataTypes.STRING(4),
@@ -211,17 +195,17 @@ Address.init(
       validate: {
         len: {
           args: [0, 4],
-          msg: COLUMN_VALIDATION.LENGTH,
-        },
-      },
+          msg: COLUMN_VALIDATION.LENGTH
+        }
+      }
     },
     latitude: {
       type: DataTypes.DECIMAL(8, 6),
-      field: 'LAT',
+      field: 'LAT'
     },
     longitude: {
       type: DataTypes.DECIMAL(8, 6),
-      field: 'LON',
+      field: 'LON'
     },
     density: {
       type: DataTypes.STRING(32),
@@ -229,30 +213,20 @@ Address.init(
       validate: {
         isIn: {
           args: [['Urban', 'Rural']],
-          msg: 'Value can only be Urban or Rural',
-        },
-      },
-    },
-    cmsRegion: {
-      type: DataTypes.STRING(32),
-      field: 'CMS_RGN_CD',
-      validate: {
-        len: {
-          args: [0, 32],
-          msg: COLUMN_VALIDATION.LENGTH,
-        },
-      },
+          msg: 'Value can only be Urban or Rural'
+        }
+      }
     },
     createdBy: {
       type: DataTypes.STRING(48),
       validate: {
         len: {
           args: [0, 48],
-          msg: COLUMN_VALIDATION.LENGTH,
-        },
+          msg: COLUMN_VALIDATION.LENGTH
+        }
       },
       field: COLUMN_NAME.CREATED_BY,
-      defaultValue: DEFAULT_VALUE.BY,
+      defaultValue: DEFAULT_VALUE.BY
     },
     lastUpdatedBy: {
       type: DataTypes.STRING(48),
@@ -261,26 +235,26 @@ Address.init(
       validate: {
         len: {
           args: [0, 48],
-          msg: COLUMN_VALIDATION.LENGTH,
-        },
-      },
+          msg: COLUMN_VALIDATION.LENGTH
+        }
+      }
     },
     createdDate: {
       type: DataTypes.DATE,
       allowNull: false,
-      field: COLUMN_NAME.CREATED_DT,
+      field: COLUMN_NAME.CREATED_DT
     },
     lastUpdatedDate: {
       type: DataTypes.DATE,
-      field: COLUMN_NAME.LAST_UPDATED_DATE,
+      field: COLUMN_NAME.LAST_UPDATED_DATE
     },
     deletedAt: {
       type: DataTypes.DATE,
-      field: COLUMN_NAME.DELETED_AT,
-    },
+      field: COLUMN_NAME.DELETED_AT
+    }
   },
   {
-    sequelize: Whoosh.dbs.whoosh_db,
+    sequelize: WhooshLibrary.dbs.whoosh_db,
     tableName: 'ADDR_INFO',
     modelName: 'Address',
     freezeTableName: true,
@@ -288,29 +262,17 @@ Address.init(
     deletedAt: COLUMN_ALIAS.DLTD_AT,
     updatedAt: COLUMN_ALIAS.LAST_UPDATED_DATE,
     createdAt: COLUMN_ALIAS.CREATD_DT,
-    paranoid: true,
+    paranoid: true
   }
 );
 
 // Hooks
-Address.beforeBulkUpdate(async (options) => {
-  options.individualHooks = true;
-});
-
-Address.beforeCreate((address) => {
-  address.cmsRegion = ruleMapRegionByState(address.state);
-});
-
-Address.beforeUpdate((address) => {
-  address.cmsRegion = ruleMapRegionByState(address.state);
-});
-
 // References
 Address.hasOne(Status, {
   foreignKey: 'id',
   sourceKey: 'statusId',
   as: 'status',
-  constraints: false,
+  constraints: false
 });
 
 export default Address;
