@@ -25,8 +25,12 @@ if [[ $(which docker) && $(docker --version) ]]; then
     docker ps -a
 
     echo "running docker container..."
-    docker run --name $CONTAINER_NAME --mount type=bind,source=$(pwd),target=/docker-entrypoint-initdb.d \
-    -p 6603:3306 \
+    docker run \
+    --name $CONTAINER_NAME \
+    --mount type=bind,source=$(pwd),target=/docker-entrypoint-initdb.d \
+    -it \
+    -p 3326:3306 \
+    -e MYSQL_ROOT_HOST=% \
     -e MYSQL_ROOT_PASSWORD=$PASSWORD \
     -d mysql/mysql-server:latest
     

@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #####################################################################################
-# Script to scaffold and populate database in a docker container
+# Script to scaffold and populate HPTSQL database in a docker container
 #####################################################################################
 PASSWORD="4p+db"
 USER="root"
@@ -24,7 +24,8 @@ if [[ $(which docker) && $(docker --version) ]]; then
     echo "starting mysql container..."
     docker run --name $CONTAINER_NAME \
                 --mount type=bind,source=$(pwd),target=/docker-entrypoint-initdb.d \
-                -p 6603:3306 \
+                -p 3326:3306 \
+                -e MYSQL_ROOT_HOST=% \
                 -e MYSQL_ROOT_PASSWORD=$PASSWORD \
                 -d mysql/mysql-server:latest
     sleep 3;
@@ -33,12 +34,12 @@ if [[ $(which docker) && $(docker --version) ]]; then
     result=$(docker inspect -f "{{.State.Running}}" "$CONTAINER_NAME")
 
     if [[ -z "$result" ]]; then 
-        echo "Docker run failed for SQL! bye :("
+        echo "Docker run failed for hptsql! bye :("
         exit 1;
     else
         sleep 5;
         echo "Verifying data..."
-        result=$(docker exec -i $CONTAINER_NAME mysql -u$USER -p$PASSWORD  <<< "select * FROM WHOOSH_DB.ROLE_TYPE;")
+        result=$(docker exec -i $CONTAINER_NAME mysql -u$USER -p$PASSWORD  <<< "select * FROM HPT_DB.ROLE_TYPE;")
 
         if [[ "$result" == *"ROLE_TYPE_CD"* ]]; then 
             echo "\n** Validation Result:** \n$result"
