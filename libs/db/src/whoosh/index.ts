@@ -1,5 +1,5 @@
 import * as models from './models';
-import * as interfaces from './interfaces/_index';
+import * as interfaces from './interfaces';
 import * as types from './dal/models/types';
 import * as dal from './dal';
 import * as mappers from './mappers';

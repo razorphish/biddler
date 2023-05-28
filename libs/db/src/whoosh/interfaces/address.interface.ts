@@ -30,5 +30,5 @@ export interface Address {
   createdBy?: string;
   lastUpdatedDate?: Date | null;
   lastUpdatedBy?: string;
-  deletedAt: Date | null;
+  deletedAt?: Date | null;
 }
