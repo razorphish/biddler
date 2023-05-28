@@ -8,4 +8,5 @@ export interface Status {
   //Timestamps
   createdDate?: Date;
   createdBy?: string;
+  deletedAt?: Date;
 }
