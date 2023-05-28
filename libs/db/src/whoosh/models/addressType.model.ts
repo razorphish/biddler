@@ -8,9 +8,6 @@ interface AddressTypeAttributes
   extends Omit<TimestampAttributes, 'lastUpdatedDate' | 'lastUpdatedBy'> {
   id: string;
   description?: string;
-
-  createdDate: Date;
-  createdBy?: string;
 }
 
 export interface AddressTypeInput extends AddressTypeAttributes {}

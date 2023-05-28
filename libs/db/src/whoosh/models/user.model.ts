@@ -1,10 +1,17 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import WhooshLibrary from '../../global/whoosh';
+import { Status } from '../../whoosh/models';
 import { COLUMN_ALIAS, COLUMN_NAME, COLUMN_VALIDATION, DEFAULT_VALUE } from '../../common/db.enum';
 import { TimestampAttributes } from '../interfaces/timestampAttributes.interface';
 
 interface UserAttributes extends TimestampAttributes {
+  // Primary Key(s)
   id: number;
+
+  // Foreign Key(s)
+  statusId: string;
+
+  // Attribute(s)
   firstName: string;
   lastName: string;
   email: string;
@@ -14,7 +21,13 @@ export type UserInput = Optional<UserAttributes, 'id' | 'createdDate'>;
 export type UserOutput = Required<UserAttributes>;
 
 class User extends Model<UserAttributes, UserInput> implements UserAttributes {
+  // Primary Key(s)
   public id!: number;
+
+  // Foreign Key(s)
+  public statusId!: string;
+
+  // Attribute(s)
   public firstName!: string;
   public lastName!: string;
   public email!: string;
@@ -37,6 +50,11 @@ User.init(
       field: 'USER_ID',
       primaryKey: true,
       autoIncrement: false
+    },
+    statusId: {
+      type: DataTypes.STRING(32),
+      allowNull: false,
+      field: COLUMN_NAME.STATUS_ID
     },
     firstName: {
       type: DataTypes.STRING,
@@ -120,6 +138,12 @@ User.init(
   }
 );
 
-// Hooks
-// References
+//Hooks
+//references
+User.belongsTo(Status, {
+  foreignKey: 'id',
+  targetKey: 'statusId',
+  as: 'status'
+});
+
 export default User;
