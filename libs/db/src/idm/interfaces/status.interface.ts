@@ -1,4 +1,4 @@
-import { TimestampAttributes } from './timestampAttributes.interface';
+import { TimestampAttributes } from '../../global/interfaces/timeStampAttributes.interface';
 
 export interface Status extends Omit<TimestampAttributes, 'lastUpdatedBy' | 'lastUpdatedDate'> {
   // Primary Key
