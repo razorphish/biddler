@@ -1,23 +1,18 @@
 import { Permission, Role } from '.';
-export interface RolePermission {
-  // Primary Key
+import { TimestampAttributes } from '../../global/interfaces/timeStampAttributes.interface';
+export interface RolePermission extends TimestampAttributes {
+  // Primary Key(s)
   roleId: string;
   permissionId: string;
 
-  // Foreign Key
+  // Foreign Key(s)
   statusId: string;
 
-  // Attributes
+  // Attribute(s)
   effectiveStartDate?: Date;
   effectiveEndDate?: Date;
 
   // children
   role?: Role | null;
   permission?: Permission | null;
-
-  createdDate?: Date;
-  createdBy?: string;
-  lastUpdatedDate?: Date | null;
-  lastUpdatedBy?: string;
-  deletedAt?: Date | null;
 }

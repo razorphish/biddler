@@ -1,22 +1,16 @@
+import { TimestampAttributes } from '../../global/interfaces/timeStampAttributes.interface';
 import { Permission } from './permission.interface';
 
-export interface Role {
-  // Primary Key
+export interface Role extends Omit<TimestampAttributes, 'lastUpdatedDate' | 'lastUpdatedBy'> {
+  // Primary Key(s)
   id: string;
 
-  // Foreign keys
+  // Foreign Key(s)
   statusId: string;
 
-  // Attributes
+  // Attribute(s)
   description?: string;
 
   // Children
-  permissions?: Permission[];
-
-  // Timestamps
-  createdDate?: Date;
-  createdBy?: string;
-  lastUpdatedDate?: Date | null;
-  lastUpdatedBy?: string;
-  deletedAt?: Date | null;
+  permission?: Permission[];
 }

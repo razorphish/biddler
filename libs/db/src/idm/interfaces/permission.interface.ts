@@ -1,17 +1,12 @@
-export interface Permission {
-  // Primary Key
+import { TimestampAttributes } from '../../global/interfaces/timeStampAttributes.interface';
+
+export interface Permission extends TimestampAttributes {
+  // Primary Key(s)
   id: string;
 
-  //Foreign keys
+  // Foreign Key(s)
   statusId: string;
 
-  //Attributes
+  // Attribute(s)
   description?: string;
-
-  //Timestamps
-  createdDate?: Date;
-  createdBy?: string;
-  lastUpdatedDate?: Date | null;
-  lastUpdatedBy?: string;
-  deletedAt?: Date | null;
 }

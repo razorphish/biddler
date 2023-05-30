@@ -1,18 +1,13 @@
-export interface Application {
-  // Primary Key
+import { TimestampAttributes } from '../../global/interfaces/timeStampAttributes.interface';
+
+export interface Application extends TimestampAttributes {
+  // Primary Key(s)
   id: string;
 
-  //Foreign keys
+  // Foreign Key(s)
   statusId: string;
 
-  //Attributes
+  // Attribute(s)
   name: string;
   description?: string;
-
-  //Timestamps
-  createdDate?: Date;
-  createdBy?: string;
-  lastUpdatedDate?: Date | null;
-  lastUpdatedBy?: string;
-  deletedAt?: Date | null;
 }

@@ -7,7 +7,7 @@ import {
   COLUMN_NAME,
   COLUMN_VALIDATION,
   DEFAULT_VALUE
-} from '../../whoosh/common/db.enum';
+} from '../../common/db.enum';
 
 interface AccessTokenAttributes extends TimestampAttributes {
   // Primary Key(s)

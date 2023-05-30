@@ -1,15 +1,9 @@
-export interface System {
-  id: number;
-  statusId: string;
-  name: string;
-  slug: string;
+import { TimestampAttributes } from '../../global/interfaces/timeStampAttributes.interface';
+
+export interface System extends Omit<TimestampAttributes, 'lastUpdatedDate' | 'lastUpdatedBy'> {
+  // Primary Key(s)
+  id: string;
+
+  // Attribute(s)
   description?: string;
-  url?: string;
-  effectiveStartDate?: Date;
-  effectiveEndDate?: Date;
-  createdDate?: Date;
-  createdBy?: string;
-  lastUpdatedDate?: Date | null;
-  lastUpdatedBy?: string;
-  deletedAt?: Date | null;
 }

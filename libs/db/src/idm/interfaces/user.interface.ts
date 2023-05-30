@@ -1,13 +1,14 @@
+import { TimestampAttributes } from '../../global/interfaces/timeStampAttributes.interface';
 import { UserRole } from './userRole.interface';
 
-export interface User {
-  // Primary Key
+export interface User extends TimestampAttributes {
+  // Primary Key(s)
   id: number;
 
-  // Foreign keys
+  // Foreign Key(s)
   statusId: string;
 
-  // Attributes
+  // Attribute(s)
   firstName: string;
   lastName: string;
   email: string;
@@ -17,11 +18,4 @@ export interface User {
 
   // Children
   userRoles?: UserRole[] | null;
-
-  // Timestamps
-  createdDate?: Date;
-  createdBy?: string;
-  lastUpdatedDate?: Date | null;
-  lastUpdatedBy?: string;
-  deletedAt: Date | null;
 }
