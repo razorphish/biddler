@@ -1,13 +1,8 @@
 import { DataTypes, Model, Optional } from 'sequelize';
-import WhooshLibrary from '../../global/whoosh';
-import { Status, User } from '../../whoosh/models';
+import BiddlerLibrary from '../../global/biddler';
+import { Status, User } from '../../biddler/models';
 import { TimestampAttributes } from '../../global/interfaces/timeStampAttributes.interface';
-import {
-  COLUMN_ALIAS,
-  COLUMN_NAME,
-  COLUMN_VALIDATION,
-  DEFAULT_VALUE
-} from '../../common/db.enum';
+import { COLUMN_ALIAS, COLUMN_NAME, COLUMN_VALIDATION, DEFAULT_VALUE } from '../../common/db.enum';
 
 interface AccessTokenAttributes extends TimestampAttributes {
   // Primary Key(s)
@@ -204,10 +199,10 @@ AccessToken.init(
     }
   },
   {
-    sequelize: WhooshLibrary.dbs.whoosh_idm_db,
+    sequelize: BiddlerLibrary.dbs.whoosh_idm_db,
     tableName: 'ACS_TOKN',
     modelName: 'AccessToken',
-    schema: 'WHOOSH_IDM_DB',
+    schema: 'BIDDLER_IDM_DB',
     freezeTableName: true,
     timestamps: true,
     deletedAt: COLUMN_ALIAS.DLTD_AT,

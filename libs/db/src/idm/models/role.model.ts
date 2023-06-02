@@ -1,6 +1,6 @@
 import { COLUMN_NAME, COLUMN_VALIDATION, DEFAULT_VALUE } from '../../common/db.enum';
 import { DataTypes, Model, Optional } from 'sequelize';
-import WhooshLibrary from '../../global/whoosh';
+import BiddlerLibrary from '../../global/biddler';
 import { PermissionInput, PermissionOutput } from './permission.model';
 import Status from './status.model';
 import { TimestampAttributes } from '../../global/interfaces/timeStampAttributes.interface';
@@ -110,10 +110,10 @@ Role.init(
     }
   },
   {
-    sequelize: WhooshLibrary.dbs.whoosh_idm_db,
+    sequelize: BiddlerLibrary.dbs.whoosh_idm_db,
     tableName: 'ROLE_INFO',
     modelName: 'Role',
-    schema: 'WHOOSH_IDM_DB',
+    schema: 'BIDDLER_IDM_DB',
     freezeTableName: true,
     timestamps: true,
     deletedAt: COLUMN_NAME.DELETED_AT,

@@ -3,8 +3,8 @@
 #####################################################################################
 # Script to clean up database setup. Removes database container and images
 #####################################################################################
-docker stop whooshsql 
-docker rm whooshsql 
+docker stop biddlersql 
+docker rm biddlersql 
 docker rmi mysql/mysql-server 
 
 echo "\nprinting containers..."

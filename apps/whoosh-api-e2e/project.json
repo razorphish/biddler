@@ -1,13 +1,13 @@
 {
-  "name": "whoosh-api-e2e",
+  "name": "biddler-api-e2e",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "implicitDependencies": ["whoosh-api"],
+  "implicitDependencies": ["biddler-api"],
   "targets": {
     "e2e": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{e2eProjectRoot}"],
       "options": {
-        "jestConfig": "apps/whoosh-api-e2e/jest.config.ts",
+        "jestConfig": "apps/biddler-api-e2e/jest.config.ts",
         "passWithNoTests": true
       }
     },
@@ -15,7 +15,7 @@
       "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["apps/whoosh-api-e2e/**/*.{js,ts}"]
+        "lintFilePatterns": ["apps/biddler-api-e2e/**/*.{js,ts}"]
       }
     }
   }

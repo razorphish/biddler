@@ -7,7 +7,7 @@
  */
 import { isNil } from 'lodash';
 import { Op } from 'sequelize';
-import { DbConfig } from '../../../common/whoosh.const';
+import { DbConfig } from '../../../common/biddler.const';
 import { AllPermissionFilters } from './types';
 import Permission, { PermissionInput, PermissionOutput } from '../../models/permission.model';
 

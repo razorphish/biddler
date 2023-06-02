@@ -1,27 +1,28 @@
 /**
  * --------------------------------------------------------
- * @file Data Access Layer: Account
+ * @file Data Access Layer: Address
  * @description DAL should only data-base level logic (i.e. filters, finds, creates, updates)
  * @author Antonio Marasco
  * --------------------------------------------------------
  */
 import { isNil } from 'lodash';
 import { Op } from 'sequelize';
-import { DbConfig } from '../../../common/whoosh.const';
-import { AllAccountFilters } from './types';
-import Account, { AccountInput, AccountOutput } from '../../models/account.model';
+import { DbConfig } from '../../../common/biddler.const';
+import Address from '../../models/address.model';
+import { AllAddressFilters } from './types';
+import { AddressInput, AddressOutput } from '../../interfaces';
 
 /**
- * @description Gets every [account]
+ * @description Gets all [address]
  * @author Antonio Marasco
- * @date 05/22/2023
+ * @date 03/22/2023
  * @param [filters]
  * @param [attributes]
  * @returns {*}
  */
-export const all = async (filters?: AllAccountFilters): Promise<AccountOutput[]> => {
+export const all = async (filters?: AllAddressFilters): Promise<AddressOutput[]> => {
   //const _date = Date.now();
-  return Account.findAll({
+  return Address.findAll({
     ...(filters?.attributes && { attributes: filters?.attributes }),
     where: {
       ...(filters?.isDeleted && { deletedAt: { [Op.not]: null } }),
@@ -40,14 +41,14 @@ export const all = async (filters?: AllAccountFilters): Promise<AccountOutput[]>
 };
 
 /**
- * @description Gets [account] by Id(PK)
+ * @description Gets [address] by Id(PK)
  * @author Antonio Marasco
- * @date 05/22/2023
- * @param id Id of [account]
- * @returns {*} [account]
+ * @date 03/22/2023
+ * @param id Id of [address]
+ * @returns {*} [address]
  */
-export const byId = async (id: number, filters?: AllAccountFilters): Promise<AccountOutput> => {
-  const model = await Account.findByPk(id, {
+export const byId = async (id: number, filters?: AllAddressFilters): Promise<AddressOutput> => {
+  const model = await Address.findByPk(id, {
     ...(filters?.attributes && { attributes: filters?.attributes }),
     logging: DbConfig.LOGGING
   });
@@ -60,39 +61,39 @@ export const byId = async (id: number, filters?: AllAccountFilters): Promise<Acc
 };
 
 /**
- * @description Creates a [account]
+ * @description Creates a [address]
  * @author Antonio Marasco
- * @date 05/22/2023
+ * @date 03/22/2023
  * @param payload
- * @returns {*} Newly created [account] object
+ * @returns {*} Newly created [address] object
  */
-export const create = async (payload: AccountInput): Promise<AccountOutput> => {
-  const output = await Account.create(payload, { logging: DbConfig.LOGGING });
+export const create = async (payload: AddressInput): Promise<AddressOutput> => {
+  const output = await Address.create(payload, { logging: DbConfig.LOGGING });
   return output;
 };
 
 /**
- * @description Delete [account] by id
+ * @description Delete [address] by id
  * @author Antonio Marasco
- * @date 05/22/2023
+ * @date 03/22/2023
  * @param id
  * @returns {*}
  */
 export const deleteById = async (id: number): Promise<boolean> => {
-  const deletedCount = await Account.destroy({ where: { id }, logging: DbConfig.LOGGING });
+  const deletedCount = await Address.destroy({ where: { id }, logging: DbConfig.LOGGING });
 
   return !!deletedCount;
 };
 
 /**
- * @description Finds or creates a [account] based on criteria
+ * @description Finds or creates a [address] based on criteria
  * @author Antonio Marasco
- * @date 05/22/2023
+ * @date 03/22/2023
  * @param payload
  * @returns {*}
  */
-export const findOrCreate = async (payload: AccountInput): Promise<AccountOutput> => {
-  const [model] = await Account.findOrCreate({
+export const findOrCreate = async (payload: AddressInput): Promise<AddressOutput> => {
+  const [model] = await Address.findOrCreate({
     where: {
       id: payload.id
     },
@@ -103,18 +104,18 @@ export const findOrCreate = async (payload: AccountInput): Promise<AccountOutput
 };
 
 /**
- * @description Paginates [account] list based on filters
+ * @description Paginates [address] list based on filters
  * @author Antonio Marasco
- * @date 05/22/2023
+ * @date 03/22/2023
  * @param [filters]
  * @returns {*}
  */
 export const paginate = async (
-  filters?: AllAccountFilters
-): Promise<{ rows: AccountOutput[]; count: number }> => {
+  filters?: AllAddressFilters
+): Promise<{ rows: AddressOutput[]; count: number }> => {
   if (!isNil(filters?.limit) && !isNil(filters?.offset)) {
     //const _date = Date.now();
-    return Account.findAndCountAll({
+    return Address.findAndCountAll({
       ...(filters?.attributes && { attributes: filters?.attributes }),
       limit: filters.limit,
       offset: (filters.offset - 1) * filters.limit,
@@ -128,7 +129,7 @@ export const paginate = async (
         //   }
         // })
       },
-      //...(filters?.orderBySortOrder && { order: [['sortOrder', 'ASC']] }),
+      // ...(filters?.orderBySortOrder && { order: [['sortOrder', 'ASC']] }),
       ...((filters?.isDeleted || filters?.includeDeleted) && { paranoid: false }),
       logging: DbConfig.LOGGING
     });
@@ -137,18 +138,18 @@ export const paginate = async (
 };
 
 /**
- * @description Updates [account]
+ * @description Updates [address]
  * @author Antonio Marasco
- * @date 05/22/2023
- * @param id Id of [account] to update
- * @param payload [account] object
+ * @date 03/22/2023
+ * @param id Id of [address] to update
+ * @param payload [address] object
  * @returns {*}
  */
 export const update = async (
   id: number,
-  payload: Partial<AccountInput>
-): Promise<AccountOutput> => {
-  const model = await Account.findByPk(id, { logging: DbConfig.LOGGING });
+  payload: Partial<AddressInput>
+): Promise<AddressOutput> => {
+  const model = await Address.findByPk(id, { logging: DbConfig.LOGGING });
   if (!model) {
     throw new Error(`not found:  cannot find by id: ${id}`);
   }

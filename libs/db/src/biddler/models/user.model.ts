@@ -1,87 +1,93 @@
 import { DataTypes, Model, Optional } from 'sequelize';
-import WhooshLibrary from '../../global/whoosh';
-import { Status } from '../../whoosh/models';
+import BiddlerLibrary from '../../global/biddler';
+import { Status } from '.';
 import { COLUMN_ALIAS, COLUMN_NAME, COLUMN_VALIDATION, DEFAULT_VALUE } from '../../common/db.enum';
-import { TimestampAttributes } from '../../global/interfaces/timeStampAttributes.interface';
+import { TimestampAttributes } from '../interfaces/timestampAttributes.interface';
 
-interface AccountUserRoleAttributes extends TimestampAttributes {
+interface UserAttributes extends TimestampAttributes {
   // Primary Key(s)
-  accountId: number;
-  userId: number;
-  roleId: string;
+  id: number;
 
   // Foreign Key(s)
   statusId: string;
 
   // Attribute(s)
-  effectiveStartDate: Date;
-  effectiveEndDate: Date;
+  firstName: string;
+  lastName: string;
+  email: string;
 }
 
-export type AccountUserRoleInput = Optional<
-  AccountUserRoleAttributes,
-  'createdDate' | 'lastUpdatedDate'
->;
-export type AccountUserRoleOutput = Required<AccountUserRoleAttributes>;
+export type UserInput = Optional<UserAttributes, 'id' | 'createdDate'>;
+export type UserOutput = Required<UserAttributes>;
 
-class AccountUserRole
-  extends Model<AccountUserRoleAttributes, AccountUserRoleInput>
-  implements AccountUserRoleAttributes
-{
+class User extends Model<UserAttributes, UserInput> implements UserAttributes {
   // Primary Key(s)
-  public accountId!: number;
-  public userId!: number;
-  public roleId!: string;
+  public id!: number;
 
   // Foreign Key(s)
   public statusId!: string;
 
   // Attribute(s)
-  public effectiveStartDate!: Date;
-  public effectiveEndDate!: Date;
+  public firstName!: string;
+  public lastName!: string;
+  public email!: string;
 
-  // User stamp(s)
+  // User stamps
   public createdBy!: string;
   public lastUpdatedBy!: string;
 
-  // Timestamp(s)
+  // Timestamps
   public readonly createdDate!: Date;
   public readonly lastUpdatedDate!: Date;
   public readonly deletedAt!: Date;
 }
 
-AccountUserRole.init(
+User.init(
   {
-    accountId: {
+    id: {
       type: DataTypes.INTEGER,
-      field: 'ACNT_ID',
       allowNull: false,
-      primaryKey: true
-    },
-    userId: {
-      type: DataTypes.INTEGER,
       field: 'USER_ID',
-      allowNull: false,
-      primaryKey: true
-    },
-    roleId: {
-      type: DataTypes.STRING(32),
-      field: 'ROLE_ID',
-      allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: false
     },
     statusId: {
       type: DataTypes.STRING(32),
       allowNull: false,
       field: COLUMN_NAME.STATUS_ID
     },
-    effectiveStartDate: {
-      type: DataTypes.DATE,
-      field: COLUMN_NAME.EFFECTIVE_START_DATE
+    firstName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      field: 'FIRST_NAME',
+      validate: {
+        len: {
+          args: [0, 32],
+          msg: 'String length is not in this range'
+        }
+      }
     },
-    effectiveEndDate: {
-      type: DataTypes.DATE,
-      field: COLUMN_NAME.EFFECTIVE_END_DATE
+    lastName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      field: 'LAST_NAME',
+      validate: {
+        len: {
+          args: [0, 64],
+          msg: 'String length is not in this range'
+        }
+      }
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      field: 'EMAIL',
+      validate: {
+        len: {
+          args: [0, 64],
+          msg: 'String length is not in this range'
+        }
+      }
     },
     createdBy: {
       type: DataTypes.STRING(48),
@@ -120,10 +126,9 @@ AccountUserRole.init(
     }
   },
   {
-    sequelize: WhooshLibrary.dbs.whoosh_db,
-    tableName: 'ACNT_USER_ROLE',
-    modelName: 'AccountUserRole',
-    schema: 'WHOOSH_DB',
+    sequelize: BiddlerLibrary.dbs.hpt_db,
+    tableName: 'USER_INFO',
+    modelName: 'User',
     freezeTableName: true,
     timestamps: true,
     deletedAt: COLUMN_ALIAS.DLTD_AT,
@@ -135,10 +140,10 @@ AccountUserRole.init(
 
 //Hooks
 //references
-AccountUserRole.belongsTo(Status, {
+User.belongsTo(Status, {
   foreignKey: 'id',
   targetKey: 'statusId',
   as: 'status'
 });
 
-export default AccountUserRole;
+export default User;

@@ -5,10 +5,10 @@ import { NxWelcomeComponent } from './nx-welcome.component';
 @Component({
   standalone: true,
   imports: [NxWelcomeComponent, RouterModule],
-  selector: 'whoosh-root',
+  selector: 'biddler-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'whoosh-admin';
+  title = 'biddler-admin';
 }

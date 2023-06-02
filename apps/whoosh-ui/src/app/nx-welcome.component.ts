@@ -2,7 +2,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'whoosh-nx-welcome',
+  selector: 'biddler-nx-welcome',
   standalone: true,
   imports: [CommonModule],
   template: `
@@ -423,7 +423,7 @@ import { CommonModule } from '@angular/common';
         <div id="welcome">
           <h1>
             <span> Hello there, </span>
-            Welcome whoosh-ui 👋
+            Welcome biddler-ui 👋
           </h1>
         </div>
         <!--  HERO  -->

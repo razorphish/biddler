@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 import { DataTypes, Model, Optional } from 'sequelize';
 import { Status } from '.';
-import WhooshLibrary from '../../global/whoosh';
+import BiddlerLibrary from '../../global/biddler';
 import { COLUMN_ALIAS, COLUMN_NAME, COLUMN_VALIDATION, DEFAULT_VALUE } from '../../common/db.enum';
 import { TimestampAttributes } from '../interfaces/timestampAttributes.interface';
 
@@ -254,7 +254,7 @@ Address.init(
     }
   },
   {
-    sequelize: WhooshLibrary.dbs.whoosh_db,
+    sequelize: BiddlerLibrary.dbs.whoosh_db,
     tableName: 'ADDR_INFO',
     modelName: 'Address',
     freezeTableName: true,

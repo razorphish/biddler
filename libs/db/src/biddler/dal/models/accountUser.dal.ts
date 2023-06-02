@@ -1,30 +1,28 @@
 /**
  * --------------------------------------------------------
- * @file Data Access Layer: AccountUserRole
+ * @file Data Access Layer: AccountUser
  * @description DAL should only data-base level logic (i.e. filters, finds, creates, updates)
  * @author Antonio Marasco
  * --------------------------------------------------------
  */
 import { isNil } from 'lodash';
 import { Op } from 'sequelize';
-import { DbConfig } from '../../../common/whoosh.const';
-import { AccountUserRole } from '../../models';
-import { AllAccountUserRoleFilters } from './types';
-import { AccountUserRoleInput, AccountUserRoleOutput } from '../../models/accountUserRole.model';
+import { DbConfig } from '../../../common/biddler.const';
+import { AccountUser } from '../../models';
+import { AllAccountUserFilters } from './types';
+import { AccountUserInput, AccountUserOutput } from '../../models/accountUser.model';
 
 /**
- * @description Gets every [accountUserRole]
+ * @description Gets every [accountUser]
  * @author Antonio Marasco
  * @date 05/22/2023
  * @param [filters]
  * @param [attributes]
  * @returns {*}
  */
-export const all = async (
-  filters?: AllAccountUserRoleFilters
-): Promise<AccountUserRoleOutput[]> => {
+export const all = async (filters?: AllAccountUserFilters): Promise<AccountUserOutput[]> => {
   const _date = Date.now();
-  return AccountUserRole.findAll({
+  return AccountUser.findAll({
     ...(filters?.attributes && { attributes: filters?.attributes }),
     where: {
       ...(filters?.isDeleted && { deletedAt: { [Op.not]: null } }),
@@ -43,63 +41,54 @@ export const all = async (
 };
 
 /**
- * @description Gets [accountUserRole] by Id(PK)
+ * @description Gets [accountUser] by Id(PK)
  * @author Antonio Marasco
  * @date 05/22/2023
- * @param accountId id of account
+ * @param accountId Id of [account]
  * @param userId id of user
- * @param roleId id of role
- * @returns {*} [accountUserRole]
+ * @returns {*} [accountUser]
  */
 export const byId = async (
   accountId: number,
   userId: number,
-  roleId: string,
-  filters?: AllAccountUserRoleFilters
-): Promise<AccountUserRoleOutput> => {
-  const model = await AccountUserRole.findOne({
-    where: { accountId, userId, roleId },
+  filters?: AllAccountUserFilters
+): Promise<AccountUserOutput> => {
+  const model = await AccountUser.findOne({
+    where: { accountId, userId },
     ...(filters?.attributes && { attributes: filters?.attributes }),
     logging: DbConfig.LOGGING
   });
 
   if (!model) {
-    throw new Error(
-      `not found:  cannot find by accountId: ${accountId}, userId: ${userId}, roleId: ${roleId}`
-    );
+    throw new Error(`not found:  cannot find by accountId: ${accountId}, userId: ${userId}`);
   }
 
   return model;
 };
 
 /**
- * @description Creates a [accountUserRole]
+ * @description Creates a [accountUser]
  * @author Antonio Marasco
  * @date 05/22/2023
  * @param payload
- * @returns {*} Newly created [accountUserRole] object
+ * @returns {*} Newly created [accountUser] object
  */
-export const create = async (payload: AccountUserRoleInput): Promise<AccountUserRoleOutput> => {
-  const output = await AccountUserRole.create(payload, { logging: DbConfig.LOGGING });
+export const create = async (payload: AccountUserInput): Promise<AccountUserOutput> => {
+  const output = await AccountUser.create(payload, { logging: DbConfig.LOGGING });
   return output;
 };
 
 /**
- * @description Delete [accountUserRole] by id
+ * @description Delete [accountUser] by id
  * @author Antonio Marasco
  * @date 05/22/2023
  * @param accountId id of account
  * @param userId id of user
- * @param roleId id of role
  * @returns {*}
  */
-export const deleteById = async (
-  accountId: number,
-  userId: number,
-  roleId: string
-): Promise<boolean> => {
-  const deletedCount = await AccountUserRole.destroy({
-    where: { accountId, userId, roleId },
+export const deleteById = async (accountId: number, userId: number): Promise<boolean> => {
+  const deletedCount = await AccountUser.destroy({
+    where: { accountId, userId },
     logging: DbConfig.LOGGING
   });
 
@@ -107,20 +96,17 @@ export const deleteById = async (
 };
 
 /**
- * @description Finds or creates a [accountUserRole] based on criteria
+ * @description Finds or creates a [accountUser] based on criteria
  * @author Antonio Marasco
  * @date 05/22/2023
  * @param payload
  * @returns {*}
  */
-export const findOrCreate = async (
-  payload: AccountUserRoleInput
-): Promise<AccountUserRoleOutput> => {
-  const [model] = await AccountUserRole.findOrCreate({
+export const findOrCreate = async (payload: AccountUserInput): Promise<AccountUserOutput> => {
+  const [model] = await AccountUser.findOrCreate({
     where: {
       accountId: payload.accountId,
-      userId: payload.userId,
-      roleId: payload.roleId
+      userId: payload.userId
     },
     defaults: payload
   });
@@ -129,18 +115,18 @@ export const findOrCreate = async (
 };
 
 /**
- * @description Paginates [accountUserRole] list based on filters
+ * @description Paginates [accountUser] list based on filters
  * @author Antonio Marasco
  * @date 05/22/2023
  * @param [filters]
  * @returns {*}
  */
 export const paginate = async (
-  filters?: AllAccountUserRoleFilters
-): Promise<{ rows: AccountUserRoleOutput[]; count: number }> => {
+  filters?: AllAccountUserFilters
+): Promise<{ rows: AccountUserOutput[]; count: number }> => {
   if (!isNil(filters?.limit) && !isNil(filters?.offset)) {
     const _date = Date.now();
-    return AccountUserRole.findAndCountAll({
+    return AccountUser.findAndCountAll({
       ...(filters?.attributes && { attributes: filters?.attributes }),
       limit: filters.limit,
       offset: (filters.offset - 1) * filters.limit,
@@ -163,29 +149,25 @@ export const paginate = async (
 };
 
 /**
- * @description Updates [accountUserRole]
+ * @description Updates [accountUser]
  * @author Antonio Marasco
  * @date 05/22/2023
- * @param accountId id of account
- * @param userId id of user
- * @param roleId id of role
- * @param payload [accountUserRole] object
+ * @param accountId Id of account
+ * @param userid id of user
+ * @param payload [accountUser] object
  * @returns {*}
  */
 export const update = async (
   accountId: number,
   userId: number,
-  roleId: string,
-  payload: Partial<AccountUserRoleInput>
-): Promise<AccountUserRoleOutput> => {
-  const model = await AccountUserRole.findOne({
-    where: { accountId, userId, roleId },
+  payload: Partial<AccountUserInput>
+): Promise<AccountUserOutput> => {
+  const model = await AccountUser.findOne({
+    where: { accountId, userId },
     logging: DbConfig.LOGGING
   });
   if (!model) {
-    throw new Error(
-      `not found:  cannot find by accountId: ${accountId}, userId: ${userId}, roleId: ${roleId}`
-    );
+    throw new Error(`not found:  cannot find by accountId: ${accountId}, userId: ${userId}`);
   }
 
   const updatedModel = await model.update(payload);

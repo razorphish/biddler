@@ -1,32 +1,39 @@
 import { DataTypes, Model, Optional } from 'sequelize';
-import WhooshLibrary from '../../global/whoosh';
-import { Status } from '../../whoosh/models';
+import BiddlerLibrary from '../../global/biddler';
+import { Status } from '.';
 import { COLUMN_ALIAS, COLUMN_NAME, COLUMN_VALIDATION, DEFAULT_VALUE } from '../../common/db.enum';
 import { TimestampAttributes } from '../../global/interfaces/timeStampAttributes.interface';
 
-interface AccountAttributes extends TimestampAttributes {
+interface AccountUserAttributes extends TimestampAttributes {
   // Primary Key(s)
-  id: number;
+  userId: number;
+  accountId: number;
 
   // Foreign Key(s)
   statusId: string;
 
   // Attribute(s)
-  name: string;
+  effectiveStartDate: Date;
+  effectiveEndDate: Date;
 }
 
-export type AccountInput = Optional<AccountAttributes, 'id' | 'createdDate' | 'lastUpdatedDate'>;
-export type AccountOutput = Required<AccountAttributes>;
+export type AccountUserInput = Optional<AccountUserAttributes, 'createdDate' | 'lastUpdatedDate'>;
+export type AccountUserOutput = Required<AccountUserAttributes>;
 
-class Account extends Model<AccountAttributes, AccountInput> implements AccountAttributes {
+class AccountUser
+  extends Model<AccountUserAttributes, AccountUserInput>
+  implements AccountUserAttributes
+{
   // Primary Key(s)
-  public id!: number;
+  public accountId!: number;
+  public userId!: number;
 
   // Foreign Key(s)
   public statusId!: string;
 
   // Attribute(s)
-  public name!: string;
+  public effectiveStartDate!: Date;
+  public effectiveEndDate!: Date;
 
   // User stamp(s)
   public createdBy!: string;
@@ -38,13 +45,18 @@ class Account extends Model<AccountAttributes, AccountInput> implements AccountA
   public readonly deletedAt!: Date;
 }
 
-Account.init(
+AccountUser.init(
   {
-    id: {
+    accountId: {
       type: DataTypes.INTEGER,
       field: 'ACNT_ID',
       allowNull: false,
-      autoIncrement: true,
+      primaryKey: true
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+      field: 'USER_ID',
+      allowNull: false,
       primaryKey: true
     },
     statusId: {
@@ -52,10 +64,13 @@ Account.init(
       allowNull: false,
       field: COLUMN_NAME.STATUS_ID
     },
-    name: {
-      type: DataTypes.STRING(32),
-      field: 'ACS_NAME',
-      allowNull: false
+    effectiveStartDate: {
+      type: DataTypes.DATE,
+      field: COLUMN_NAME.EFFECTIVE_START_DATE
+    },
+    effectiveEndDate: {
+      type: DataTypes.DATE,
+      field: COLUMN_NAME.EFFECTIVE_END_DATE
     },
     createdBy: {
       type: DataTypes.STRING(48),
@@ -94,10 +109,10 @@ Account.init(
     }
   },
   {
-    sequelize: WhooshLibrary.dbs.whoosh_db,
-    tableName: 'ACNT_INFO',
-    modelName: 'Account',
-    schema: 'WHOOSH_DB',
+    sequelize: BiddlerLibrary.dbs.whoosh_db,
+    tableName: 'ACNT_USER',
+    modelName: 'AccountUser',
+    schema: 'BIDDLER_DB',
     freezeTableName: true,
     timestamps: true,
     deletedAt: COLUMN_ALIAS.DLTD_AT,
@@ -109,10 +124,10 @@ Account.init(
 
 //Hooks
 //references
-Account.belongsTo(Status, {
+AccountUser.belongsTo(Status, {
   foreignKey: 'id',
   targetKey: 'statusId',
   as: 'status'
 });
 
-export default Account;
+export default AccountUser;

@@ -1,11 +1,11 @@
 /* eslint-disable */
 export default {
-  displayName: 'whoosh-api',
+  displayName: 'biddler-api',
   preset: '../../jest.preset.js',
   testEnvironment: 'node',
   transform: {
-    '^.+\\.[tj]s$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.spec.json' }],
+    '^.+\\.[tj]s$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.spec.json' }]
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
-  coverageDirectory: '../../coverage/apps/whoosh-api',
+  coverageDirectory: '../../coverage/apps/biddler-api'
 };

@@ -1,10 +1,10 @@
 import { DataTypes, Model, Optional } from 'sequelize';
-import WhooshLibrary from '../../global/whoosh';
-import { Status } from '../../whoosh/models';
+import BiddlerLibrary from '../../global/biddler';
+import { Status } from '.';
 import { COLUMN_ALIAS, COLUMN_NAME, COLUMN_VALIDATION, DEFAULT_VALUE } from '../../common/db.enum';
-import { TimestampAttributes } from '../interfaces/timestampAttributes.interface';
+import { TimestampAttributes } from '../../global/interfaces/timeStampAttributes.interface';
 
-interface UserAttributes extends TimestampAttributes {
+interface AccountAttributes extends TimestampAttributes {
   // Primary Key(s)
   id: number;
 
@@ -12,15 +12,13 @@ interface UserAttributes extends TimestampAttributes {
   statusId: string;
 
   // Attribute(s)
-  firstName: string;
-  lastName: string;
-  email: string;
+  name: string;
 }
 
-export type UserInput = Optional<UserAttributes, 'id' | 'createdDate'>;
-export type UserOutput = Required<UserAttributes>;
+export type AccountInput = Optional<AccountAttributes, 'id' | 'createdDate' | 'lastUpdatedDate'>;
+export type AccountOutput = Required<AccountAttributes>;
 
-class User extends Model<UserAttributes, UserInput> implements UserAttributes {
+class Account extends Model<AccountAttributes, AccountInput> implements AccountAttributes {
   // Primary Key(s)
   public id!: number;
 
@@ -28,66 +26,36 @@ class User extends Model<UserAttributes, UserInput> implements UserAttributes {
   public statusId!: string;
 
   // Attribute(s)
-  public firstName!: string;
-  public lastName!: string;
-  public email!: string;
+  public name!: string;
 
-  // User stamps
+  // User stamp(s)
   public createdBy!: string;
   public lastUpdatedBy!: string;
 
-  // Timestamps
+  // Timestamp(s)
   public readonly createdDate!: Date;
   public readonly lastUpdatedDate!: Date;
   public readonly deletedAt!: Date;
 }
 
-User.init(
+Account.init(
   {
     id: {
       type: DataTypes.INTEGER,
+      field: 'ACNT_ID',
       allowNull: false,
-      field: 'USER_ID',
-      primaryKey: true,
-      autoIncrement: false
+      autoIncrement: true,
+      primaryKey: true
     },
     statusId: {
       type: DataTypes.STRING(32),
       allowNull: false,
       field: COLUMN_NAME.STATUS_ID
     },
-    firstName: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      field: 'FIRST_NAME',
-      validate: {
-        len: {
-          args: [0, 32],
-          msg: 'String length is not in this range'
-        }
-      }
-    },
-    lastName: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      field: 'LAST_NAME',
-      validate: {
-        len: {
-          args: [0, 64],
-          msg: 'String length is not in this range'
-        }
-      }
-    },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      field: 'EMAIL',
-      validate: {
-        len: {
-          args: [0, 64],
-          msg: 'String length is not in this range'
-        }
-      }
+    name: {
+      type: DataTypes.STRING(32),
+      field: 'ACS_NAME',
+      allowNull: false
     },
     createdBy: {
       type: DataTypes.STRING(48),
@@ -126,9 +94,10 @@ User.init(
     }
   },
   {
-    sequelize: WhooshLibrary.dbs.hpt_db,
-    tableName: 'USER_INFO',
-    modelName: 'User',
+    sequelize: BiddlerLibrary.dbs.whoosh_db,
+    tableName: 'ACNT_INFO',
+    modelName: 'Account',
+    schema: 'BIDDLER_DB',
     freezeTableName: true,
     timestamps: true,
     deletedAt: COLUMN_ALIAS.DLTD_AT,
@@ -140,10 +109,10 @@ User.init(
 
 //Hooks
 //references
-User.belongsTo(Status, {
+Account.belongsTo(Status, {
   foreignKey: 'id',
   targetKey: 'statusId',
   as: 'status'
 });
 
-export default User;
+export default Account;

@@ -6,7 +6,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AppComponent, NxWelcomeComponent, RouterTestingModule],
+      imports: [AppComponent, NxWelcomeComponent, RouterTestingModule]
     }).compileComponents();
   });
 
@@ -14,14 +14,12 @@ describe('AppComponent', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain(
-      'Welcome whoosh-ui'
-    );
+    expect(compiled.querySelector('h1')?.textContent).toContain('Welcome biddler-ui');
   });
 
-  it(`should have as title 'whoosh-ui'`, () => {
+  it(`should have as title 'biddler-ui'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('whoosh-ui');
+    expect(app.title).toEqual('biddler-ui');
   });
 });

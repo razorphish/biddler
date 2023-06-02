@@ -1,6 +1,6 @@
 /* eslint-disable */
 export default {
-  displayName: 'whoosh-api-e2e',
+  displayName: 'biddler-api-e2e',
   preset: '../../jest.preset.js',
   globalSetup: '<rootDir>/src/support/global-setup.ts',
   globalTeardown: '<rootDir>/src/support/global-teardown.ts',
@@ -10,10 +10,10 @@ export default {
     '^.+\\.[tj]s$': [
       'ts-jest',
       {
-        tsconfig: '<rootDir>/tsconfig.spec.json',
-      },
-    ],
+        tsconfig: '<rootDir>/tsconfig.spec.json'
+      }
+    ]
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
-  coverageDirectory: '../../coverage/whoosh-api-e2e',
+  coverageDirectory: '../../coverage/biddler-api-e2e'
 };

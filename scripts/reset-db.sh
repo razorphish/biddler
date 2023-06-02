@@ -2,8 +2,8 @@
 
 PASSWORD="4p+db"
 USER="root"
-CONTAINER_NAME="whooshsql"
-DB_NAME="WHOOSH_DB"
+CONTAINER_NAME="biddlersql"
+DB_NAME="BIDDLER_DB"
 
 if [[ $(which docker) && $(docker --version) ]]; then
     echo "docker is installed! moving on..."

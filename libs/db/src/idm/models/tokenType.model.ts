@@ -1,5 +1,5 @@
 import { DataTypes, Model } from 'sequelize';
-import WhooshLibrary from '../../global/whoosh';
+import BiddlerLibrary from '../../global/biddler';
 import { COLUMN_NAME, COLUMN_VALIDATION, DEFAULT_VALUE } from '../../common/db.enum';
 import { TimestampAttributes } from '../../global/interfaces/timeStampAttributes.interface';
 
@@ -67,10 +67,10 @@ TokenType.init(
     }
   },
   {
-    sequelize: WhooshLibrary.dbs.hpt_idm_db,
+    sequelize: BiddlerLibrary.dbs.hpt_idm_db,
     tableName: 'TOKN_TYPE_LKP',
     modelName: 'TokenType',
-    schema: 'WHOOSH_IDM_DB',
+    schema: 'BIDDLER_IDM_DB',
     freezeTableName: true,
     timestamps: true,
     deletedAt: false,

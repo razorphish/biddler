@@ -1,27 +1,30 @@
 /**
  * --------------------------------------------------------
- * @file Data Access Layer: Role
+ * @file Data Access Layer: RolePermission
  * @description DAL should only data-base level logic (i.e. filters, finds, creates, updates)
  * @author Antonio Marasco
  * --------------------------------------------------------
  */
 import { isNil } from 'lodash';
 import { Op } from 'sequelize';
-import { DbConfig } from '../../../common/whoosh.const';
-import { AllRoleFilters } from './types';
-import Role, { RoleInput, RoleOutput } from '../../models/role.model';
+import { DbConfig } from '../../../common/biddler.const';
+import { AllRolePermissionFilters } from './types';
+import RolePermission, {
+  RolePermissionInput,
+  RolePermissionOutput
+} from '../../models/rolePermission.model';
 
 /**
- * @description Gets every [role]
+ * @description Gets every [rolePermission]
  * @author Antonio Marasco
  * @date 05/22/2023
  * @param [filters]
  * @param [attributes]
  * @returns {*}
  */
-export const all = async (filters?: AllRoleFilters): Promise<RoleOutput[]> => {
+export const all = async (filters?: AllRolePermissionFilters): Promise<RolePermissionOutput[]> => {
   //const _date = Date.now();
-  return Role.findAll({
+  return RolePermission.findAll({
     ...(filters?.attributes && { attributes: filters?.attributes }),
     where: {
       ...(filters?.isDeleted && { deletedAt: { [Op.not]: null } }),
@@ -40,61 +43,72 @@ export const all = async (filters?: AllRoleFilters): Promise<RoleOutput[]> => {
 };
 
 /**
- * @description Gets [role] by Id(PK)
+ * @description Gets [rolePermission] by Id(PK)
  * @author Antonio Marasco
  * @date 05/22/2023
- * @param id Id of [role]
- * @returns {*} [role]
+ * @param roleId id of role
+ * @param permissionId id of permission
+ * @returns {*} [rolePermission]
  */
-export const byId = async (id: string, filters?: AllRoleFilters): Promise<RoleOutput> => {
-  const model = await Role.findByPk(id, {
+export const byId = async (
+  roleId: string,
+  permissionId: string,
+  filters?: AllRolePermissionFilters
+): Promise<RolePermissionOutput> => {
+  const model = await RolePermission.findOne({
+    where: { roleId, permissionId },
     ...(filters?.attributes && { attributes: filters?.attributes }),
     logging: DbConfig.LOGGING
   });
 
   if (!model) {
-    throw new Error(`not found:  cannot find by id: ${id}`);
+    throw new Error(`not found:  cannot find by roleId: ${roleId}, permissionId: ${permissionId}`);
   }
 
   return model;
 };
 
 /**
- * @description Creates a [role]
+ * @description Creates a [rolePermission]
  * @author Antonio Marasco
  * @date 05/22/2023
  * @param payload
- * @returns {*} Newly created [role] object
+ * @returns {*} Newly created [rolePermission] object
  */
-export const create = async (payload: RoleInput): Promise<RoleOutput> => {
-  const output = await Role.create(payload, { logging: DbConfig.LOGGING });
+export const create = async (payload: RolePermissionInput): Promise<RolePermissionOutput> => {
+  const output = await RolePermission.create(payload, { logging: DbConfig.LOGGING });
   return output;
 };
 
 /**
- * @description Delete [role] by id
+ * @description Delete [rolePermission] by id
  * @author Antonio Marasco
  * @date 05/22/2023
- * @param id
- * @returns {*}
+ * @param roleId id of role
+ * @param permissionId id of permission
+ * @returns {*} True if deletion was successful; otherwise false.
  */
-export const deleteById = async (id: string): Promise<boolean> => {
-  const deletedCount = await Role.destroy({ where: { id }, logging: DbConfig.LOGGING });
+export const deleteById = async (roleId: string, permissionId: string): Promise<boolean> => {
+  const deletedCount = await RolePermission.destroy({
+    where: { roleId, permissionId },
+    logging: DbConfig.LOGGING
+  });
 
   return !!deletedCount;
 };
 
 /**
- * @description Finds or creates a [role] based on criteria
+ * @description Finds or creates a [rolePermission] based on criteria
  * @author Antonio Marasco
  * @date 05/22/2023
  * @param payload
  * @returns {*}
  */
-export const findOrCreate = async (payload: RoleInput): Promise<RoleOutput> => {
-  const [model] = await Role.findOrCreate({
+export const findOrCreate = async (payload: RolePermissionInput): Promise<RolePermissionOutput> => {
+  const [model] = await RolePermission.findOrCreate({
     where: {
-      id: payload.id
+      roleId: payload.roleId,
+      permissionId: payload.permissionId
     },
     defaults: payload
   });
@@ -103,18 +117,18 @@ export const findOrCreate = async (payload: RoleInput): Promise<RoleOutput> => {
 };
 
 /**
- * @description Paginates [role] list based on filters
+ * @description Paginates [rolePermission] list based on filters
  * @author Antonio Marasco
  * @date 05/22/2023
  * @param [filters]
  * @returns {*}
  */
 export const paginate = async (
-  filters?: AllRoleFilters
-): Promise<{ rows: RoleOutput[]; count: number }> => {
+  filters?: AllRolePermissionFilters
+): Promise<{ rows: RolePermissionOutput[]; count: number }> => {
   if (!isNil(filters?.limit) && !isNil(filters?.offset)) {
     //const _date = Date.now();
-    return Role.findAndCountAll({
+    return RolePermission.findAndCountAll({
       ...(filters?.attributes && { attributes: filters?.attributes }),
       limit: filters.limit,
       offset: (filters.offset - 1) * filters.limit,
@@ -137,17 +151,25 @@ export const paginate = async (
 };
 
 /**
- * @description Updates [role]
+ * @description Updates [rolePermission]
  * @author Antonio Marasco
  * @date 05/22/2023
- * @param id Id of [role] to update
- * @param payload [role] object
+ * @param roleId id of role
+ * @param permissionId id of permission
+ * @param payload [rolePermission] object
  * @returns {*}
  */
-export const update = async (id: string, payload: Partial<RoleInput>): Promise<RoleOutput> => {
-  const model = await Role.findByPk(id, { logging: DbConfig.LOGGING });
+export const update = async (
+  roleId: string,
+  permissionId: string,
+  payload: Partial<RolePermissionInput>
+): Promise<RolePermissionOutput> => {
+  const model = await RolePermission.findOne({
+    where: { roleId, permissionId },
+    logging: DbConfig.LOGGING
+  });
   if (!model) {
-    throw new Error(`not found:  cannot find by id: ${id}`);
+    throw new Error(`not found:  cannot find by roleId: ${roleId}, permissionId: ${permissionId}`);
   }
 
   const updatedModel = await model.update(payload);

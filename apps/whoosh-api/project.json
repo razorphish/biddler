@@ -1,7 +1,7 @@
 {
-  "name": "whoosh-api",
+  "name": "biddler-api",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/whoosh-api/src",
+  "sourceRoot": "apps/biddler-api/src",
   "projectType": "application",
   "targets": {
     "build": {
@@ -11,12 +11,12 @@
       "options": {
         "target": "node",
         "compiler": "tsc",
-        "outputPath": "dist/apps/whoosh-api",
-        "main": "apps/whoosh-api/src/main.ts",
-        "tsConfig": "apps/whoosh-api/tsconfig.app.json",
-        "assets": ["apps/whoosh-api/src/assets"],
+        "outputPath": "dist/apps/biddler-api",
+        "main": "apps/biddler-api/src/main.ts",
+        "tsConfig": "apps/biddler-api/tsconfig.app.json",
+        "assets": ["apps/biddler-api/src/assets"],
         "isolatedConfig": true,
-        "webpackConfig": "apps/whoosh-api/webpack.config.js"
+        "webpackConfig": "apps/biddler-api/webpack.config.js"
       },
       "configurations": {
         "development": {},
@@ -27,14 +27,14 @@
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "whoosh-api:build"
+        "buildTarget": "biddler-api:build"
       },
       "configurations": {
         "development": {
-          "buildTarget": "whoosh-api:build:development"
+          "buildTarget": "biddler-api:build:development"
         },
         "production": {
-          "buildTarget": "whoosh-api:build:production"
+          "buildTarget": "biddler-api:build:production"
         }
       }
     },
@@ -42,14 +42,14 @@
       "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["apps/whoosh-api/**/*.ts"]
+        "lintFilePatterns": ["apps/biddler-api/**/*.ts"]
       }
     },
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "apps/whoosh-api/jest.config.ts",
+        "jestConfig": "apps/biddler-api/jest.config.ts",
         "passWithNoTests": true
       },
       "configurations": {

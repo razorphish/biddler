@@ -1,11 +1,10 @@
 import { DataTypes, Model, Optional } from 'sequelize';
-import WhooshLibrary from '../../global/whoosh';
-import { Status } from '../../whoosh/models';
+import BiddlerLibrary from '../../global/biddler';
+import { Status } from '.';
 import { COLUMN_ALIAS, COLUMN_NAME, COLUMN_VALIDATION, DEFAULT_VALUE } from '../../common/db.enum';
 import { TimestampAttributes } from '../../global/interfaces/timeStampAttributes.interface';
 
-interface PermissionAttributes
-  extends Omit<TimestampAttributes, 'lastUpdatedDate' | 'lastUpdatedBy'> {
+interface RoleAttributes extends Omit<TimestampAttributes, 'lastUpdatedDate' | 'lastUpdatedBy'> {
   // Primary Key(s)
   id: number;
 
@@ -16,13 +15,10 @@ interface PermissionAttributes
   description: string;
 }
 
-export type PermissionInput = Optional<PermissionAttributes, 'createdDate'>;
-export type PermissionOutput = Required<PermissionAttributes>;
+export type RoleInput = Optional<RoleAttributes, 'createdDate'>;
+export type RoleOutput = Required<RoleAttributes>;
 
-class Permission
-  extends Model<PermissionAttributes, PermissionInput>
-  implements PermissionAttributes
-{
+class Role extends Model<RoleAttributes, RoleInput> implements RoleAttributes {
   // Primary Key(s)
   public id!: number;
 
@@ -40,11 +36,11 @@ class Permission
   public readonly deletedAt!: Date;
 }
 
-Permission.init(
+Role.init(
   {
     id: {
       type: DataTypes.INTEGER,
-      field: 'PERMSN_ID',
+      field: 'ROLE_ID',
       allowNull: false,
       autoIncrement: true,
       primaryKey: true
@@ -56,7 +52,7 @@ Permission.init(
     },
     description: {
       type: DataTypes.STRING(128),
-      field: 'PERMSN_DESC',
+      field: 'ROLE_DESC',
       allowNull: false
     },
     createdBy: {
@@ -81,10 +77,10 @@ Permission.init(
     }
   },
   {
-    sequelize: WhooshLibrary.dbs.whoosh_db,
-    tableName: 'PERMSN_INFO',
-    modelName: 'Permission',
-    schema: 'WHOOSH_DB',
+    sequelize: BiddlerLibrary.dbs.whoosh_db,
+    tableName: 'ROLE_INFO',
+    modelName: 'Role',
+    schema: 'BIDDLER_DB',
     freezeTableName: true,
     timestamps: true,
     deletedAt: COLUMN_ALIAS.DLTD_AT,
@@ -96,10 +92,10 @@ Permission.init(
 
 //Hooks
 //references
-Permission.belongsTo(Status, {
+Role.belongsTo(Status, {
   foreignKey: 'id',
   targetKey: 'statusId',
   as: 'status'
 });
 
-export default Permission;
+export default Role;

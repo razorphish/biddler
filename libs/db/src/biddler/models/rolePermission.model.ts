@@ -1,13 +1,13 @@
 import { DataTypes, Model, Optional } from 'sequelize';
-import WhooshLibrary from '../../global/whoosh';
-import { Status } from '../../whoosh/models';
+import BiddlerLibrary from '../../global/biddler';
+import { Status } from '.';
 import { COLUMN_ALIAS, COLUMN_NAME, COLUMN_VALIDATION, DEFAULT_VALUE } from '../../common/db.enum';
 import { TimestampAttributes } from '../../global/interfaces/timeStampAttributes.interface';
 
-interface AccountUserAttributes extends TimestampAttributes {
+interface RolePermissionAttributes extends TimestampAttributes {
   // Primary Key(s)
-  userId: number;
-  accountId: number;
+  roleId: string;
+  permissionId: string;
 
   // Foreign Key(s)
   statusId: string;
@@ -17,16 +17,19 @@ interface AccountUserAttributes extends TimestampAttributes {
   effectiveEndDate: Date;
 }
 
-export type AccountUserInput = Optional<AccountUserAttributes, 'createdDate' | 'lastUpdatedDate'>;
-export type AccountUserOutput = Required<AccountUserAttributes>;
+export type RolePermissionInput = Optional<
+  RolePermissionAttributes,
+  'createdDate' | 'lastUpdatedDate'
+>;
+export type RolePermissionOutput = Required<RolePermissionAttributes>;
 
-class AccountUser
-  extends Model<AccountUserAttributes, AccountUserInput>
-  implements AccountUserAttributes
+class RolePermission
+  extends Model<RolePermissionAttributes, RolePermissionInput>
+  implements RolePermissionAttributes
 {
   // Primary Key(s)
-  public accountId!: number;
-  public userId!: number;
+  public roleId!: string;
+  public permissionId!: string;
 
   // Foreign Key(s)
   public statusId!: string;
@@ -45,17 +48,17 @@ class AccountUser
   public readonly deletedAt!: Date;
 }
 
-AccountUser.init(
+RolePermission.init(
   {
-    accountId: {
+    roleId: {
       type: DataTypes.INTEGER,
-      field: 'ACNT_ID',
+      field: 'ROLE_ID',
       allowNull: false,
       primaryKey: true
     },
-    userId: {
+    permissionId: {
       type: DataTypes.INTEGER,
-      field: 'USER_ID',
+      field: 'PERMSN_ID',
       allowNull: false,
       primaryKey: true
     },
@@ -109,10 +112,10 @@ AccountUser.init(
     }
   },
   {
-    sequelize: WhooshLibrary.dbs.whoosh_db,
-    tableName: 'ACNT_USER',
-    modelName: 'AccountUser',
-    schema: 'WHOOSH_DB',
+    sequelize: BiddlerLibrary.dbs.whoosh_db,
+    tableName: 'ROLE_PERSN',
+    modelName: 'RolePermission',
+    schema: 'BIDDLER_DB',
     freezeTableName: true,
     timestamps: true,
     deletedAt: COLUMN_ALIAS.DLTD_AT,
@@ -124,10 +127,10 @@ AccountUser.init(
 
 //Hooks
 //references
-AccountUser.belongsTo(Status, {
+RolePermission.belongsTo(Status, {
   foreignKey: 'id',
   targetKey: 'statusId',
   as: 'status'
 });
 
-export default AccountUser;
+export default RolePermission;

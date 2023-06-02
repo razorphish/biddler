@@ -3,7 +3,7 @@ import { Sequelize } from 'sequelize';
 
 import connections from '../config/connections.config';
 
-class WhooshLibrary {
+class BiddlerLibrary {
   public dbs;
 
   constructor() {
@@ -22,4 +22,4 @@ class WhooshLibrary {
   }
 }
 
-export default new WhooshLibrary();
+export default new BiddlerLibrary();

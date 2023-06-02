@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 import { DataTypes, Model, Optional } from 'sequelize';
-import WhooshLibrary from '../../global/whoosh';
+import BiddlerLibrary from '../../global/biddler';
 import { COLUMN_NAME, COLUMN_VALIDATION, DEFAULT_VALUE, COLUMN_ALIAS } from '../../common/db.enum';
 import { TimestampAttributes } from '../interfaces/timestampAttributes.interface';
 
@@ -66,7 +66,7 @@ Status.init(
     }
   },
   {
-    sequelize: WhooshLibrary.dbs.whoosh_db,
+    sequelize: BiddlerLibrary.dbs.whoosh_db,
     tableName: 'STUS_TYPE_LKP',
     modelName: 'Status',
     freezeTableName: true,

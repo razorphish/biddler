@@ -15,8 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@whoosh/db": ["libs/db/src/index.ts"],
-      "@whoosh/logging": ["libs/logging/src/index.ts"]
+      "@biddler/db": ["libs/db/src/index.ts"],
+      "@biddler/logging": ["libs/logging/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

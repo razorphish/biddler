@@ -1,5 +1,5 @@
 import { DataTypes, Model, Optional } from 'sequelize';
-import WhooshLibrary from '../../global/whoosh';
+import BiddlerLibrary from '../../global/biddler';
 import { TimestampAttributes } from '../../global/interfaces/timeStampAttributes.interface';
 import { COLUMN_NAME, COLUMN_VALIDATION, DEFAULT_VALUE } from '../../common/db.enum';
 import { COLUMN_ALIAS } from '../../common/db.enum';
@@ -173,10 +173,10 @@ ApiClient.init(
     }
   },
   {
-    sequelize: WhooshLibrary.dbs.hpt_db,
+    sequelize: BiddlerLibrary.dbs.hpt_db,
     tableName: 'API_CLIENT',
     modelName: 'ApiClient',
-    schema: 'WHOOSH_IDM_DB',
+    schema: 'BIDDLER_IDM_DB',
     freezeTableName: true,
     timestamps: true,
     deletedAt: COLUMN_ALIAS.DLTD_AT,

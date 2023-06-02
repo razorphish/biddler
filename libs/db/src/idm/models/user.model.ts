@@ -1,5 +1,5 @@
 import { DataTypes, Model, Optional } from 'sequelize';
-import WhooshLibrary from '../../global/whoosh';
+import BiddlerLibrary from '../../global/biddler';
 import { COLUMN_NAME, COLUMN_VALIDATION, DEFAULT_VALUE } from '../../common/db.enum';
 import { TimestampAttributes } from '../../global/interfaces/timeStampAttributes.interface';
 import Status from './status.model';
@@ -170,10 +170,10 @@ User.init(
     }
   },
   {
-    sequelize: WhooshLibrary.dbs.hpt_idm_db,
+    sequelize: BiddlerLibrary.dbs.hpt_idm_db,
     tableName: 'USER_INFO',
     modelName: 'User',
-    schema: 'WHOOSH_IDM_DB',
+    schema: 'BIDDLER_IDM_DB',
     freezeTableName: true,
     timestamps: true,
     deletedAt: COLUMN_NAME.DELETED_AT,

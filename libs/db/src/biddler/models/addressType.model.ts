@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 import { DataTypes, Model, Sequelize } from 'sequelize';
-import WhooshLibrary from '../../global/whoosh';
+import BiddlerLibrary from '../../global/biddler';
 import { COLUMN_ALIAS, COLUMN_NAME } from '../../common/db.enum';
 import { TimestampAttributes } from '../interfaces/timestampAttributes.interface';
 
@@ -76,7 +76,7 @@ AddressType.init(
     }
   },
   {
-    sequelize: WhooshLibrary.dbs.whoosh_db,
+    sequelize: BiddlerLibrary.dbs.whoosh_db,
     tableName: 'ADDR_TYPE_LKP',
     modelName: 'AddressType',
     freezeTableName: true,

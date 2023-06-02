@@ -1,22 +1,22 @@
 {
-  "name": "whoosh-ui-e2e",
+  "name": "biddler-ui-e2e",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/whoosh-ui-e2e/src",
+  "sourceRoot": "apps/biddler-ui-e2e/src",
   "projectType": "application",
   "targets": {
     "e2e": {
       "executor": "@nx/cypress:cypress",
       "options": {
-        "cypressConfig": "apps/whoosh-ui-e2e/cypress.config.ts",
-        "devServerTarget": "whoosh-ui:serve:development",
+        "cypressConfig": "apps/biddler-ui-e2e/cypress.config.ts",
+        "devServerTarget": "biddler-ui:serve:development",
         "testingType": "e2e"
       },
       "configurations": {
         "production": {
-          "devServerTarget": "whoosh-ui:serve:production"
+          "devServerTarget": "biddler-ui:serve:production"
         },
         "ci": {
-          "devServerTarget": "whoosh-ui:serve-static"
+          "devServerTarget": "biddler-ui:serve-static"
         }
       }
     },
@@ -24,10 +24,10 @@
       "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["apps/whoosh-ui-e2e/**/*.{js,ts}"]
+        "lintFilePatterns": ["apps/biddler-ui-e2e/**/*.{js,ts}"]
       }
     }
   },
   "tags": [],
-  "implicitDependencies": ["whoosh-ui"]
+  "implicitDependencies": ["biddler-ui"]
 }

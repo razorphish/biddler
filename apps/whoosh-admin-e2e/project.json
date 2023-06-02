@@ -1,22 +1,22 @@
 {
-  "name": "whoosh-admin-e2e",
+  "name": "biddler-admin-e2e",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/whoosh-admin-e2e/src",
+  "sourceRoot": "apps/biddler-admin-e2e/src",
   "projectType": "application",
   "targets": {
     "e2e": {
       "executor": "@nx/cypress:cypress",
       "options": {
-        "cypressConfig": "apps/whoosh-admin-e2e/cypress.config.ts",
-        "devServerTarget": "whoosh-admin:serve:development",
+        "cypressConfig": "apps/biddler-admin-e2e/cypress.config.ts",
+        "devServerTarget": "biddler-admin:serve:development",
         "testingType": "e2e"
       },
       "configurations": {
         "production": {
-          "devServerTarget": "whoosh-admin:serve:production"
+          "devServerTarget": "biddler-admin:serve:production"
         },
         "ci": {
-          "devServerTarget": "whoosh-admin:serve-static"
+          "devServerTarget": "biddler-admin:serve-static"
         }
       }
     },
@@ -24,10 +24,10 @@
       "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["apps/whoosh-admin-e2e/**/*.{js,ts}"]
+        "lintFilePatterns": ["apps/biddler-admin-e2e/**/*.{js,ts}"]
       }
     }
   },
   "tags": [],
-  "implicitDependencies": ["whoosh-admin"]
+  "implicitDependencies": ["biddler-admin"]
 }
