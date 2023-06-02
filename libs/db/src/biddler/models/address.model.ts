@@ -254,7 +254,7 @@ Address.init(
     }
   },
   {
-    sequelize: BiddlerLibrary.dbs.whoosh_db,
+    sequelize: BiddlerLibrary.dbs.biddler_db,
     tableName: 'ADDR_INFO',
     modelName: 'Address',
     freezeTableName: true,

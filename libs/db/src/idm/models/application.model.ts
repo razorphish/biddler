@@ -119,7 +119,7 @@ Application.init(
     }
   },
   {
-    sequelize: BiddlerLibrary.dbs.whoosh_idm_db,
+    sequelize: BiddlerLibrary.dbs.biddler_idm_db,
     tableName: 'PERMSN_INFO',
     modelName: 'Application',
     schema: 'BIDDLER_IDM_DB',

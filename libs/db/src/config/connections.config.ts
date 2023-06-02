@@ -30,7 +30,7 @@ export type DatabaseConnection = {
 };
 
 export default {
-  whoosh_db: {
+  biddler_db: {
     path: {
       database: BIDDLER_DB_DATABASE,
       dialect: BIDDLER_DB_DIALECT,
@@ -53,7 +53,7 @@ export default {
       }
     }
   },
-  whoosh_idm_db: {
+  biddler_idm_db: {
     path: {
       database: BIDDLER_IDM_DB_DATABASE,
       dialect: BIDDLER_IDM_DB_DIALECT,

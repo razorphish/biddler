@@ -77,7 +77,7 @@ Role.init(
     }
   },
   {
-    sequelize: BiddlerLibrary.dbs.whoosh_db,
+    sequelize: BiddlerLibrary.dbs.biddler_db,
     tableName: 'ROLE_INFO',
     modelName: 'Role',
     schema: 'BIDDLER_DB',

@@ -120,7 +120,7 @@ AccountUserRole.init(
     }
   },
   {
-    sequelize: BiddlerLibrary.dbs.whoosh_db,
+    sequelize: BiddlerLibrary.dbs.biddler_db,
     tableName: 'ACNT_USER_ROLE',
     modelName: 'AccountUserRole',
     schema: 'BIDDLER_DB',

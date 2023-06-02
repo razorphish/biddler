@@ -199,7 +199,7 @@ AccessToken.init(
     }
   },
   {
-    sequelize: BiddlerLibrary.dbs.whoosh_idm_db,
+    sequelize: BiddlerLibrary.dbs.biddler_idm_db,
     tableName: 'ACS_TOKN',
     modelName: 'AccessToken',
     schema: 'BIDDLER_IDM_DB',

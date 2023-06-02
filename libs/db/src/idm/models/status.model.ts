@@ -67,7 +67,7 @@ Status.init(
     }
   },
   {
-    sequelize: BiddlerLibrary.dbs.whoosh_idm_db,
+    sequelize: BiddlerLibrary.dbs.biddler_idm_db,
     tableName: 'STUS_TYPE_LKP',
     modelName: 'Status',
     schema: 'BIDDLER_IDM_DB',

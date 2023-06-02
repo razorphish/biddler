@@ -66,7 +66,7 @@ Status.init(
     }
   },
   {
-    sequelize: BiddlerLibrary.dbs.whoosh_db,
+    sequelize: BiddlerLibrary.dbs.biddler_db,
     tableName: 'STUS_TYPE_LKP',
     modelName: 'Status',
     freezeTableName: true,

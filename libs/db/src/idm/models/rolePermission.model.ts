@@ -121,7 +121,7 @@ RolePermission.init(
     }
   },
   {
-    sequelize: BiddlerLibrary.dbs.whoosh_idm_db,
+    sequelize: BiddlerLibrary.dbs.biddler_idm_db,
     tableName: 'ROLE_PERMSN',
     modelName: 'RolePermission',
     schema: 'BIDDLER_IDM_DB',

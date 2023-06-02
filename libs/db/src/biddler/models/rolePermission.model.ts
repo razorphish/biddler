@@ -112,7 +112,7 @@ RolePermission.init(
     }
   },
   {
-    sequelize: BiddlerLibrary.dbs.whoosh_db,
+    sequelize: BiddlerLibrary.dbs.biddler_db,
     tableName: 'ROLE_PERSN',
     modelName: 'RolePermission',
     schema: 'BIDDLER_DB',

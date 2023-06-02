@@ -109,7 +109,7 @@ AccountUser.init(
     }
   },
   {
-    sequelize: BiddlerLibrary.dbs.whoosh_db,
+    sequelize: BiddlerLibrary.dbs.biddler_db,
     tableName: 'ACNT_USER',
     modelName: 'AccountUser',
     schema: 'BIDDLER_DB',

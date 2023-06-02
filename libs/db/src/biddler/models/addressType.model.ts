@@ -76,7 +76,7 @@ AddressType.init(
     }
   },
   {
-    sequelize: BiddlerLibrary.dbs.whoosh_db,
+    sequelize: BiddlerLibrary.dbs.biddler_db,
     tableName: 'ADDR_TYPE_LKP',
     modelName: 'AddressType',
     freezeTableName: true,

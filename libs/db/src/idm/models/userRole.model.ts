@@ -105,7 +105,7 @@ UserRole.init(
     }
   },
   {
-    sequelize: BiddlerLibrary.dbs.whoosh_idm_db,
+    sequelize: BiddlerLibrary.dbs.biddler_idm_db,
     tableName: 'USER_ROLES',
     modelName: 'UserRole',
     schema: 'BIDDLER_IDM_DB',
