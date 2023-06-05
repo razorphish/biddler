@@ -4,8 +4,7 @@
  */
 
 // Referenced/Standalone tables
-import Status from './status.model';
-import AddressType from './addressType.model';
+import Lookup from './lookup.model';
 import Address from './address.model';
 
 import User from './user.model';
@@ -22,10 +21,9 @@ export {
   AccountUser,
   AccountUserRole,
   Address,
-  AddressType,
   Permission,
   Role,
   RolePermission,
-  Status,
+  Lookup,
   User
 };

@@ -19,7 +19,7 @@ import { AddressTypeInput, AddressTypeOutput } from '../models/addressType.model
 import { PermissionInput, PermissionOutput } from '../models/permission.model';
 import { RoleInput, RoleOutput } from '../models/role.model';
 import { RolePermissionInput, RolePermissionOutput } from '../models/rolePermission.model';
-import { StatusInput, StatusOutput } from '../models/status.model';
+import { StatusInput, StatusOutput } from '../models/lookup.model';
 import { UserInput, UserOutput } from '../models/user.model';
 
 export {

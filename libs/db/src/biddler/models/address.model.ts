@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 import { DataTypes, Model, Optional } from 'sequelize';
-import { Status } from '.';
+import { Lookup } from '.';
 import BiddlerLibrary from '../../global/biddler';
 import { COLUMN_ALIAS, COLUMN_NAME, COLUMN_VALIDATION, DEFAULT_VALUE } from '../../common/db.enum';
 import { TimestampAttributes } from '../interfaces/timestampAttributes.interface';
@@ -268,11 +268,10 @@ Address.init(
 
 // Hooks
 // References
-Address.hasOne(Status, {
+Address.hasOne(Lookup, {
   foreignKey: 'id',
   sourceKey: 'statusId',
-  as: 'status',
-  constraints: false
+  as: 'status'
 });
 
 export default Address;

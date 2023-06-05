@@ -1,6 +1,6 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import BiddlerLibrary from '../../global/biddler';
-import { Status } from '.';
+import { Lookup } from '.';
 import { COLUMN_ALIAS, COLUMN_NAME, COLUMN_VALIDATION, DEFAULT_VALUE } from '../../common/db.enum';
 import { TimestampAttributes } from '../interfaces/timestampAttributes.interface';
 
@@ -140,7 +140,7 @@ User.init(
 
 //Hooks
 //references
-User.belongsTo(Status, {
+User.belongsTo(Lookup, {
   foreignKey: 'id',
   targetKey: 'statusId',
   as: 'status'

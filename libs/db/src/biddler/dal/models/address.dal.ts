@@ -26,7 +26,8 @@ export const all = async (filters?: AllAddressFilters): Promise<AddressOutput[]>
     ...(filters?.attributes && { attributes: filters?.attributes }),
     where: {
       ...(filters?.isDeleted && { deletedAt: { [Op.not]: null } }),
-      ...(filters?.status && { statusId: { [Op.eq]: filters.status } })
+      ...(filters?.status && { statusId: { [Op.eq]: filters.status } }),
+      ...(filters?.typeId && { typeId: { [Op.eq]: filters.typeId } })
       // ...(filters?.checkEffectiveDate && {
       //   [Op.and]: {
       //     effectiveStartDate: { [Op.lte]: { _date } },
