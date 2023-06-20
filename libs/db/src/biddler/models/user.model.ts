@@ -129,6 +129,7 @@ User.init(
     sequelize: BiddlerLibrary.dbs.hpt_db,
     tableName: 'USER_INFO',
     modelName: 'User',
+    schema: 'BIDDLER',
     freezeTableName: true,
     timestamps: true,
     deletedAt: COLUMN_ALIAS.DLTD_AT,

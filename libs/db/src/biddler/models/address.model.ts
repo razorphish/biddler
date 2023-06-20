@@ -71,7 +71,7 @@ Address.init(
     typeId: {
       type: DataTypes.STRING(32),
       allowNull: false,
-      field: 'ADDR_TYPE_CD'
+      field: 'ADDR_TYPE_LKP_ID'
     },
     statusId: {
       type: DataTypes.STRING(32),
@@ -257,6 +257,7 @@ Address.init(
     sequelize: BiddlerLibrary.dbs.biddler_db,
     tableName: 'ADDR_INFO',
     modelName: 'Address',
+    schema: 'BIDDLER_DB',
     freezeTableName: true,
     timestamps: true,
     deletedAt: COLUMN_ALIAS.DLTD_AT,

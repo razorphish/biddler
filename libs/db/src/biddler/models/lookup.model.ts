@@ -7,10 +7,11 @@ import { TimestampAttributes } from '../interfaces/timestampAttributes.interface
 interface LookupAttributes extends TimestampAttributes {
   // Primary Key(s)
   id: string;
-  group: string;
 
   // Foreign Key(s)
   // Attribute(s)
+  code: string;
+  group: string;
   title?: string;
   description?: string;
   isDefault?: boolean;
@@ -25,9 +26,10 @@ export interface LookupOutput extends LookupAttributes {}
 class Lookup extends Model<LookupAttributes, LookupInput> implements LookupAttributes {
   // Primary Key(s)
   public id!: string;
-  public group!: string;
 
   // Attribute(s)
+  public code!: string;
+  public group!: string;
   public title!: string;
   public description!: string;
   public isDefault!: boolean;
@@ -50,7 +52,7 @@ Lookup.init(
     id: {
       type: DataTypes.STRING(32),
       allowNull: false,
-      field: 'LKP_CD',
+      field: 'LKP_ID',
       primaryKey: true,
       validate: {
         len: {
@@ -59,9 +61,18 @@ Lookup.init(
         }
       }
     },
+    code: {
+      type: DataTypes.STRING(32),
+      field: 'LKP_CD',
+      validate: {
+        len: {
+          args: [0, 128],
+          msg: COLUMN_VALIDATION.LENGTH
+        }
+      }
+    },
     group: {
       type: DataTypes.STRING(64),
-      primaryKey: true,
       allowNull: false,
       field: 'LKP_GRP_NAME',
       validate: {
@@ -148,6 +159,7 @@ Lookup.init(
     sequelize: BiddlerLibrary.dbs.biddler_db,
     tableName: 'STUS_TYPE_LKP',
     modelName: 'Lookup',
+    schema: 'BIDDLER_DB',
     freezeTableName: true,
     timestamps: true,
     createdAt: COLUMN_ALIAS.CREATD_DT,
