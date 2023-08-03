@@ -17,5 +17,6 @@ export interface AllApplicationFilters extends ListFilters {}
 export interface AllLookupFilters extends ListFilters {}
 export interface AllAccessTokenFilters extends ListFilters {}
 export interface AllSystemFilters extends ListFilters {}
+export interface AllSystemIssuerFilters extends ListFilters {}
 export interface AllApiClientFilters extends ListFilters {}
 export interface AllUserFilters extends ListFilters {}

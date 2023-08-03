@@ -87,7 +87,7 @@ AccessToken.init(
     tokenTypeId: {
       type: DataTypes.STRING(32),
       allowNull: false,
-      field: 'TOKN_TYP_LKP_ID'
+      field: COLUMN_NAME.TOKEN_TYPE_ID
     },
     schemeTypeId: {
       type: DataTypes.STRING(32),

@@ -156,7 +156,7 @@ Lookup.init(
     }
   },
   {
-    sequelize: BiddlerLibrary.dbs.biddler_db,
+    sequelize: BiddlerLibrary.dbs.biddler_idm_db,
     tableName: 'STUS_TYPE_LKP',
     modelName: 'Lookup',
     schema: 'BIDDLER_IDM_DB',

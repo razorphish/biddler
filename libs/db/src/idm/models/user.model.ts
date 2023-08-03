@@ -170,7 +170,7 @@ User.init(
     }
   },
   {
-    sequelize: BiddlerLibrary.dbs.hpt_idm_db,
+    sequelize: BiddlerLibrary.dbs.biddler_idm_db,
     tableName: 'USER_INFO',
     modelName: 'User',
     schema: 'BIDDLER_IDM_DB',

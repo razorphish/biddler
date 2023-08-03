@@ -148,7 +148,7 @@ System.init(
     }
   },
   {
-    sequelize: BiddlerLibrary.dbs.biddler_db,
+    sequelize: BiddlerLibrary.dbs.biddler_idm_db,
     tableName: 'SYS_INFO',
     modelName: 'System',
     schema: 'BIDDLER_IDM_DB',

@@ -63,6 +63,7 @@ Environment.init(
     description: {
       type: DataTypes.STRING(64),
       field: 'ENV_DESC',
+      defaultValue: 'Environment Description',
       validate: {
         len: {
           args: [0, 64],

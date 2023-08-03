@@ -90,7 +90,7 @@ ApiClient.init(
     },
     tokenTypeId: {
       type: DataTypes.STRING(32),
-      field: 'TOKN_TYP_LKP_ID',
+      field: COLUMN_NAME.TOKEN_TYPE_ID,
       allowNull: false,
       validate: {
         len: {
@@ -157,6 +157,7 @@ ApiClient.init(
     allowedIps: {
       type: DataTypes.STRING(1024),
       field: 'ALLOWED_IPS',
+      defaultValue: '*',
       validate: {
         len: {
           args: [0, 1024],
@@ -167,6 +168,7 @@ ApiClient.init(
     restrictedIps: {
       type: DataTypes.STRING(1024),
       field: 'RESTRICTED_IPS',
+      defaultValue: '-',
       validate: {
         len: {
           args: [0, 1024],
@@ -219,7 +221,7 @@ ApiClient.init(
     }
   },
   {
-    sequelize: BiddlerLibrary.dbs.hpt_db,
+    sequelize: BiddlerLibrary.dbs.biddler_idm_db,
     tableName: 'API_CLIENT',
     modelName: 'ApiClient',
     schema: 'BIDDLER_IDM_DB',
