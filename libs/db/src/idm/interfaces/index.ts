@@ -11,6 +11,8 @@ import { ApplicationInput, ApplicationOutput } from '../models/application.model
 import { ApiClientInput, ApiClientOutput } from '../models/apiClient.model';
 import { UserInput, UserOutput } from '../models/user.model';
 import { EnvironmentInput, EnvironmentOutput } from '../models/environment.model';
+import { LookupInput, LookupOutput } from '../models/lookup.model';
+import { Lookup } from './lookup.interface';
 
 export {
   AccessToken,
@@ -25,6 +27,9 @@ export {
   Environment,
   EnvironmentInput,
   EnvironmentOutput,
+  Lookup,
+  LookupInput,
+  LookupOutput,
   User,
   UserInput,
   UserOutput
