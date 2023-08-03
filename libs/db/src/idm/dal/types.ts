@@ -11,9 +11,11 @@ interface ListFilters {
   attributes?: FindAttributeOptions;
   orderBySortOrder?: boolean;
 }
+
+export interface AllEnvironmentFilters extends ListFilters {}
+export interface AllApplicationFilters extends ListFilters {}
 export interface AllLookupFilters extends ListFilters {}
 export interface AllAccessTokenFilters extends ListFilters {}
-export interface AllApplicationFilters extends ListFilters {}
 export interface AllSystemFilters extends ListFilters {}
 export interface AllApiClientFilters extends ListFilters {}
 export interface AllUserFilters extends ListFilters {}

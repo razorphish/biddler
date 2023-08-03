@@ -1,6 +1,6 @@
 import { Optional } from 'sequelize';
 
-export type CreateApplicationDTO = {
+export type CreateEnvironmentDTO = {
   //Foreign keys
   statusId: string;
 
@@ -9,9 +9,9 @@ export type CreateApplicationDTO = {
   description?: string;
 };
 
-export type UpdateApplicationDTO = Optional<CreateApplicationDTO, 'statusId' | 'name'>;
+export type UpdateEnvironmentDTO = Optional<CreateEnvironmentDTO, 'statusId' | 'name'>;
 
-export type FilterApplicationDTO = {
+export type FilterEnvironmentDTO = {
   isActive?: boolean;
   isDeleted?: boolean;
   includeDeleted?: boolean;
