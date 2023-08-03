@@ -1,39 +1,40 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 import { DataTypes, Model, Optional } from 'sequelize';
 import BiddlerLibrary from '../../global/biddler';
-import { COLUMN_NAME, COLUMN_VALIDATION, DEFAULT_VALUE, COLUMN_ALIAS } from '../../common/db.enum';
+import { COLUMN_NAME, COLUMN_VALIDATION, DEFAULT_VALUE } from '../../common/db.enum';
 import { TimestampAttributes } from '../../global/interfaces';
 
-interface LookupAttributes extends TimestampAttributes {
+interface SystemAttributes extends TimestampAttributes {
   // Primary Key(s)
   id: string;
 
   // Foreign Key(s)
+  statusId: string;
+
   // Attribute(s)
-  code: string;
-  group: string;
-  title?: string;
+  name: string;
+  slug: string;
   description?: string;
-  isDefault?: boolean;
-  sortOrder?: number;
+  url?: string;
   effectiveStartDate?: Date;
   effectiveEndDate?: Date;
 }
 
-export interface LookupInput extends Optional<LookupAttributes, 'id'> {}
-export interface LookupOutput extends LookupAttributes {}
+export interface SystemInput extends Optional<SystemAttributes, 'id'> {}
+export interface SystemOutput extends SystemAttributes {}
 
-class Lookup extends Model<LookupAttributes, LookupInput> implements LookupAttributes {
+class System extends Model<SystemAttributes, SystemInput> implements SystemAttributes {
   // Primary Key(s)
   public id!: string;
 
+  // Foreign Key(s)
+  public statusId!: string;
+
   // Attribute(s)
-  public code!: string;
-  public group!: string;
-  public title!: string;
+  public name!: string;
+  public slug!: string;
   public description!: string;
-  public isDefault!: boolean;
-  public sortOrder!: number;
+  public url!: string;
   public effectiveStartDate!: Date;
   public effectiveEndDate!: Date;
 
@@ -47,34 +48,24 @@ class Lookup extends Model<LookupAttributes, LookupInput> implements LookupAttri
   public readonly deletedAt!: Date;
 }
 
-Lookup.init(
+System.init(
   {
     id: {
+      type: DataTypes.NUMBER,
+      allowNull: false,
+      field: 'SYS_ID',
+      primaryKey: true,
+      autoIncrement: true
+    },
+    statusId: {
       type: DataTypes.STRING(32),
       allowNull: false,
-      field: 'LKP_ID',
-      primaryKey: true,
-      validate: {
-        len: {
-          args: [1, 32],
-          msg: COLUMN_VALIDATION.LENGTH
-        }
-      }
+      field: COLUMN_NAME.STATUS_ID
     },
-    code: {
-      type: DataTypes.STRING(32),
-      field: 'LKP_CD',
-      validate: {
-        len: {
-          args: [0, 128],
-          msg: COLUMN_VALIDATION.LENGTH
-        }
-      }
-    },
-    group: {
+    name: {
       type: DataTypes.STRING(64),
       allowNull: false,
-      field: 'LKP_GRP_NAME',
+      field: 'SYS_NAME',
       validate: {
         len: {
           args: [0, 64],
@@ -82,19 +73,19 @@ Lookup.init(
         }
       }
     },
-    title: {
-      type: DataTypes.STRING(128),
-      field: 'LKP_TITLE',
+    slug: {
+      type: DataTypes.STRING(96),
+      field: 'SYS_NAME_SLUG',
       validate: {
         len: {
-          args: [0, 128],
+          args: [0, 96],
           msg: COLUMN_VALIDATION.LENGTH
         }
       }
     },
     description: {
       type: DataTypes.STRING(256),
-      field: 'LKP_DESC',
+      field: 'SYS_DESC',
       validate: {
         len: {
           args: [0, 64],
@@ -102,14 +93,15 @@ Lookup.init(
         }
       }
     },
-    isDefault: {
-      type: DataTypes.BOOLEAN,
-      field: 'LKP_DFLT',
-      defaultValue: false
-    },
-    sortOrder: {
-      type: DataTypes.DECIMAL(4, 2),
-      field: 'SORT_ORDR'
+    url: {
+      type: DataTypes.STRING(256),
+      field: 'SYS_URL',
+      validate: {
+        len: {
+          args: [0, 256],
+          msg: COLUMN_VALIDATION.LENGTH
+        }
+      }
     },
     effectiveStartDate: {
       type: DataTypes.DATE,
@@ -157,17 +149,17 @@ Lookup.init(
   },
   {
     sequelize: BiddlerLibrary.dbs.biddler_db,
-    tableName: 'STUS_TYPE_LKP',
-    modelName: 'Lookup',
+    tableName: 'SYS_INFO',
+    modelName: 'System',
     schema: 'BIDDLER_IDM_DB',
     freezeTableName: true,
     timestamps: true,
-    createdAt: COLUMN_ALIAS.CREATD_DT,
-    updatedAt: false,
-    deletedAt: COLUMN_ALIAS.DLTD_AT,
+    deletedAt: COLUMN_NAME.DELETED_AT,
+    updatedAt: COLUMN_NAME.LAST_UPDATED_DATE,
+    createdAt: COLUMN_NAME.CREATED_DT,
     paranoid: true
   }
 );
 // Hooks
 // References
-export default Lookup;
+export default System;

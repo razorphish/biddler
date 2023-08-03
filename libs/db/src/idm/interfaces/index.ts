@@ -3,16 +3,18 @@ import { AccessToken } from './accessToken.interface';
 import { ApiClient } from './apiClient.interface';
 import { Application } from './application.interface';
 import { Environment } from './environment.interface';
+import { Lookup } from './lookup.interface';
+import { System } from './system.interface';
 import { User } from './user.interface';
 
 // Models
 import { AccessTokenInput, AccessTokenOutput } from '../models/accessToken.model';
 import { ApplicationInput, ApplicationOutput } from '../models/application.model';
 import { ApiClientInput, ApiClientOutput } from '../models/apiClient.model';
-import { UserInput, UserOutput } from '../models/user.model';
 import { EnvironmentInput, EnvironmentOutput } from '../models/environment.model';
 import { LookupInput, LookupOutput } from '../models/lookup.model';
-import { Lookup } from './lookup.interface';
+import { SystemInput, SystemOutput } from '../models/system.model';
+import { UserInput, UserOutput } from '../models/user.model';
 
 export {
   AccessToken,
@@ -30,6 +32,9 @@ export {
   Lookup,
   LookupInput,
   LookupOutput,
+  System,
+  SystemInput,
+  SystemOutput,
   User,
   UserInput,
   UserOutput
