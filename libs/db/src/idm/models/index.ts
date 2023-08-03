@@ -1,3 +1,4 @@
+import Lookup from './lookup.model';
 import Status from './status.model';
 import System from './system.model';
 import AccessToken from './accessToken.model';
@@ -13,6 +14,7 @@ export {
   AccessToken,
   ApiClient,
   Application,
+  Lookup,
   Role,
   Permission,
   RolePermission,

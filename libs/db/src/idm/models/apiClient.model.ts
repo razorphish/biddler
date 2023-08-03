@@ -3,7 +3,7 @@ import BiddlerLibrary from '../../global/biddler';
 import { TimestampAttributes } from '../../global/interfaces/timeStampAttributes.interface';
 import { COLUMN_NAME, COLUMN_VALIDATION, DEFAULT_VALUE } from '../../common/db.enum';
 import { COLUMN_ALIAS } from '../../common/db.enum';
-import Status from './status.model';
+import Lookup from './lookup.model';
 
 interface ApiClientAttributes extends TimestampAttributes {
   // Primary Key(s)
@@ -16,10 +16,15 @@ interface ApiClientAttributes extends TimestampAttributes {
   statusId: string;
 
   // Attribute(s)
-  audience: string;
-  secret: string;
+  audience?: string;
+  subject?: string;
+  secret?: string;
   salt?: string;
-  scopes: string;
+  scopes?: string;
+  allowedIps?: string;
+  restrictedIps?: string;
+  timeToLive?: number;
+  refreshTimeToLive?: number;
 }
 
 export type ApiClientInput = Optional<
@@ -40,9 +45,14 @@ class ApiClient extends Model<ApiClientAttributes, ApiClientInput> implements Ap
 
   // Attribute(s)
   public audience!: string;
+  public subject!: string;
   public secret!: string;
   public salt!: string;
   public scopes!: string;
+  public allowedIps!: string;
+  public restrictedIps!: string;
+  public timeToLive!: number;
+  public refreshTimeToLive!: number;
 
   // User stamp(s)
   public createdBy!: string;
@@ -75,12 +85,13 @@ ApiClient.init(
     },
     systemIssuerId: {
       type: DataTypes.INTEGER,
-      field: 'APLCTN_ISSUER_ID',
+      field: 'SYS_ISSUER_ID',
       allowNull: false
     },
     tokenTypeId: {
       type: DataTypes.STRING(32),
-      field: 'TOKEN_TYPE',
+      field: 'TOKN_TYP_LKP_ID',
+      allowNull: false,
       validate: {
         len: {
           args: [0, 128],
@@ -94,8 +105,38 @@ ApiClient.init(
       allowNull: false
     },
     audience: {
+      type: DataTypes.STRING(48),
+      field: 'CLIENT_AUD',
+      validate: {
+        len: {
+          args: [0, 48],
+          msg: COLUMN_VALIDATION.LENGTH
+        }
+      }
+    },
+    subject: {
+      type: DataTypes.STRING(36),
+      field: 'CLIENT_SUB',
+      validate: {
+        len: {
+          args: [0, 36],
+          msg: COLUMN_VALIDATION.LENGTH
+        }
+      }
+    },
+    secret: {
       type: DataTypes.STRING(128),
-      field: 'SCOPES',
+      field: 'KEY_SECRET_HASH',
+      validate: {
+        len: {
+          args: [0, 128],
+          msg: COLUMN_VALIDATION.LENGTH
+        }
+      }
+    },
+    salt: {
+      type: DataTypes.STRING(256),
+      field: 'KEY_SALT',
       validate: {
         len: {
           args: [0, 256],
@@ -103,38 +144,43 @@ ApiClient.init(
         }
       }
     },
-    secret: {
-      type: DataTypes.STRING(1000),
-      field: 'RESTRICTED_IPS',
-      allowNull: false,
-      validate: {
-        len: {
-          args: [0, 1000],
-          msg: COLUMN_VALIDATION.LENGTH
-        }
-      }
-    },
-    salt: {
-      type: DataTypes.STRING(128),
-      field: 'KEY_SECRET_HASH',
-      allowNull: false,
-      validate: {
-        len: {
-          args: [0, 128],
-          msg: COLUMN_VALIDATION.LENGTH
-        }
-      }
-    },
     scopes: {
-      type: DataTypes.STRING(128),
-      field: 'KEY_SALT',
-      allowNull: false,
+      type: DataTypes.STRING(2048),
+      field: 'SCOPES',
       validate: {
         len: {
-          args: [0, 128],
+          args: [0, 2048],
           msg: COLUMN_VALIDATION.LENGTH
         }
       }
+    },
+    allowedIps: {
+      type: DataTypes.STRING(1024),
+      field: 'ALLOWED_IPS',
+      validate: {
+        len: {
+          args: [0, 1024],
+          msg: COLUMN_VALIDATION.LENGTH
+        }
+      }
+    },
+    restrictedIps: {
+      type: DataTypes.STRING(1024),
+      field: 'RESTRICTED_IPS',
+      validate: {
+        len: {
+          args: [0, 1024],
+          msg: COLUMN_VALIDATION.LENGTH
+        }
+      }
+    },
+    timeToLive: {
+      type: DataTypes.NUMBER,
+      field: 'TKN_TTL'
+    },
+    refreshTimeToLive: {
+      type: DataTypes.NUMBER,
+      field: 'RFRSH_TKN_TTL'
     },
     createdBy: {
       type: DataTypes.STRING(48),
@@ -188,7 +234,7 @@ ApiClient.init(
 
 //Hooks
 //references
-ApiClient.belongsTo(Status, {
+ApiClient.belongsTo(Lookup, {
   foreignKey: 'id',
   targetKey: 'statusId',
   as: 'status'

@@ -5,19 +5,19 @@ export interface AccessToken extends TimestampAttributes {
   id: number;
 
   // Foreign Key(s)
-  userId: number;
+  userId?: number;
   statusId: string;
+  tokenTypeId: string;
+  schemeTypeId: string;
 
   // Attribute(s)
-  name: string;
-  accessToken: string;
-  timeToLive?: number;
+  token: string;
+  secret?: string;
   scope?: string;
-  type?: string;
   expiresIn?: number;
   origin?: string;
   forceRefresh?: boolean;
-  cookie?: string;
   ipAddress?: string;
+  cookie?: string;
   expireDate?: Date;
 }

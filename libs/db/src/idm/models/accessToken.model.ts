@@ -1,6 +1,6 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import BiddlerLibrary from '../../global/biddler';
-import { Status, User } from '../../biddler/models';
+import { Lookup, User } from '../../idm/models';
 import { TimestampAttributes } from '../../global/interfaces/timeStampAttributes.interface';
 import { COLUMN_ALIAS, COLUMN_NAME, COLUMN_VALIDATION, DEFAULT_VALUE } from '../../common/db.enum';
 
@@ -9,26 +9,26 @@ interface AccessTokenAttributes extends TimestampAttributes {
   id: number;
 
   // Foreign Key(s)
-  userId: number;
+  userId?: number;
   statusId: string;
+  tokenTypeId: string;
+  schemeTypeId: string;
 
   // Attribute(s)
-  name: string;
-  accessToken: string;
-  timeToLive?: number;
+  token: string;
+  secret?: string;
   scope?: string;
-  type?: string;
   expiresIn?: number;
   origin?: string;
   forceRefresh?: boolean;
-  cookie?: string;
   ipAddress?: string;
+  cookie?: string;
   expireDate?: Date;
 }
 
 export type AccessTokenInput = Optional<
   AccessTokenAttributes,
-  'id' | 'accessToken' | 'createdDate' | 'lastUpdatedDate'
+  'id' | 'token' | 'createdDate' | 'lastUpdatedDate'
 >;
 export type AccessTokenOutput = Required<AccessTokenAttributes>;
 
@@ -42,18 +42,18 @@ class AccessToken
   // Foreign Key(s)
   public userId!: number;
   public statusId!: string;
+  public tokenTypeId!: string;
+  public schemeTypeId!: string;
 
   // Attribute(s)
-  public name!: string;
-  public accessToken!: string;
-  public timeToLive!: number;
+  public token!: string;
+  public secret!: string;
   public scope!: string;
-  public type!: string;
   public expiresIn!: number;
   public origin!: string;
   public forceRefresh!: boolean;
-  public cookie!: string;
   public ipAddress!: string;
+  public cookie!: string;
   public expireDate!: Date;
 
   // User stamp(s)
@@ -70,93 +70,96 @@ AccessToken.init(
   {
     id: {
       type: DataTypes.INTEGER,
-      field: 'ACS_ID',
+      field: 'ACS_TOKN_ID',
       allowNull: false,
       autoIncrement: true,
       primaryKey: true
     },
     userId: {
       type: DataTypes.INTEGER,
-      field: 'USER_ID',
-      allowNull: false
+      field: 'USER_ID'
     },
     statusId: {
       type: DataTypes.STRING(32),
       allowNull: false,
       field: COLUMN_NAME.STATUS_ID
     },
-    name: {
+    tokenTypeId: {
       type: DataTypes.STRING(32),
-      field: 'ACS_NAME',
-      allowNull: false
+      allowNull: false,
+      field: 'TOKN_TYP_LKP_ID'
     },
-    accessToken: {
-      type: DataTypes.STRING(256),
-      field: 'ACS_TOKN',
+    schemeTypeId: {
+      type: DataTypes.STRING(32),
+      allowNull: false,
+      field: 'SCHM_TYP_LKP_ID',
+      defaultValue: 'ascii'
+    },
+    token: {
+      type: DataTypes.STRING(1024),
+      field: 'TKN',
       allowNull: false,
       validate: {
         len: {
-          args: [0, 256],
+          args: [0, 1024],
           msg: COLUMN_VALIDATION.LENGTH
         }
       }
     },
-    timeToLive: {
-      type: DataTypes.DECIMAL,
-      field: 'TTL'
+    secret: {
+      type: DataTypes.STRING(512),
+      field: 'TKN_SCRT',
+      validate: {
+        len: {
+          args: [0, 512],
+          msg: COLUMN_VALIDATION.LENGTH
+        }
+      }
     },
     scope: {
       type: DataTypes.STRING(256),
-      field: 'SCOPES',
+      field: 'SCOPE',
       validate: {
         len: {
           args: [0, 256],
-          msg: COLUMN_VALIDATION.LENGTH
-        }
-      }
-    },
-    type: {
-      type: DataTypes.STRING(32),
-      field: 'ACS_TYPE',
-      validate: {
-        len: {
-          args: [0, 128],
           msg: COLUMN_VALIDATION.LENGTH
         }
       }
     },
     expiresIn: {
       type: DataTypes.INTEGER,
-      field: 'ACS_EXPRS_IN'
+      field: 'EXPIRS_IN',
+      defaultValue: 3600
     },
     origin: {
       type: DataTypes.STRING(256),
-      field: 'ACS_ORGN',
+      field: 'ORIGN',
+      defaultValue: '*',
       validate: {
         len: {
-          args: [0, 128],
+          args: [0, 256],
           msg: COLUMN_VALIDATION.LENGTH
         }
       }
     },
     forceRefresh: {
       type: DataTypes.BOOLEAN,
-      field: 'FORCE_RFRSH',
+      field: 'FRCE_RFRSH',
       defaultValue: true
     },
+    ipAddress: {
+      type: DataTypes.STRING(64),
+      field: 'IP_ADRS'
+    },
     cookie: {
-      type: DataTypes.STRING(256),
-      field: 'CKIE',
+      type: DataTypes.STRING(512),
+      field: 'COOKIE',
       validate: {
         len: {
-          args: [0, 128],
+          args: [0, 512],
           msg: COLUMN_VALIDATION.LENGTH
         }
       }
-    },
-    ipAddress: {
-      type: DataTypes.STRING(1024),
-      field: 'IP_ADDR'
     },
     expireDate: {
       type: DataTypes.DATE,
@@ -220,10 +223,22 @@ AccessToken.belongsTo(User, {
   as: 'user'
 });
 
-AccessToken.belongsTo(Status, {
+AccessToken.belongsTo(Lookup, {
   foreignKey: 'id',
   targetKey: 'statusId',
   as: 'status'
+});
+
+AccessToken.belongsTo(Lookup, {
+  foreignKey: 'id',
+  targetKey: 'tokenTypeId',
+  as: 'tokenType'
+});
+
+AccessToken.belongsTo(Lookup, {
+  foreignKey: 'id',
+  targetKey: 'schemeTypeId',
+  as: 'schemeType'
 });
 
 export default AccessToken;

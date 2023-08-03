@@ -2,7 +2,7 @@ import { DataTypes, Model, Optional } from 'sequelize';
 import BiddlerLibrary from '../../global/biddler';
 import { COLUMN_NAME, COLUMN_VALIDATION, DEFAULT_VALUE } from '../../common/db.enum';
 import { TimestampAttributes } from '../../global/interfaces/timeStampAttributes.interface';
-import Status from './status.model';
+import Lookup from './lookup.model';
 
 interface ApplicationAttributes extends TimestampAttributes {
   // Primary Key(s)
@@ -65,16 +65,15 @@ Application.init(
       field: 'APLCTN_NAME',
       allowNull: false,
       validate: {
-        max: {
-          args: [64],
-          msg: COLUMN_VALIDATION.MAX
+        len: {
+          args: [0, 64],
+          msg: COLUMN_VALIDATION.LENGTH
         }
       }
     },
     description: {
       type: DataTypes.STRING(128),
       field: 'APLCTN_DESC',
-      allowNull: true,
       validate: {
         len: {
           args: [0, 128],
@@ -120,7 +119,7 @@ Application.init(
   },
   {
     sequelize: BiddlerLibrary.dbs.biddler_idm_db,
-    tableName: 'PERMSN_INFO',
+    tableName: 'APLCTN_INFO',
     modelName: 'Application',
     schema: 'BIDDLER_IDM_DB',
     freezeTableName: true,
@@ -135,7 +134,7 @@ Application.init(
 // Hooks
 
 // References
-Application.belongsTo(Status, {
+Application.belongsTo(Lookup, {
   foreignKey: 'id',
   targetKey: 'statusId',
   as: 'status'

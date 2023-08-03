@@ -10,7 +10,7 @@ export const toApplication = (application: ApplicationOutput): Application => {
     createdDate: application.createdDate,
     createdBy: application.createdBy,
     lastUpdatedDate: application.lastUpdatedDate,
-    lastUpdatedBy: application.lastUpdatedBy,
+libs/db/src/idm/dal/models/accessToken.dal.ts    lastUpdatedBy: application.lastUpdatedBy,
     deletedAt: application.deletedAt
   };
 };

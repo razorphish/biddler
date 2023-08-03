@@ -1,41 +1,39 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 import { DataTypes, Model, Optional } from 'sequelize';
 import BiddlerLibrary from '../../global/biddler';
-import { COLUMN_NAME, COLUMN_VALIDATION, DEFAULT_VALUE } from '../../common/db.enum';
-import { TimestampAttributes } from '../../global/interfaces/timeStampAttributes.interface';
-import Status from './status.model';
+import { COLUMN_NAME, COLUMN_VALIDATION, DEFAULT_VALUE, COLUMN_ALIAS } from '../../common/db.enum';
+import { TimestampAttributes } from '../../global/interfaces';
 
-interface SystemAttributes extends TimestampAttributes {
+interface LookupAttributes extends TimestampAttributes {
   // Primary Key(s)
-  id: number;
+  id: string;
 
   // Foreign Key(s)
-  statusId: string;
-
   // Attribute(s)
-  name: string;
-  slug: string;
+  code: string;
+  group: string;
+  title?: string;
   description?: string;
-  url?: string;
+  isDefault?: boolean;
+  sortOrder?: number;
   effectiveStartDate?: Date;
   effectiveEndDate?: Date;
 }
 
-export interface SystemInput extends Optional<SystemAttributes, 'id' | 'createdDate'> {}
-export interface SystemOutput extends Required<SystemAttributes> {}
+export interface LookupInput extends Optional<LookupAttributes, 'id'> {}
+export interface LookupOutput extends LookupAttributes {}
 
-class System extends Model<SystemAttributes, SystemInput> implements SystemAttributes {
+class Lookup extends Model<LookupAttributes, LookupInput> implements LookupAttributes {
   // Primary Key(s)
-  public id!: number;
-
-  // Foreign Key(s)
-  public statusId!: string;
+  public id!: string;
 
   // Attribute(s)
-  public name!: string;
-  public slug!: string;
+  public code!: string;
+  public group!: string;
+  public title!: string;
   public description!: string;
-  public url!: string;
+  public isDefault!: boolean;
+  public sortOrder!: number;
   public effectiveStartDate!: Date;
   public effectiveEndDate!: Date;
 
@@ -49,24 +47,34 @@ class System extends Model<SystemAttributes, SystemInput> implements SystemAttri
   public readonly deletedAt!: Date;
 }
 
-System.init(
+Lookup.init(
   {
     id: {
-      type: DataTypes.NUMBER,
-      field: 'SYS_ID',
-      primaryKey: true,
-      autoIncrement: true,
-      allowNull: false
-    },
-    statusId: {
       type: DataTypes.STRING(32),
       allowNull: false,
-      field: COLUMN_NAME.STATUS_ID
+      field: 'LKP_ID',
+      primaryKey: true,
+      validate: {
+        len: {
+          args: [1, 32],
+          msg: COLUMN_VALIDATION.LENGTH
+        }
+      }
     },
-    name: {
+    code: {
+      type: DataTypes.STRING(32),
+      field: 'LKP_CD',
+      validate: {
+        len: {
+          args: [0, 128],
+          msg: COLUMN_VALIDATION.LENGTH
+        }
+      }
+    },
+    group: {
       type: DataTypes.STRING(64),
       allowNull: false,
-      field: 'SYS_NAME',
+      field: 'LKP_GRP_NAME',
       validate: {
         len: {
           args: [0, 64],
@@ -74,48 +82,42 @@ System.init(
         }
       }
     },
-    slug: {
-      type: DataTypes.STRING(96),
-      field: 'SYS_NAME_SLUG',
-      allowNull: false,
+    title: {
+      type: DataTypes.STRING(128),
+      field: 'LKP_TITLE',
       validate: {
         len: {
-          args: [0, 96],
+          args: [0, 128],
           msg: COLUMN_VALIDATION.LENGTH
         }
       }
     },
     description: {
       type: DataTypes.STRING(256),
-      field: 'SYS_DESC',
-      allowNull: true,
+      field: 'LKP_DESC',
       validate: {
         len: {
-          args: [0, 256],
+          args: [0, 64],
           msg: COLUMN_VALIDATION.LENGTH
         }
       }
     },
-    url: {
-      type: DataTypes.STRING(256),
-      field: 'SYS_URL',
-      allowNull: true,
-      validate: {
-        len: {
-          args: [0, 256],
-          msg: COLUMN_VALIDATION.LENGTH
-        }
-      }
+    isDefault: {
+      type: DataTypes.BOOLEAN,
+      field: 'LKP_DFLT',
+      defaultValue: false
+    },
+    sortOrder: {
+      type: DataTypes.DECIMAL(4, 2),
+      field: 'SORT_ORDR'
     },
     effectiveStartDate: {
       type: DataTypes.DATE,
-      field: COLUMN_NAME.EFFECTIVE_START_DATE,
-      allowNull: true
+      field: COLUMN_NAME.EFFECTIVE_START_DATE
     },
     effectiveEndDate: {
       type: DataTypes.DATE,
-      field: COLUMN_NAME.EFFECTIVE_END_DATE,
-      allowNull: false
+      field: COLUMN_NAME.EFFECTIVE_END_DATE
     },
     createdBy: {
       type: DataTypes.STRING(48),
@@ -154,25 +156,18 @@ System.init(
     }
   },
   {
-    sequelize: BiddlerLibrary.dbs.biddler_idm_db,
-    tableName: 'SYS_INFO',
-    modelName: 'System',
-    schema: 'BIDDLER_IDM_DB',
+    sequelize: BiddlerLibrary.dbs.biddler_db,
+    tableName: 'STUS_TYPE_LKP',
+    modelName: 'Lookup',
+    schema: 'BIDDLER_DB',
     freezeTableName: true,
     timestamps: true,
-    deletedAt: COLUMN_NAME.DELETED_AT,
-    updatedAt: COLUMN_NAME.LAST_UPDATED_DATE,
-    createdAt: COLUMN_NAME.CREATED_DT,
+    createdAt: COLUMN_ALIAS.CREATD_DT,
+    updatedAt: false,
+    deletedAt: COLUMN_ALIAS.DLTD_AT,
     paranoid: true
   }
 );
-
 // Hooks
 // References
-System.belongsTo(Status, {
-  foreignKey: 'id',
-  targetKey: 'statusId',
-  as: 'status'
-});
-
-export default System;
+export default Lookup;

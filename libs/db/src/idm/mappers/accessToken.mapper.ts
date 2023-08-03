@@ -8,18 +8,18 @@ export const toAccessToken = (output: AccessTokenOutput): AccessToken => {
     // Foreign Key(s)
     userId: output.userId,
     statusId: output.statusId,
+    tokenTypeId: output.tokenTypeId,
+    schemeTypeId: output.schemeTypeId,
 
     // Attribute(s)
-    name: output.name,
-    accessToken: output.accessToken,
-    timeToLive: output.timeToLive,
+    token: output.token,
+    secret: output.secret,
     scope: output.scope,
-    type: output.type,
     expiresIn: output.expiresIn,
     origin: output.origin,
     forceRefresh: output.forceRefresh,
-    cookie: output.cookie,
     ipAddress: output.ipAddress,
+    cookie: output.cookie,
     expireDate: output.expireDate,
 
     // Userstamp(s)

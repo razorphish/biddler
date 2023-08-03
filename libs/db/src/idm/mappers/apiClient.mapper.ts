@@ -13,9 +13,14 @@ export const toApiClient = (output: ApiClientOutput): ApiClient => {
 
     // Attribute(s)
     audience: output.audience,
+    subject: output.subject,
     secret: output.secret,
     salt: output.salt,
     scopes: output.scopes,
+    allowedIps: output.allowedIps,
+    restrictedIps: output.restrictedIps,
+    timeToLive: output.timeToLive,
+    refreshTimeToLive: output.refreshTimeToLive,
 
     // Userstamp(s)
     lastUpdatedBy: output.lastUpdatedBy,

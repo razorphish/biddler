@@ -1,9 +1,6 @@
-import { TimestampAttributes } from '../../global/interfaces/timeStampAttributes.interface';
+import { Optional } from 'sequelize';
 
-export interface ApiClient extends TimestampAttributes {
-  // Primary Key(s)
-  id: string;
-
+export type CreateApiClientDTO = {
   // Foreign Key(s)
   applicationId: number;
   systemIssuerId: number;
@@ -20,4 +17,15 @@ export interface ApiClient extends TimestampAttributes {
   restrictedIps?: string;
   timeToLive?: number;
   refreshTimeToLive?: number;
-}
+};
+
+export type UpdateApiClientDTO = Optional<
+  CreateApiClientDTO,
+  'applicationId' | 'systemIssuerId' | 'tokenTypeId' | 'statusId'
+>;
+
+export type FilterApiClientDTO = {
+  isActive?: boolean;
+  isDeleted?: boolean;
+  includeDeleted?: boolean;
+};
