@@ -3,7 +3,7 @@ import { DataTypes, Model, Optional } from 'sequelize';
 import { Lookup } from '.';
 import BiddlerLibrary from '../../global/biddler';
 import { COLUMN_ALIAS, COLUMN_NAME, COLUMN_VALIDATION, DEFAULT_VALUE } from '../../common/db.enum';
-import { TimestampAttributes } from '../interfaces/timestampAttributes.interface';
+import { TimestampAttributes } from '../../global/interfaces';
 
 interface AddressAttributes extends TimestampAttributes {
   id: number;
@@ -26,7 +26,8 @@ interface AddressAttributes extends TimestampAttributes {
   density?: string;
 }
 
-export interface AddressInput extends Optional<AddressAttributes, 'id'> {}
+export interface AddressInput
+  extends Optional<AddressAttributes, 'id' | 'createdDate' | 'lastUpdatedDate'> {}
 export interface AddressOutput extends Required<AddressAttributes> {}
 
 class Address extends Model<AddressAttributes, AddressInput> implements AddressAttributes {

@@ -1,5 +1,5 @@
 import { UserInput, UserOutput } from '../models/user.model';
-import { AllUserFilters } from '../dal/types';
+import { AllUserFilters } from '../dal/models/types';
 import * as DAL from '../dal/models/user.dal';
 
 export const all = (filters: AllUserFilters): Promise<UserOutput[]> => {

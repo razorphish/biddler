@@ -1,6 +1,6 @@
 import { Op } from 'sequelize';
 import { SystemInput, SystemOutput } from '../../models/system.model';
-import { AllSystemFilters } from '../types';
+import { AllSystemFilters } from './types';
 import { DbConfig } from '../../common/idm.const';
 import { System } from '../../models';
 import { isNil } from 'lodash';

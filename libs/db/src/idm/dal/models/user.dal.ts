@@ -1,6 +1,6 @@
 import { Op } from 'sequelize';
 import { UserInput, UserOutput } from '../../models/user.model';
-import { AllUserFilters } from '../types';
+import { AllUserFilters } from './types';
 import { DbConfig } from '../../common/idm.const';
 import { User } from '../../models';
 import { isNil } from 'lodash';

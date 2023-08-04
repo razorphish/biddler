@@ -4,6 +4,7 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import appConfig from '../config/app';
 import { ErrorsInterceptor } from '../common/interceptors/errors.interceptors';
 import { HealthCheckModule } from './healthCheck/healthCheck.module';
+import { AccessTokenModule } from './accessToken/accessToken.module';
 
 @Module({
   providers: [{ provide: APP_INTERCEPTOR, useClass: ErrorsInterceptor }],
@@ -13,7 +14,8 @@ import { HealthCheckModule } from './healthCheck/healthCheck.module';
       load: [appConfig],
       envFilePath: ['.env']
     }),
-    HealthCheckModule
+    HealthCheckModule,
+    AccessTokenModule
   ]
 })
 export class AppModule {}

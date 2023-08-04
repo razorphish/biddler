@@ -1,6 +1,6 @@
 import { Op } from 'sequelize';
 import { ApiClientInput, ApiClientOutput } from '../../models/apiClient.model';
-import { AllApiClientFilters } from '../types';
+import { AllApiClientFilters } from './types';
 import { DbConfig } from '../../common/idm.const';
 import { ApiClient } from '../../models';
 import { isNil } from 'lodash';

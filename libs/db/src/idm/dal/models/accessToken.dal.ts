@@ -1,6 +1,6 @@
 import { Op } from 'sequelize';
 import { AccessTokenInput, AccessTokenOutput } from '../../models/accessToken.model';
-import { AllAccessTokenFilters } from '../types';
+import { AllAccessTokenFilters } from './types';
 import { DbConfig } from '../../common/idm.const';
 import { AccessToken } from '../../models';
 import { isNil } from 'lodash';

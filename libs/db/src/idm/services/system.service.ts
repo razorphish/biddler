@@ -1,5 +1,5 @@
 import { SystemInput, SystemOutput } from '../models/system.model';
-import { AllSystemFilters } from '../dal/types';
+import { AllSystemFilters } from '../dal/models/types';
 import * as SystemDAL from '../dal/models/system.dal';
 
 export const create = async (payload: SystemInput): Promise<SystemOutput> => {

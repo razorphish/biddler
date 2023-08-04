@@ -1,6 +1,6 @@
 import { Op } from 'sequelize';
 import { EnvironmentInput, EnvironmentOutput } from '../../models/environment.model';
-import { AllEnvironmentFilters } from '../types';
+import { AllEnvironmentFilters } from './types';
 import { DbConfig } from '../../common/idm.const';
 import { Environment } from '../../models';
 import { isNil } from 'lodash';

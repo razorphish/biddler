@@ -1,5 +1,5 @@
 import { ApplicationInput, ApplicationOutput } from '../models/application.model';
-import { AllApplicationFilters } from '../dal/types';
+import { AllApplicationFilters } from '../dal/models/types';
 import * as DAL from '../dal/models/application.dal';
 
 export const all = (filters: AllApplicationFilters): Promise<ApplicationOutput[]> => {

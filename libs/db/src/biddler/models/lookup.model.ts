@@ -2,7 +2,7 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import BiddlerLibrary from '../../global/biddler';
 import { COLUMN_NAME, COLUMN_VALIDATION, DEFAULT_VALUE, COLUMN_ALIAS } from '../../common/db.enum';
-import { TimestampAttributes } from '../interfaces/timestampAttributes.interface';
+import { TimestampAttributes } from '../../global/interfaces';
 
 interface LookupAttributes extends TimestampAttributes {
   // Primary Key(s)
