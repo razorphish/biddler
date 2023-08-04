@@ -11,9 +11,9 @@ export const toUser = (output: UserOutput): User => {
     // Attribute(s)
     firstName: output.firstName,
     lastName: output.lastName,
-    email: output.email,
-    phone: output.phone,
     username: output.username,
+    email: output.email,
+    salt: output.salt,
     password: output.password,
 
     // Userstamp(s)

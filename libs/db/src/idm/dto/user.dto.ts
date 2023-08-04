@@ -1,24 +1,23 @@
 import { Optional } from 'sequelize';
-import { CreateUserRoleDTO } from './userRole.dto';
-
 export type CreateUserDTO = {
   //Foreign keys
   statusId: string;
+
   //Attributes
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone?: string;
+  firstName?: string;
+  lastName?: string;
   username: string;
-  password?: string;
+  email: string;
+  salt: string;
+  password: string;
 
   //Foreign keys
-  userRoles?: CreateUserRoleDTO[];
+  // userRoles?: CreateUserRoleDTO[];
 };
 
 export type UpdateUserDTO = Optional<
   CreateUserDTO,
-  'statusId' | 'firstName' | 'lastName' | 'email' | 'username'
+  'statusId' | 'username' | 'email' | 'salt' | 'password'
 >;
 
 export type FilterUserDTO = {
