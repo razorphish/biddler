@@ -1,18 +1,18 @@
 /**
  * --------------------------------------------------------
- * @file Service Layer: Access Token
+ * @file Service Layer: LookupService
  * @description Service layer should be used for data manipulation on/from payload
  * @author Antonio Marasco
  * --------------------------------------------------------
  */
 import { Injectable } from '@nestjs/common';
-import { AllAccessTokenFilters } from '../dal/models/types';
-import { AccessTokenInput, AccessTokenOutput } from '../interfaces';
-import * as DAL from '../dal/models/accessToken.dal';
+import { AllLookupFilters } from '../dal/models/types';
+import { LookupInput, LookupOutput } from '../interfaces';
+import * as DAL from '../dal/models/lookup.dal';
 
 @Injectable()
-export class AccessTokenService {
-  all(filters: AllAccessTokenFilters): Promise<AccessTokenOutput[]> {
+export class LookupService {
+  all(filters: AllLookupFilters): Promise<LookupOutput[]> {
     const queryFilters = {
       // attributes: ['id', 'title', 'sortOrder', 'statusId', 'description', 'icon'],
       ...filters
@@ -20,11 +20,11 @@ export class AccessTokenService {
     return DAL.all(queryFilters);
   }
 
-  byId(id: number, filters?: AllAccessTokenFilters): Promise<AccessTokenOutput> {
+  byId(id: number, filters?: AllLookupFilters): Promise<LookupOutput> {
     return DAL.byId(id, filters);
   }
 
-  create(payload: AccessTokenInput): Promise<AccessTokenOutput> {
+  create(payload: LookupInput): Promise<LookupOutput> {
     return DAL.create(payload);
   }
 
@@ -32,11 +32,11 @@ export class AccessTokenService {
     return DAL.deleteById(id);
   }
 
-  paginate(filters: AllAccessTokenFilters): Promise<{ rows: AccessTokenOutput[]; count: number }> {
+  paginate(filters: AllLookupFilters): Promise<{ rows: LookupOutput[]; count: number }> {
     return DAL.paginate(filters);
   }
 
-  update(id: number, payload: Partial<AccessTokenInput>): Promise<AccessTokenOutput> {
+  update(id: number, payload: Partial<LookupInput>): Promise<LookupOutput> {
     return DAL.update(id, payload);
   }
 }
