@@ -237,8 +237,8 @@ ApiClient.init(
 //Hooks
 //references
 ApiClient.belongsTo(Lookup, {
-  foreignKey: 'id',
-  targetKey: 'statusId',
+  targetKey: 'id',
+  foreignKey: 'statusId',
   as: 'status'
 });
 

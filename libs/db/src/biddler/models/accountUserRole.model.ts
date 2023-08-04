@@ -136,8 +136,8 @@ AccountUserRole.init(
 //Hooks
 //references
 AccountUserRole.belongsTo(Lookup, {
-  foreignKey: 'id',
-  targetKey: 'statusId',
+  foreignKey: 'statusId',
+  targetKey: 'id',
   as: 'status'
 });
 

@@ -126,7 +126,7 @@ User.init(
     }
   },
   {
-    sequelize: BiddlerLibrary.dbs.hpt_db,
+    sequelize: BiddlerLibrary.dbs.biddler_db,
     tableName: 'USER_INFO',
     modelName: 'User',
     schema: 'BIDDLER',
@@ -142,8 +142,8 @@ User.init(
 //Hooks
 //references
 User.belongsTo(Lookup, {
-  foreignKey: 'id',
-  targetKey: 'statusId',
+  foreignKey: 'statusId',
+  targetKey: 'id',
   as: 'status'
 });
 

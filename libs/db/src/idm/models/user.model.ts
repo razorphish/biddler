@@ -184,8 +184,8 @@ User.init(
 // Hooks
 // References
 User.belongsTo(Lookup, {
-  foreignKey: 'id',
-  targetKey: 'statusId',
+  targetKey: 'id',
+  foreignKey: 'statusId',
   as: 'status'
 });
 

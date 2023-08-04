@@ -163,7 +163,7 @@ AccessToken.init(
     },
     expireDate: {
       type: DataTypes.DATE,
-      field: 'EXP_DT'
+      field: 'EXPIR_DT'
     },
     createdBy: {
       type: DataTypes.STRING(48),
@@ -224,20 +224,20 @@ AccessToken.belongsTo(User, {
 });
 
 AccessToken.belongsTo(Lookup, {
-  foreignKey: 'id',
-  targetKey: 'statusId',
+  foreignKey: 'statusId',
+  targetKey: 'id',
   as: 'status'
 });
 
 AccessToken.belongsTo(Lookup, {
-  foreignKey: 'id',
-  targetKey: 'tokenTypeId',
+  targetKey: 'id',
+  foreignKey: 'tokenTypeId',
   as: 'tokenType'
 });
 
 AccessToken.belongsTo(Lookup, {
-  foreignKey: 'id',
-  targetKey: 'schemeTypeId',
+  targetKey: 'id',
+  foreignKey: 'schemeTypeId',
   as: 'schemeType'
 });
 

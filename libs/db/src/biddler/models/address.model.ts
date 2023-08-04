@@ -270,9 +270,9 @@ Address.init(
 
 // Hooks
 // References
-Address.hasOne(Lookup, {
-  foreignKey: 'id',
-  sourceKey: 'statusId',
+Address.belongsTo(Lookup, {
+  foreignKey: 'statusId',
+  targetKey: 'id',
   as: 'status'
 });
 

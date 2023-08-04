@@ -14,7 +14,7 @@ import * as DAL from '../dal/models/accessToken.dal';
 export class AccessTokenService {
   all(filters: AllAccessTokenFilters): Promise<AccessTokenOutput[]> {
     const queryFilters = {
-      attributes: ['id', 'title', 'sortOrder', 'statusId', 'description', 'icon'],
+      // attributes: ['id', 'title', 'sortOrder', 'statusId', 'description', 'icon'],
       includeDeleted: false,
       ...filters
     };

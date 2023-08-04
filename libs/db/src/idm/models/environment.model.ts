@@ -136,8 +136,8 @@ Environment.init(
 
 // References
 Environment.belongsTo(Lookup, {
-  foreignKey: 'id',
-  targetKey: 'statusId',
+  foreignKey: 'statusId',
+  targetKey: 'id',
   as: 'status'
 });
 

@@ -1,16 +1,5 @@
 import { toAccessToken } from './../mappers/accessToken.mapper';
-import {
-  Controller,
-  Get,
-  Query,
-  Param,
-  Post,
-  Body,
-  Delete,
-  Patch,
-  HttpStatus,
-  HttpException
-} from '@nestjs/common';
+import { Controller, Get, Query, Param, Post, Body, Delete, Patch } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiParam } from '@nestjs/swagger';
 import { AccessToken } from '../interfaces';
 import {
@@ -22,7 +11,7 @@ import { AccessTokenService } from '../services/accessToken.service';
 
 @ApiTags('Access Token')
 @Controller({
-  path: 'AccessToken',
+  path: 'accessToken',
   version: '1'
 })
 export class AccessTokenController {

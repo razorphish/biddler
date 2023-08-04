@@ -135,8 +135,8 @@ Application.init(
 
 // References
 Application.belongsTo(Lookup, {
-  foreignKey: 'id',
-  targetKey: 'statusId',
+  targetKey: 'id',
+  foreignKey: 'statusId',
   as: 'status'
 });
 
