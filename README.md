@@ -12,6 +12,8 @@ Run `nx serve biddler` for a dev server. Navigate to http://localhost:4200/. The
 
 Run `nx graph` to see a diagram of the dependencies of the projects.
 
+Run `nx affected:graph --base=master` to see diagram of affected projects
+
 ## Remote caching
 
 Run `npx nx connect-to-nx-cloud` to enable [remote caching](https://nx.app) and make CI faster.
