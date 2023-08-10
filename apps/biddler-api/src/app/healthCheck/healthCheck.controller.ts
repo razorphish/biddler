@@ -14,6 +14,7 @@ export class HealthCheckController {
 
   @Get()
   getHeathcheck(): HealthcheckResponse {
+    // added a column
     return this.service.healthCheck();
   }
 }
