@@ -1,6 +1,6 @@
 {
-  "affected": { "defaultBase": "master" },
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "affected": { "defaultBase": "master" },
   "npmScope": "biddler",
   "tasksRunnerOptions": {
     "default": {
