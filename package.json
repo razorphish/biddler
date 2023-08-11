@@ -3,6 +3,16 @@
   "version": "0.0.1",
   "license": "MIT",
   "scripts": {
+    "affected:deploy": "nx affected --target=deploy --base=master",
+    "affected:apps": "nx affected:apps --base=master",
+    "affected:libs": "nx affected:libs",
+    "affected:build": "nx affected:build",
+    "affected:e2e": "nx affected:e2e",
+    "affected:test": "nx affected:test",
+    "affected:lint": "nx affected:lint",
+    "affected:graph": "nx affected:graph --base=master",
+    "affected:dep-graph": "nx affected:dep-graph --base=master",
+    "affected": "nx affected",
     "db:setup": "./scripts/db-setup.sh",
     "db:remove": "./scripts/remove-db.sh",
     "db:reset": "./scripts/reset-db.sh"
