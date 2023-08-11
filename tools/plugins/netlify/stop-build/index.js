@@ -10,7 +10,7 @@ module.exports = {
     );
     if (!projectHasChanged) {
       utils.build.cancelBuild(
-        `Build was cancelled because ${currentProject} was not affected by the latest changes ${process.env}`
+        `Build was cancelled because ${currentProject} was not affected by the latest changes ${JSON.stringify(process.env)}`
       );
     }
   }
