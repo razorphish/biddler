@@ -20,3 +20,7 @@ CODE_OF_CONDUCT.md
 .prettierrc
 .eslintrc.json
 
+# NX files
+angular.json.config
+nx.json
+tsconfig.base.json
