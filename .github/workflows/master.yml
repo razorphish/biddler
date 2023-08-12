@@ -12,12 +12,15 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - uses: nrwl/nx-set-shas@v3
+
+      - name: Derive appropriate SHAs for base and head for `nx affected` commands
+        id: setSHAS
+        uses: nrwl/nx-set-shas@v3
         with:
-           main-branch-name: 'master'
+          main-branch-name: 'master'
       - run: npm ci
 
       - run: npx nx format:check
-      - run: npx nx affected -t lint --parallel=3 --base=master
-      - run: npx nx affected -t test --parallel=3 --configuration=ci --base=master
-      - run: npx nx affected -t build --parallel=3 --base=master
+      - run: npx nx affected -t lint --parallel=3
+      - run: npx nx affected -t test --parallel=3 --configuration=ci 
+      - run: npx nx affected -t build --parallel=3 
