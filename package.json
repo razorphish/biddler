@@ -13,6 +13,7 @@
     "affected:graph": "nx affected:graph --base=master",
     "affected:dep-graph": "nx affected:dep-graph --base=master",
     "affected": "nx affected",
+    "format:write" : "nx format:write",
     "db:setup": "./scripts/db-setup.sh",
     "db:remove": "./scripts/remove-db.sh",
     "db:reset": "./scripts/reset-db.sh"
