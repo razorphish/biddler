@@ -22,7 +22,7 @@ function projectChanged(currentSite, fromHash, toHash) {
   const output = execSync(getAffected).toString();
   //get the list of changed projects from the output
   const changedProjects = JSON.parse(output).projects;
-  console.log('================CHNAGNE===========')
+  console.log('================CHANGE===========')
   console.log(`currentSide:${currentSite} fromHash:${fromHash} toHash:${toHash}`)
   console.log(JSON.stringify(changedProjects))
   if (changedProjects.find(project => project === currentSite)) {
