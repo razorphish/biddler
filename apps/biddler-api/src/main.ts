@@ -37,6 +37,8 @@ async function bootstrap() {
 
   await app.listen(configService.get('app.port'));
 
+  console.log('Hello World');
+
   Logger.log(
     `🚀 Application [Biddler-api] is running on: http://localhost:${configService.get(
       'app.port'
