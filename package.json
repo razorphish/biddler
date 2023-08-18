@@ -16,7 +16,8 @@
     "format:write" : "nx format:write",
     "db:setup": "./scripts/db-setup.sh",
     "db:remove": "./scripts/remove-db.sh",
-    "db:reset": "./scripts/reset-db.sh"
+    "db:reset": "./scripts/reset-db.sh",
+    "start": "node dist/biddler-api/main.js"
   },
   "private": true,
   "dependencies": {

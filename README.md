@@ -22,6 +22,30 @@ Run `npx nx connect-to-nx-cloud` to enable [remote caching](https://nx.app) and 
 
 chmod +x the_file_name
 
+## Deploy NODEJS Apps
+https://nx.dev/recipes/node/node-server-fly-io#setup-docker
+
+To setup a new nodejs app for deployment
+```bash
+npx nx g @nx/node:setup-docker
+```
+
+Install flyctl - This is the Fly.io CLI.
+Create an account with fly auth signup or fly auth
+
+# Build Docker
+```bash
+npx nx docker-build biddler-api      
+```
+
+```bash
+fly launch --no-deploy
+```
+
+# Run Docker
+```
+docker run -p 8080:8080 -t biddler-api
+```
 ## Further help
 
 Visit the [Nx Documentation](https://nx.dev) to learn more.

@@ -3,11 +3,11 @@
 # Build the docker image with `npx nx docker-build biddler-api`.
 # Tip: Modify "docker-build" options in project.json to change docker build args.
 #
-# Run the container with `docker run -p 3000:3000 -t biddler-api`.
+# Run the container with `docker run -p 8080:8080 -t biddler-api`.
 FROM docker.io/node:lts-alpine
 
 ENV HOST=0.0.0.0
-ENV PORT=3000
+ENV PORT=8080
 
 WORKDIR /app
 
@@ -15,11 +15,10 @@ RUN addgroup --system biddler-api && \
   adduser --system -G biddler-api biddler-api
 
 COPY dist/apps/biddler-api biddler-api
-
 RUN chown -R biddler-api:biddler-api .
 
 # You can remove this install step if you build with `--bundle` option.
 # The bundled output will include external dependencies.
 # RUN npm --prefix biddler-api --omit=dev -f install
 
-CMD [ "node", "biddler-api" ]
+CMD [ "node", "biddler-api/main.js"]
