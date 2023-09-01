@@ -16,7 +16,8 @@
         "tsConfig": "apps/biddler-api/tsconfig.app.json",
         "assets": ["apps/biddler-api/src/assets"],
         "isolatedConfig": true,
-        "webpackConfig": "apps/biddler-api/webpack.config.js"
+        "webpackConfig": "apps/biddler-api/webpack.config.js",
+        "generatePackageJson": true
       },
       "configurations": {
         "development": {},

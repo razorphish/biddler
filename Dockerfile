@@ -22,7 +22,9 @@ RUN apt-get update -qq && \
 
 # Install node modules
 COPY --link package.json package-lock.json .
-RUN npm install --production=false
+# RUN npm install --production=false
+# Commented line above to replace with this
+Run npm install --omit=dev
 
 # Copy application code
 COPY --link . .

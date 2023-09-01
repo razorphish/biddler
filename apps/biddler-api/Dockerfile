@@ -19,6 +19,6 @@ RUN chown -R biddler-api:biddler-api .
 
 # You can remove this install step if you build with `--bundle` option.
 # The bundled output will include external dependencies.
-# RUN npm --prefix biddler-api --omit=dev -f install
+RUN npm --prefix biddler-api --omit=dev -f install
 
 CMD [ "node", "biddler-api/main.js"]

@@ -29,7 +29,7 @@ export class HealthCheckService {
 
   healthCheck(): HealthcheckResponse {
     return {
-      name: this.configService.get('app.name') || 'reports-api',
+      name: this.configService.get('app.name') || 'biddler-api',
       // version: packageJson?.version || this.configService.get('app.version') || '1.0.0',
       version: this.configService.get('app.version') || '1.0.0',
       started: new Date(this.startTime).toUTCString(),
