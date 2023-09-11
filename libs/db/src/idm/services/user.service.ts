@@ -11,7 +11,7 @@ import { UserInput, UserOutput } from '../interfaces';
 import * as DAL from '../dal/models/user.dal';
 
 @Injectable()
-export class ApplicationService {
+export class UserService {
   all(filters: AllUserFilters): Promise<UserOutput[]> {
     const queryFilters = {
       // attributes: ['id', 'title', 'sortOrder', 'statusId', 'description', 'icon'],
