@@ -21,6 +21,7 @@ export const toAccessToken = (output: AccessTokenOutput): AccessToken => {
     ipAddress: output.ipAddress,
     cookie: output.cookie,
     expireDate: output.expireDate,
+    issuedDate: output.issuedDate,
 
     // Userstamp(s)
     lastUpdatedBy: output.lastUpdatedBy,

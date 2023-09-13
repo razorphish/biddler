@@ -17,7 +17,7 @@ interface UserAttributes extends TimestampAttributes {
   lastName?: string;
   username: string;
   email: string;
-  salt: string;
+  salt?: string;
   password?: string;
 }
 
@@ -60,7 +60,7 @@ User.init(
       allowNull: false,
       field: 'USER_ID',
       primaryKey: true,
-      autoIncrement: false
+      autoIncrement: true
     },
     statusId: {
       type: DataTypes.STRING(32),
@@ -112,7 +112,6 @@ User.init(
     salt: {
       type: DataTypes.STRING(64),
       field: 'SALT',
-      allowNull: false,
       validate: {
         len: {
           args: [0, 64],
@@ -122,7 +121,6 @@ User.init(
     },
     password: {
       type: DataTypes.STRING(64),
-      allowNull: false,
       field: 'PWD',
       validate: {
         len: {
@@ -155,7 +153,6 @@ User.init(
     },
     createdDate: {
       type: DataTypes.DATE,
-      allowNull: false,
       field: COLUMN_NAME.CREATED_DT
     },
     lastUpdatedDate: {

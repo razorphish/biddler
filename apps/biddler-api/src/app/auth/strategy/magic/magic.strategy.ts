@@ -1,17 +1,23 @@
 import MagicLoginStrategy from 'passport-magic-login';
 import { PassportStrategy } from '@nestjs/passport';
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, Request } from '@nestjs/common';
 import { SignOptions } from 'jsonwebtoken';
 import { ConfigService } from '@nestjs/config';
 import { MagicMailService } from './magic.mailer.service';
 import { CreateMagicLinkDTO } from './types';
+import { IDM } from '@biddler/db';
 
 @Injectable()
 export class MagicStrategy extends PassportStrategy(MagicLoginStrategy) {
   public options = {};
   private readonly logger = new Logger(MagicStrategy.name);
 
-  constructor(service: ConfigService, private mailer: MagicMailService) {
+  constructor(
+    service: ConfigService,
+    private mailer: MagicMailService,
+    private accessTokenService: IDM.services.AccessTokenService,
+    private userService: IDM.services.UserService
+  ) {
     // Add JWT SignOptions here
     const jwtOptions: SignOptions = {
       algorithm: service.getOrThrow('auth.magicAlgorithm'),
@@ -34,6 +40,8 @@ export class MagicStrategy extends PassportStrategy(MagicLoginStrategy) {
       // "href" is your confirmUrl with the confirmation token,
       // for example "/auth/magiclogin/confirm?token=<longtoken>"
       sendMagicLink: async (destination, href, code, req) => {
+        this.logger.log('::sendEmail sending magic link...', destination, href, code, req.body);
+
         await this.sendEmail({
           to: destination,
           href: href,
@@ -41,10 +49,10 @@ export class MagicStrategy extends PassportStrategy(MagicLoginStrategy) {
           payload: req.body
         });
       },
-      verify: async (token, done) => {
-        console.log('verifying....');
-        console.log('payload', token);
-        return done(null, {});
+      verify: async (payload, done, req) => {
+        const token: string = req.query.token || req.body?.token;
+        this.logger.log('::verifying...', payload, token);
+        return done(null, await this.validate(payload, token), token);
       },
       jwtOptions: jwtOptions
     };
@@ -52,14 +60,29 @@ export class MagicStrategy extends PassportStrategy(MagicLoginStrategy) {
     this.options = options;
   }
 
-  async validate(payload: any, done) {
-    // Get or create a user with the provided email from the database
-    // return done(null, user);
-    // await this._magic.users.getMetadataByIssuer(payload.issuer);
-    // db operation
-    console.log('validating....');
-    const existingUser = {};
-    return done(null, {});
+  async validate(payload: any, token: string): Promise<IDM.interfaces.UserOutput> {
+    const user = await this.userService.findOrCreate(this.buildUser(payload));
+    this.accessTokenService.create({
+      userId: user.id,
+      statusId: 'st_active',
+      tokenTypeId: 'tt_jwt',
+      token: token,
+      scope: '*',
+      expireDate: payload.exp,
+      origin: payload.iss
+    });
+
+    return user;
+  }
+
+  private buildUser(payload): IDM.dtos.CreateUserDTO {
+    return {
+      statusId: 'st_active',
+      email: payload.destination,
+      username: payload.destination,
+      firstName: payload.firstName,
+      lastName: payload.lastName
+    };
   }
 
   private sendEmail(emailParams: {
@@ -68,15 +91,7 @@ export class MagicStrategy extends PassportStrategy(MagicLoginStrategy) {
     code: string;
     payload: CreateMagicLinkDTO;
   }) {
-    this.logger.log(
-      '::sendEmail sending magic link...',
-      emailParams.to,
-      emailParams.href,
-      emailParams.code,
-      emailParams.payload
-    );
-
-    this.mailer.sendMail(emailParams.payload.name, emailParams.to, emailParams.href);
+    this.mailer.sendMail(emailParams.payload.firstName, emailParams.to, emailParams.href);
     return true;
   }
 }

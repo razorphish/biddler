@@ -72,7 +72,7 @@ export const deleteById = async (id: number): Promise<boolean> => {
 };
 
 /**
- * @description Finds or creates a user based on criteria
+ * @description Finds or creates a user based on criteria.  All new users get a salt
  * @author Antonio Marasco
  * @date 05/25/2023
  * @param payload
@@ -81,9 +81,10 @@ export const deleteById = async (id: number): Promise<boolean> => {
 export const findOrCreate = async (payload: UserInput): Promise<UserOutput> => {
   const [model] = await User.findOrCreate({
     where: {
-      id: payload.id
+      [Op.or]: [{ ...(payload?.id && { id: payload.id }) }, { email: payload.email }]
     },
-    defaults: payload
+    defaults: payload,
+    logging: DbConfig.LOGGING
   });
 
   return model;

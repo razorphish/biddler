@@ -8,8 +8,8 @@ export type CreateUserDTO = {
   lastName?: string;
   username: string;
   email: string;
-  salt: string;
-  password: string;
+  salt?: string;
+  password?: string;
 
   //Foreign keys
   // userRoles?: CreateUserRoleDTO[];

@@ -9,6 +9,7 @@ import { Injectable } from '@nestjs/common';
 import { AllUserFilters } from '../dal/models/types';
 import { UserInput, UserOutput } from '../interfaces';
 import * as DAL from '../dal/models/user.dal';
+import * as crypter from '../../common/helpers/crypt.helper';
 
 @Injectable()
 export class UserService {
@@ -25,11 +26,21 @@ export class UserService {
   }
 
   create(payload: UserInput): Promise<UserOutput> {
+    if (!payload.salt) {
+      payload.salt = crypter.generateSaltSync();
+    }
     return DAL.create(payload);
   }
 
   deleteById(id: number): Promise<boolean> {
     return DAL.deleteById(id);
+  }
+
+  findOrCreate(payload: UserInput): Promise<UserOutput> {
+    if (!payload.salt) {
+      payload.salt = crypter.generateSaltSync();
+    }
+    return DAL.findOrCreate(payload);
   }
 
   paginate(filters: AllUserFilters): Promise<{ rows: UserOutput[]; count: number }> {

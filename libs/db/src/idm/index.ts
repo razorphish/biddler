@@ -5,7 +5,8 @@ import * as dal from './dal';
 import * as mappers from './mappers';
 import * as services from './services';
 import * as controllers from './controllers';
+import * as dtos from './dto';
 // import * as helpers from './common/';
 // import * as views from './views';
 
-export { controllers, dal, interfaces, mappers, models, services, types };
+export { controllers, dal, interfaces, mappers, models, services, types, dtos };

@@ -36,6 +36,8 @@ import { MagicMailService } from './strategy/magic/magic.mailer.service';
     OktaStrategy,
     MagicStrategy,
     IDM.services.ApiClientService,
+    IDM.services.AccessTokenService,
+    IDM.services.UserService,
     MagicMailService
   ],
   controllers: [AuthController, MagicController]

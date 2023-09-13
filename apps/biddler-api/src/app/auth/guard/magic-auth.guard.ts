@@ -9,14 +9,10 @@ export class MagicAuthGuard extends AuthGuard(['magiclogin']) {
   }
   canActivate(context: ExecutionContext) {
     // Authenticate
-    console.log('[MagicAuthGuard]::canActivate() authenticating.....');
     return super.canActivate(context);
   }
 
   handleRequest(err, user, info) {
-    console.log('err', err);
-    console.log('user', user);
-    console.log('info', info);
     if (err || !user) {
       throw err || new UnauthorizedException(info[0]);
     }

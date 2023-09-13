@@ -10,7 +10,7 @@ export type CreateSystemDTO = {
   effectiveEndDate?: Date;
 };
 
-export type UpdateUserDTO = Optional<CreateSystemDTO, 'name' | 'slug' | 'statusId'>;
+export type UpdateSystemDTO = Optional<CreateSystemDTO, 'name' | 'slug' | 'statusId'>;
 
 export type FilterSystemDTO = {
   isActive?: boolean;

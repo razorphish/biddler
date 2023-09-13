@@ -8,7 +8,7 @@ export interface AccessToken extends TimestampAttributes {
   userId?: number;
   statusId: string;
   tokenTypeId: string;
-  schemeTypeId: string;
+  schemeTypeId?: string;
 
   // Attribute(s)
   token: string;
@@ -20,4 +20,5 @@ export interface AccessToken extends TimestampAttributes {
   ipAddress?: string;
   cookie?: string;
   expireDate?: Date;
+  issuedDate?: Date;
 }

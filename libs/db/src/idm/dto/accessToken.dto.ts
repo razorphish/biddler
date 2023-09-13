@@ -21,6 +21,7 @@ export type CreateAccessTokenDTO = {
   ipAddress?: string;
   cookie?: string;
   expireDate?: Date;
+  issuedDate?: Date;
 };
 
 export type UpdateAccessTokenDTO = Optional<

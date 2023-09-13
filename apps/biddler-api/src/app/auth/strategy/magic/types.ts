@@ -13,10 +13,17 @@ export class CreateMagicLinkDTO {
 
   @ApiPropertyOptional({
     description: 'Name of the user to address email to',
-    example: 'David Marasco'
+    example: 'Antonio'
   })
   @IsString()
-  name: string;
+  firstName: string;
+
+  @ApiPropertyOptional({
+    description: 'Name of the user to address email to',
+    example: 'Marasco'
+  })
+  @IsString()
+  lastName: string;
 }
 
 export class CallbackMagicLinkDTO {

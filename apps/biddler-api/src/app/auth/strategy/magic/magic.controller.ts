@@ -13,6 +13,7 @@ import { MagicAuthGuard } from '../../guard/magic-auth.guard';
 import { Public } from '../../meta/IS_PUBLIC_KEY.meta';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CallbackMagicLinkDTO, CreateMagicLinkDTO } from './types';
+import { IDM } from '@biddler/db';
 
 @ApiTags('Auth: Magic Link')
 @Controller({
@@ -22,6 +23,7 @@ import { CallbackMagicLinkDTO, CreateMagicLinkDTO } from './types';
 export class MagicController {
   private readonly logger = new Logger(MagicController.name);
 
+  constructor(private accessTokenService: IDM.services.AccessTokenService) {}
   @Public()
   @Post('login')
   @ApiOperation({
@@ -43,7 +45,7 @@ export class MagicController {
     description: 'Password-less logging in'
   })
   callback(@Query() payload: CallbackMagicLinkDTO) {
-    this.logger.log(`callback(payload) ${payload}`);
+    this.logger.log(`::callback(payload) ${JSON.stringify(payload)}`);
     return payload;
   }
 

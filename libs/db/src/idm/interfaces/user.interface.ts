@@ -12,7 +12,7 @@ export interface User extends TimestampAttributes {
   lastName: string;
   username: string;
   email: string;
-  salt: string;
+  salt?: string;
   password?: string;
 
   // Children

@@ -12,7 +12,7 @@ interface AccessTokenAttributes extends TimestampAttributes {
   userId?: number;
   statusId: string;
   tokenTypeId: string;
-  schemeTypeId: string;
+  schemeTypeId?: string;
 
   // Attribute(s)
   token: string;
@@ -24,6 +24,7 @@ interface AccessTokenAttributes extends TimestampAttributes {
   ipAddress?: string;
   cookie?: string;
   expireDate?: Date;
+  issuedDate?: Date;
 }
 
 export type AccessTokenInput = Optional<
@@ -55,6 +56,7 @@ class AccessToken
   public ipAddress!: string;
   public cookie!: string;
   public expireDate!: Date;
+  public issuedDate!: Date;
 
   // User stamp(s)
   public createdBy!: string;
@@ -93,7 +95,7 @@ AccessToken.init(
       type: DataTypes.STRING(32),
       allowNull: false,
       field: 'SCHM_TYP_LKP_ID',
-      defaultValue: 'ascii'
+      defaultValue: 'tst_ascii'
     },
     token: {
       type: DataTypes.STRING(1024),
@@ -164,6 +166,10 @@ AccessToken.init(
     expireDate: {
       type: DataTypes.DATE,
       field: 'EXPIR_DT'
+    },
+    issuedDate: {
+      type: DataTypes.DATE,
+      field: 'ISSUED_DT'
     },
     createdBy: {
       type: DataTypes.STRING(48),
