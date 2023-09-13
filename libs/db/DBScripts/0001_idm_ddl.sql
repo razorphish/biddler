@@ -138,8 +138,8 @@ CREATE TABLE BIDDLER_IDM_DB.SYS_ISSUER (
   STUS_LKP_ID         VARCHAR(32) NOT NULL,
   TOKN_TYP_LKP_ID     VARCHAR(32) NOT NULL DEFAULT 'bearer' COMMENT 'Type of token: Default to ''bearer''',
 	ISSUER_NAME         VARCHAR(128) NOT NULL COMMENT 'Issuer Identifier for the Issuer of the response.',
-  TKN_TTL             INT NOT NULL COMMENT '(Time-To-Live) Maximum amount of time (seconds) ACCESS token has to live in application',
-  RFRSH_TKN_TTL       INT NULL COMMENT '(Time-To-Live) Maximum amount of time (seconds) REFRESH token has to live in application',
+  TKN_TTL             INT NOT NULL COMMENT '(Time-To-Live) Maximum amount of time (minutes) ACCESS token has to live in application',
+  RFRSH_TKN_TTL       INT NULL COMMENT '(Time-To-Live) Maximum amount of time (minutes) REFRESH token has to live in application',
   HASH_ALGORITHM      VARCHAR(32) NULL COMMENT 'Algorithm to use when generating tokens',
   ORIGIN              VARCHAR(1024) NULL DEFAULT '*' COMMENT 'CORS ORIGIN Space delimited array of URLs, IP addresses and/or IP Address ranges.  If blank or ''*'' then all are allowed, otherwise ONLY listed IP addresses allowed',
   RESTRICTED_IPS      VARCHAR(1024) NULL COMMENT 'Space delimited array of IP addresses and/or IP Address ranges that are restricted',
@@ -158,7 +158,7 @@ CREATE TABLE BIDDLER_IDM_DB.SYS_ISSUER (
 	CONSTRAINT SYS_ISSUER_FK    FOREIGN KEY (STUS_LKP_ID) REFERENCES BIDDLER_IDM_DB.LKP_INFO(LKP_ID),
   CONSTRAINT SYS_ISSUER_FK_1  FOREIGN KEY (TOKN_TYP_LKP_ID) REFERENCES BIDDLER_IDM_DB.LKP_INFO(LKP_ID),
   CONSTRAINT SYS_ISSUER_FK_2  FOREIGN KEY (SYS_ID) REFERENCES BIDDLER_IDM_DB.SYS_INFO(SYS_ID) ON DELETE CASCADE ON UPDATE CASCADE
-) COMMENT='The system'' token issuer manager.  A system can contain multiple issuers with different configurations defined depending on client needs';
+) COMMENT='The system token issuer manager.  A system can contain multiple issuers with different configurations defined depending on client needs';
 
 
 -- CLIENT

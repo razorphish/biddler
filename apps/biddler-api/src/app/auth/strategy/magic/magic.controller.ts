@@ -6,16 +6,15 @@ import {
   Response,
   Get,
   Logger,
-  Header,
-  Body
+  Body,
+  Query
 } from '@nestjs/common';
 import { MagicAuthGuard } from '../../guard/magic-auth.guard';
-import { MagicStrategy } from './magic.strategy';
 import { Public } from '../../meta/IS_PUBLIC_KEY.meta';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { CreateMagicLinkDTO } from './types';
+import { CallbackMagicLinkDTO, CreateMagicLinkDTO } from './types';
 
-@ApiTags('Magic Controller')
+@ApiTags('Auth: Magic Link')
 @Controller({
   path: 'auth/magic',
   version: '1'
@@ -23,28 +22,29 @@ import { CreateMagicLinkDTO } from './types';
 export class MagicController {
   private readonly logger = new Logger(MagicController.name);
 
-  constructor(private _magicStrategy: MagicStrategy) {}
-
   @Public()
   @Post('login')
-  @Header('content-type', 'application/json')
   @ApiOperation({
-    summary: 'Logins',
-    description: 'Creates a login'
+    summary: 'Sends email to user for logging in',
+    description: 'Creates a magic link login'
   })
-  send(@Body() payload: CreateMagicLinkDTO, @Request() req, @Response() res) {
-    this.logger.log(`all() `);
-    try {
-      this._magicStrategy.send(req, res);
-    } catch (error) {
-      throw new Error(error);
-    }
+  send(@Body() payload: CreateMagicLinkDTO) {
+    // The code to handle this api endpoint is in the middleware
+    // ../../middleware/magic.middlware.ts
+    // Code below does NOT get called
+    this.logger.log(`all(payload) ${payload}`);
   }
 
+  @Public()
   @UseGuards(MagicAuthGuard)
   @Get('callback')
-  callback(@Request() req) {
-    return req.user;
+  @ApiOperation({
+    summary: 'Callback for magic link url',
+    description: 'Password-less logging in'
+  })
+  callback(@Query() payload: CallbackMagicLinkDTO) {
+    this.logger.log(`callback(payload) ${payload}`);
+    return payload;
   }
 
   @Post('logout')

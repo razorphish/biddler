@@ -1,7 +1,6 @@
 import { ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { IS_PUBLIC_KEY } from '../meta/IS_PUBLIC_KEY.meta';
 
 @Injectable()
 export class MagicAuthGuard extends AuthGuard(['magiclogin']) {
@@ -9,22 +8,18 @@ export class MagicAuthGuard extends AuthGuard(['magiclogin']) {
     super();
   }
   canActivate(context: ExecutionContext) {
-    const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
-      context.getHandler(),
-      context.getClass()
-    ]);
-    if (isPublic) {
-      return true;
-    }
+    // Authenticate
+    console.log('[MagicAuthGuard]::canActivate() authenticating.....');
     return super.canActivate(context);
   }
 
   handleRequest(err, user, info) {
-    console.log(err);
-    console.log(user);
-    // if (err || !user) {
-    //   throw err || new UnauthorizedException();
-    // }
+    console.log('err', err);
+    console.log('user', user);
+    console.log('info', info);
+    if (err || !user) {
+      throw err || new UnauthorizedException(info[0]);
+    }
 
     return user;
   }

@@ -36,14 +36,14 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('docs', app, document);
 
-  await app.listen(configService.get('app.port'));
+  await app.listen(configService.getOrThrow('app.port'));
 
   console.log('Hello World');
 
   Logger.log(
-    `🚀 Application [Biddler-api] is running on: http://localhost:${configService.get(
-      'app.port'
-    )}/${configService.get('app.apiPrefix')}`
+    `🚀 Application [Biddler-api] is running on: ${configService.getOrThrow(
+      'app.apiPrefix'
+    )} on port ${configService.getOrThrow('app.port')}`
   );
 }
 
