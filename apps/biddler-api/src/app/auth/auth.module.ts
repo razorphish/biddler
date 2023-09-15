@@ -22,6 +22,9 @@ import { TwitterAuthModule } from './strategy/twitter';
 import { FacebookAuthConfig } from './strategy/facebook/facebook.config';
 import { TwitterAuthConfig } from './strategy/twitter/twitter.config';
 import { TwitterController } from './strategy/twitter/twitter.controller';
+import { GithubController } from './strategy/github/github.controller';
+import { GithubAuthModule } from './strategy/github';
+import { GithubAuthConfig } from './strategy/github/github.config';
 
 @Module({
   imports: [
@@ -47,6 +50,10 @@ import { TwitterController } from './strategy/twitter/twitter.controller';
     TwitterAuthModule.forRootAsync({
       inject: [ConfigService],
       useClass: TwitterAuthConfig
+    }),
+    GithubAuthModule.forRootAsync({
+      inject: [ConfigService],
+      useClass: GithubAuthConfig
     })
   ],
   providers: [
@@ -59,7 +66,13 @@ import { TwitterController } from './strategy/twitter/twitter.controller';
     IDM.services.UserService,
     MagicMailService
   ],
-  controllers: [MagicController, OktaController, FacebookController, TwitterController]
+  controllers: [
+    MagicController,
+    OktaController,
+    FacebookController,
+    TwitterController,
+    GithubController
+  ]
 })
 export class AuthModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

@@ -21,5 +21,8 @@ export default registerAs('auth', () => ({
   facebookCallbackURL: process.env.FACEBOOK_CALLBACK_URL,
   twitterConsumerKey: process.env.TWITTER_CONSUMER_KEY,
   twitterConsumerSecret: process.env.TWITTER_CONSUMER_SECRET,
-  twitterCallbackURL: process.env.TWITTER_CALLBACK_URL
+  twitterCallbackURL: process.env.TWITTER_CALLBACK_URL,
+  githubClientID: process.env.GITHUB_CLIENT_ID,
+  githubClientSecret: process.env.GITHUB_CLIENT_SECRET,
+  githubCallbackURL: process.env.GITHUB_CALLBACK_URL
 }));
