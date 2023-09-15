@@ -16,6 +16,8 @@ import { OktaController } from './strategy/okta/okta.controller';
 //import { OktaMiddleware } from './middleware/okta.middleware';
 import { OktaAuthModule } from './strategy/okta/okta.module';
 import { OktaAuthConfig } from './strategy/okta/okta.config';
+import { FacebookController } from './strategy/facebook/facebook.controller';
+import { FacebookAuthModule } from './strategy/facebook';
 
 @Module({
   imports: [
@@ -33,6 +35,10 @@ import { OktaAuthConfig } from './strategy/okta/okta.config';
     OktaAuthModule.forRootAsync({
       inject: [ConfigService],
       useClass: OktaAuthConfig
+    }),
+    FacebookAuthModule.forRootAsync({
+      inject: [ConfigService],
+      useClass: OktaAuthConfig
     })
   ],
   providers: [
@@ -45,7 +51,7 @@ import { OktaAuthConfig } from './strategy/okta/okta.config';
     IDM.services.UserService,
     MagicMailService
   ],
-  controllers: [MagicController, OktaController]
+  controllers: [MagicController, OktaController, FacebookController]
 })
 export class AuthModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

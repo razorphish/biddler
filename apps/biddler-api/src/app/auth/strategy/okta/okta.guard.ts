@@ -13,6 +13,11 @@ export class OktaAuthGuard extends AuthGuard(['okta']) {
     );
   }
 
+  canActivate(context: ExecutionContext) {
+    // Authenticate
+    return super.canActivate(context);
+  }
+
   handleRequest(err, req, info) {
     console.log('...handleRequest', err, req, info);
     if (err || !req.profile) {

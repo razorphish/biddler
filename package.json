@@ -52,6 +52,7 @@
     "nodemailer": "^6.9.5",
     "oauth2orize": "^1.11.1",
     "passport": "^0.6.0",
+    "passport-facebook": "^3.0.0",
     "passport-local": "^1.0.0",
     "passport-magic-login": "^1.2.2",
     "passport-okta-oauth20": "^1.1.0",

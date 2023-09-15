@@ -15,5 +15,8 @@ export default registerAs('auth', () => ({
   oktaSecret: process.env.OKTA_SECRET,
   oktaScope: process.env.OKTA_SCOPE.split(' '),
   oktaCallbackURL: process.env.OKTA_CALLBACK_URL,
-  oktaAuthorizationId: process.env.OKTA_AUTHORIZATION_ID
+  oktaAuthorizationId: process.env.OKTA_AUTHORIZATION_ID,
+  facebookClientID: process.env.FACEBOOK_CLIENT_ID,
+  facebookClientSecret: process.env.FACEBOOK_CLIENT_SECRET,
+  facebookCallbackURL: process.env.FACEBOOK_CALLBACK_URL
 }));
