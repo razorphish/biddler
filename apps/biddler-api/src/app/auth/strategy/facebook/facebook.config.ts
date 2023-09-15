@@ -8,7 +8,7 @@ export class FacebookAuthConfig implements FacebookAuthModuleOptionsFactory {
 
   createModuleOptions(): FacebookAuthModuleOptions {
     return {
-      clientKey: this.configService.getOrThrow('auth.facebookClientID'),
+      clientID: this.configService.getOrThrow('auth.facebookClientID'),
       clientSecret: this.configService.getOrThrow('auth.facebookClientSecret'),
       callbackURL: this.configService.getOrThrow('auth.facebookCallbackURL')
     };

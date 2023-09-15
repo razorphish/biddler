@@ -18,5 +18,8 @@ export default registerAs('auth', () => ({
   oktaAuthorizationId: process.env.OKTA_AUTHORIZATION_ID,
   facebookClientID: process.env.FACEBOOK_CLIENT_ID,
   facebookClientSecret: process.env.FACEBOOK_CLIENT_SECRET,
-  facebookCallbackURL: process.env.FACEBOOK_CALLBACK_URL
+  facebookCallbackURL: process.env.FACEBOOK_CALLBACK_URL,
+  twitterConsumerKey: process.env.TWITTER_CONSUMER_KEY,
+  twitterConsumerSecret: process.env.TWITTER_CONSUMER_SECRET,
+  twitterCallbackURL: process.env.TWITTER_CALLBACK_URL
 }));
