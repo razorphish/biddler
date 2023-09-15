@@ -1,15 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { MagicController } from './magic.controller';
+import { OktaController } from './okta.controller';
 
-describe('MagicController', () => {
-  let controller: MagicController;
+describe('OktaController', () => {
+  let controller: OktaController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [MagicController]
+      controllers: [OktaController]
     }).compile();
 
-    controller = module.get<MagicController>(MagicController);
+    controller = module.get<OktaController>(OktaController);
   });
 
   it('should be defined', () => {

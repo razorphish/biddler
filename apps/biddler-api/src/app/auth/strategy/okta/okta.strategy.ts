@@ -1,22 +1,29 @@
-import { Strategy, OktaProfile, OktaStrategyOptions } from 'passport-okta-oauth20';
+import { Injectable, Inject } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { Injectable } from '@nestjs/common';
+import { Strategy } from 'passport-okta-oauth20';
+import { merge } from 'lodash';
+import { OktaAuthModuleOptions, OktaAuthResult } from './okta.types';
+import { OKTA_HYBRID_AUTH_OPTIONS } from './okta.constants';
 
 @Injectable()
-export class OktaStrategy extends PassportStrategy(Strategy) {
-  constructor() {
-    const options: OktaStrategyOptions = {
-      audience: 'https://acme.okta.com',
-      clientID: 'oa6qp1vkvrgwABC12345',
-      clientSecret: 'qwertyA-fooBazB_DQSS-qqsQSD123',
-      scope: [], // ['openid', 'email', 'profile'],
-      callbackURL: 'http://localhost:3000/api/auth/okta/callback'
-    };
-    super(options);
+export class OktaAuthStrategy extends PassportStrategy(Strategy) {
+  constructor(
+    @Inject(OKTA_HYBRID_AUTH_OPTIONS)
+    options: OktaAuthModuleOptions
+  ) {
+    super(
+      merge(options, {
+        passReqToCallback: true
+      }) as OktaAuthModuleOptions
+    );
   }
 
-  async validate(accessToken: string, refreshToken, profile, done) {
-    const _profile: OktaProfile = profile;
-    return done(null, _profile);
+  async validate(originalRequest: any, accessToken: string, refreshToken: string, profile: any) {
+    return {
+      originalRequest,
+      accessToken,
+      refreshToken,
+      profile
+    } as OktaAuthResult;
   }
 }

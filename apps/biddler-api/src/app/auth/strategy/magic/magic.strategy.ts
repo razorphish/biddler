@@ -1,6 +1,6 @@
 import MagicLoginStrategy from 'passport-magic-login';
 import { PassportStrategy } from '@nestjs/passport';
-import { Injectable, Logger, Request } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { SignOptions } from 'jsonwebtoken';
 import { ConfigService } from '@nestjs/config';
 import { MagicMailService } from './magic.mailer.service';
@@ -8,9 +8,9 @@ import { CreateMagicLinkDTO } from './types';
 import { IDM } from '@biddler/db';
 
 @Injectable()
-export class MagicStrategy extends PassportStrategy(MagicLoginStrategy) {
+export class MagicAuthStrategy extends PassportStrategy(MagicLoginStrategy) {
   public options = {};
-  private readonly logger = new Logger(MagicStrategy.name);
+  private readonly logger = new Logger(MagicAuthStrategy.name);
 
   constructor(
     service: ConfigService,

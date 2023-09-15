@@ -1,10 +1,9 @@
 import { ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 
 @Injectable()
 export class MagicAuthGuard extends AuthGuard(['magiclogin']) {
-  constructor(private reflector: Reflector) {
+  constructor() {
     super();
   }
   canActivate(context: ExecutionContext) {

@@ -9,7 +9,7 @@ import {
   Body,
   Query
 } from '@nestjs/common';
-import { MagicAuthGuard } from '../../guard/magic-auth.guard';
+import { MagicAuthGuard } from './magic.guard';
 import { Public } from '../../meta/IS_PUBLIC_KEY.meta';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CallbackMagicLinkDTO, CreateMagicLinkDTO } from './types';
@@ -23,7 +23,6 @@ import { IDM } from '@biddler/db';
 export class MagicController {
   private readonly logger = new Logger(MagicController.name);
 
-  constructor(private accessTokenService: IDM.services.AccessTokenService) {}
   @Public()
   @Post('login')
   @ApiOperation({
@@ -34,7 +33,7 @@ export class MagicController {
     // The code to handle this api endpoint is in the middleware
     // ../../middleware/magic.middlware.ts
     // Code below does NOT get called
-    this.logger.log(`all(payload) ${payload}`);
+    this.logger.log(`send(payload) ${payload}`);
   }
 
   @Public()

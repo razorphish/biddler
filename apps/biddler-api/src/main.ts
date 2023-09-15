@@ -8,6 +8,7 @@ import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app/app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as session from 'express-session';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
@@ -18,6 +19,15 @@ async function bootstrap() {
     new ValidationPipe({
       transform: true,
       whitelist: true
+    })
+  );
+
+  // Added express session
+  app.use(
+    session.default({
+      secret: 'my-secret',
+      resave: true,
+      saveUninitialized: false
     })
   );
 
@@ -38,7 +48,7 @@ async function bootstrap() {
 
   await app.listen(configService.getOrThrow('app.port'));
 
-  console.log('Hello World');
+  Logger.log('==============Hello World===============');
 
   Logger.log(
     `🚀 Application [Biddler-api] is running on: ${configService.getOrThrow(

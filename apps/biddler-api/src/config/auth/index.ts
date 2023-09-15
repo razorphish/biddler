@@ -9,5 +9,11 @@ export default registerAs('auth', () => ({
   magicIssuer: process.env.MAGIC_ISSUER,
   magicEmailSubject: process.env.MAGIC_EMAIL_SUBJECT,
   magicEmailFrom: process.env.MAGIC_EMAIL_FROM,
-  magicEmailTemplate: process.env.MAGIC_EMAIL_TEMPLATE
+  magicEmailTemplate: process.env.MAGIC_EMAIL_TEMPLATE,
+  oktaAudience: process.env.OKTA_AUDIENCE,
+  oktaClientID: process.env.OKTA_CLIENT_ID,
+  oktaSecret: process.env.OKTA_SECRET,
+  oktaScope: process.env.OKTA_SCOPE.split(' '),
+  oktaCallbackURL: process.env.OKTA_CALLBACK_URL,
+  oktaAuthorizationId: process.env.OKTA_AUTHORIZATION_ID
 }));
