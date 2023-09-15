@@ -25,6 +25,9 @@ import { TwitterController } from './strategy/twitter/twitter.controller';
 import { GithubController } from './strategy/github/github.controller';
 import { GithubAuthModule } from './strategy/github';
 import { GithubAuthConfig } from './strategy/github/github.config';
+import { LinkedinAuthModule } from './strategy/linkedIn';
+import { LinkedinAuthConfig } from './strategy/linkedIn/linkedin.config';
+import { LinkedinController } from './strategy/linkedIn/linkedin.controller';
 
 @Module({
   imports: [
@@ -54,6 +57,10 @@ import { GithubAuthConfig } from './strategy/github/github.config';
     GithubAuthModule.forRootAsync({
       inject: [ConfigService],
       useClass: GithubAuthConfig
+    }),
+    LinkedinAuthModule.forRootAsync({
+      inject: [ConfigService],
+      useClass: LinkedinAuthConfig
     })
   ],
   providers: [
@@ -71,7 +78,8 @@ import { GithubAuthConfig } from './strategy/github/github.config';
     OktaController,
     FacebookController,
     TwitterController,
-    GithubController
+    GithubController,
+    LinkedinController
   ]
 })
 export class AuthModule implements NestModule {

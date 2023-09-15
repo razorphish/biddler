@@ -24,5 +24,9 @@ export default registerAs('auth', () => ({
   twitterCallbackURL: process.env.TWITTER_CALLBACK_URL,
   githubClientID: process.env.GITHUB_CLIENT_ID,
   githubClientSecret: process.env.GITHUB_CLIENT_SECRET,
-  githubCallbackURL: process.env.GITHUB_CALLBACK_URL
+  githubCallbackURL: process.env.GITHUB_CALLBACK_URL,
+  linkedinClientID: process.env.LINKEDIN_CLIENT_ID,
+  linkedinClientSecret: process.env.LINKEDIN_CLIENT_SECRET,
+  linkedinCallbackURL: process.env.LINKEDIN_CALLBACK_URL,
+  linkedinScope: process.env.LINKEDIN_SCOPE.split(' ')
 }));
