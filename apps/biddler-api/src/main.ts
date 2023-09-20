@@ -22,10 +22,10 @@ async function bootstrap() {
     })
   );
 
-  // Added express session
+  // Added express session for 'local' auth
   app.use(
     session.default({
-      secret: 'my-secret',
+      secret: configService.getOrThrow('app.secret'),
       resave: true,
       saveUninitialized: false
     })

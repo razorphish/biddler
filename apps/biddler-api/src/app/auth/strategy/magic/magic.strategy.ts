@@ -77,7 +77,6 @@ export class MagicAuthStrategy extends PassportStrategy(MagicLoginStrategy) {
 
   private buildUser(payload): IDM.dtos.CreateUserDTO {
     return {
-      statusId: 'st_active',
       email: payload.destination,
       username: payload.destination,
       firstName: payload.firstName,

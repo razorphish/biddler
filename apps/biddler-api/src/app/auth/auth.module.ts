@@ -1,5 +1,5 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
-import { AuthService } from './auth.service';
 import { UsersModule } from '../users/users.module';
 import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from './strategy/local/local.strategy';
@@ -28,6 +28,8 @@ import { GithubAuthConfig } from './strategy/github/github.config';
 import { LinkedinAuthModule } from './strategy/linkedIn';
 import { LinkedinAuthConfig } from './strategy/linkedIn/linkedin.config';
 import { LinkedinController } from './strategy/linkedIn/linkedin.controller';
+import { ClientPasswordAuthStrategy } from './strategy/client-password/client-password.strategy';
+import { UserController } from './user/user.controller';
 
 @Module({
   imports: [
@@ -64,10 +66,10 @@ import { LinkedinController } from './strategy/linkedIn/linkedin.controller';
     })
   ],
   providers: [
-    AuthService,
     LocalStrategy,
     JwtStrategy,
     MagicAuthStrategy,
+    ClientPasswordAuthStrategy,
     IDM.services.ApiClientService,
     IDM.services.AccessTokenService,
     IDM.services.UserService,
@@ -79,7 +81,8 @@ import { LinkedinController } from './strategy/linkedIn/linkedin.controller';
     FacebookController,
     TwitterController,
     GithubController,
-    LinkedinController
+    LinkedinController,
+    UserController
   ]
 })
 export class AuthModule implements NestModule {

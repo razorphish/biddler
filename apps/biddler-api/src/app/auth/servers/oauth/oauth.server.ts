@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import * as oauth2orize from 'oauth2orize';
 import * as cuid from 'cuid';
-import { ClientEntity } from './client.entity';
+import { ClientModel } from '../models/client.model';
 
 @Injectable()
 export class OauthServer {
@@ -16,7 +16,7 @@ export class OauthServer {
   } = {};
 
   constructor() {
-    this.server.serializeClient((client: ClientEntity, done) => {
+    this.server.serializeClient((client: ClientModel, done) => {
       done(null, client.clientId);
     });
 
@@ -45,7 +45,7 @@ export class OauthServer {
       })
     );
 
-    // Code
+    // Exchnage authorization codes for access tokens
     this.server.exchange(
       oauth2orize.exchange.code((client, code, redirectUri, body, authInfo, issued) => {
         const grantCode = this.grantCodes[code];
@@ -68,26 +68,28 @@ export class OauthServer {
       })
     );
 
-    // Client Credentials
+    // Exchange client credentials for access tokens
     this.server.exchange(
       oauth2orize.exchange.clientCredentials((client, scope, done) => {
         //  Validate the client
       })
     );
 
-    // Password
+    // Exchange Username/Password for access tokens
     this.server.exchange(
       oauth2orize.exchange.password((client, username, password, scope, done) => {
         // Validate client
       })
     );
 
+    // Refresh token
     this.server.exchange(
       oauth2orize.exchange.refreshToken((client, refreshToken, scope, done) => {
         // Validate refresh token
       })
     );
 
+    // Authorization code
     this.server.exchange(
       oauth2orize.exchange.authorizationCode((client, code, redirectUri, body, authInfo, done) => {
         // Validate Authorizaiton Code
