@@ -9,6 +9,10 @@ export class ClientPasswordAuthGuard extends AuthGuard('oauth2-client-password')
   }
 
   handleRequest(err, user) {
+    console.log('made it');
+    console.log('err', err);
+    console.log('user', user);
+
     if (err || !user) {
       throw err || new UnauthorizedException();
     }

@@ -10,7 +10,7 @@ interface UserAttributes extends TimestampAttributes {
   id: number;
 
   // Foreign Key(s)
-  statusId: string;
+  statusId?: string;
 
   // Attribute(s)
   firstName?: string;
@@ -65,7 +65,8 @@ User.init(
     statusId: {
       type: DataTypes.STRING(32),
       allowNull: false,
-      field: COLUMN_NAME.STATUS_ID
+      field: COLUMN_NAME.STATUS_ID,
+      defaultValue: DEFAULT_VALUE.STATUS
     },
     firstName: {
       type: DataTypes.STRING(32),
@@ -120,11 +121,11 @@ User.init(
       }
     },
     password: {
-      type: DataTypes.STRING(64),
+      type: DataTypes.STRING(256),
       field: 'PWD',
       validate: {
         len: {
-          args: [0, 64],
+          args: [0, 256],
           msg: COLUMN_VALIDATION.LENGTH
         }
       }
@@ -165,6 +166,14 @@ User.init(
     }
   },
   {
+    defaultScope: {
+      attributes: {
+        exclude: ['password', 'salt']
+      }
+    },
+    scopes: {
+      withPasswordAndSalt: {}
+    },
     sequelize: BiddlerLibrary.dbs.biddler_idm_db,
     tableName: 'USER_INFO',
     modelName: 'User',
@@ -179,6 +188,7 @@ User.init(
 );
 
 // Hooks
+
 // References
 User.belongsTo(Lookup, {
   targetKey: 'id',

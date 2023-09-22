@@ -5,7 +5,7 @@ export interface User extends TimestampAttributes {
   id: number;
 
   // Foreign Key(s)
-  statusId: string;
+  statusId?: string;
 
   // Attribute(s)
   firstName: string;

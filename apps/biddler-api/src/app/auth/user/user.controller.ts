@@ -18,8 +18,8 @@ export class UserController {
     summary: 'Register a user',
     description: 'Registration submission for a user'
   })
-  register(@Body() registerDto: IDM.dtos.CreateUserDTO) {
-    return this.userService.register(registerDto);
+  async register(@Body() user: IDM.dtos.CreateUserDTO) {
+    return IDM.mappers.toUser(await this.userService.register(user));
   }
 
   @Public()

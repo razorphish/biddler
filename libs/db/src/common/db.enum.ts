@@ -24,5 +24,6 @@ export enum COLUMN_ALIAS {
 }
 
 export enum DEFAULT_VALUE {
-  BY = 'SYSTEM'
+  BY = 'SYSTEM',
+  STATUS = 'st_active'
 }
