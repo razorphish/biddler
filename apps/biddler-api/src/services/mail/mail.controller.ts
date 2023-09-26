@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { MailService } from './mail.service';
-import { Public } from '../../app/auth/meta/IS_PUBLIC_KEY.meta';
+import { Public } from '../../common/decorators/meta/IS_PUBLIC_KEY.meta';
 
 @Controller()
 export class MailController {

@@ -6,7 +6,6 @@ import authConfig from '../config/auth';
 import mailConfig from '../config/mail';
 import { ErrorsInterceptor } from '../common/interceptors/errors.interceptors';
 import { HealthCheckModule } from './healthCheck/healthCheck.module';
-import { AccessTokenModule } from './accessToken/accessToken.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { JwtAuthGuard } from './auth/guard/jwt-auth.guard';
@@ -73,7 +72,6 @@ import { ApiClientModule } from './auth/client/apiClient.module';
       }
     }),
     HealthCheckModule,
-    AccessTokenModule,
     AuthModule,
     UsersModule,
     ApiClientModule

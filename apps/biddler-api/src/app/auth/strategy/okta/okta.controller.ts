@@ -1,5 +1,5 @@
-import { Controller, Post, UseGuards, Request, Response, Get, Logger, Query } from '@nestjs/common';
-import { Public } from '../../meta/IS_PUBLIC_KEY.meta';
+import { Controller, Post, UseGuards, Request, Response, Get, Logger } from '@nestjs/common';
+import { Public } from '../../../../common/decorators/meta/IS_PUBLIC_KEY.meta';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { OktaAuthResult } from './okta.types';
 import { OktaAuthGuard, UseOktaAuth } from './okta.guard';

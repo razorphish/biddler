@@ -2,7 +2,7 @@ import { Body, Controller, Post } from '@nestjs/common';
 import { UseClientPasswordAuth } from '../strategy/client-password';
 import { IDM } from '@biddler/db';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Public } from '../meta/IS_PUBLIC_KEY.meta';
+import { Public } from '../../../common/decorators/meta/IS_PUBLIC_KEY.meta';
 
 @ApiTags('Auth: User')
 @Controller({

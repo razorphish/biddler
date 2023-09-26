@@ -1,7 +1,7 @@
 import { Controller, Get, Query, Param, Post, Body, Delete, Patch } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiParam } from '@nestjs/swagger';
 import { IDM } from '@biddler/db';
-import { Public } from '../meta/IS_PUBLIC_KEY.meta';
+import { Public } from '../../../common/decorators/meta/IS_PUBLIC_KEY.meta';
 
 @ApiTags('Api Client')
 @Controller({

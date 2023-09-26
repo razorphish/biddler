@@ -1,5 +1,5 @@
 import { Controller, Post, Request, Response, Get, Logger } from '@nestjs/common';
-import { Public } from '../../meta/IS_PUBLIC_KEY.meta';
+import { Public } from '../../../../common/decorators/meta/IS_PUBLIC_KEY.meta';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { LinkedinAuthResult } from './linkedin.types';
 import { UseLinkedinAuth } from './linkedin.guard';
