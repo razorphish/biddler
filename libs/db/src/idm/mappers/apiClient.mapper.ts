@@ -1,7 +1,7 @@
 import { ApiClient, ApiClientOutput } from '../interfaces';
 
 export const toApiClient = (output: ApiClientOutput): ApiClient => {
-  return {
+  const apiClient = {
     // Primary Key(s)
     id: output.id,
 
@@ -12,15 +12,11 @@ export const toApiClient = (output: ApiClientOutput): ApiClient => {
     statusId: output.statusId,
 
     // Attribute(s)
-    audience: output.audience,
-    subject: output.subject,
-    secret: output.secret,
+    homepageURL: output.homepageURL,
+    clientID: output.clientID,
+    clientSecret: output.clientSecret,
     salt: output.salt,
     scopes: output.scopes,
-    allowedIps: output.allowedIps,
-    restrictedIps: output.restrictedIps,
-    timeToLive: output.timeToLive,
-    refreshTimeToLive: output.refreshTimeToLive,
 
     // Userstamp(s)
     lastUpdatedBy: output.lastUpdatedBy,
@@ -31,4 +27,8 @@ export const toApiClient = (output: ApiClientOutput): ApiClient => {
     lastUpdatedDate: output.lastUpdatedDate,
     deletedAt: output.deletedAt
   };
+
+  delete apiClient['salt'];
+
+  return apiClient;
 };

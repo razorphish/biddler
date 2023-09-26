@@ -98,7 +98,7 @@ SystemIssuer.init(
       validate: {
         len: {
           args: [0, 128],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('name')
         }
       }
     },
@@ -117,7 +117,7 @@ SystemIssuer.init(
       validate: {
         len: {
           args: [0, 32],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('hashAlgorithm')
         }
       }
     },
@@ -128,7 +128,7 @@ SystemIssuer.init(
       validate: {
         len: {
           args: [0, 1024],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('origin')
         }
       }
     },
@@ -138,7 +138,7 @@ SystemIssuer.init(
       validate: {
         len: {
           args: [0, 1024],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('restrictedIps')
         }
       }
     },
@@ -148,7 +148,7 @@ SystemIssuer.init(
       validate: {
         len: {
           args: [0, 1024],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('allowedIps')
         }
       }
     },
@@ -158,7 +158,7 @@ SystemIssuer.init(
       validate: {
         len: {
           args: [0, 512],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('methods')
         }
       }
     },
@@ -168,7 +168,7 @@ SystemIssuer.init(
       validate: {
         len: {
           args: [0, 512],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('allowedHeaders')
         }
       }
     },
@@ -178,7 +178,7 @@ SystemIssuer.init(
       validate: {
         len: {
           args: [0, 512],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('exposedHeaders')
         }
       }
     },
@@ -196,7 +196,7 @@ SystemIssuer.init(
       validate: {
         len: {
           args: [0, 48],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('createdBy')
         }
       },
       field: COLUMN_NAME.CREATED_BY,
@@ -209,7 +209,7 @@ SystemIssuer.init(
       validate: {
         len: {
           args: [0, 48],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('lastUpdatedBy')
         }
       }
     },

@@ -1,7 +1,11 @@
-export enum COLUMN_VALIDATION {
-  LENGTH = 'String length is not in this range',
-  MAX = 'String length is beyond max range'
-}
+export const COLUMN_VALIDATION = {
+  LENGTH: (field = 'unknown') : string => {
+    return `String length is not in this range for column[${field}]`;
+  },
+  MAX: (field = 'unknown') : string => {
+    return `String length is beyond max range for column [${field}]`;
+  }
+};
 
 export enum COLUMN_NAME {
   DELETED_AT = 'DLTD_AT',

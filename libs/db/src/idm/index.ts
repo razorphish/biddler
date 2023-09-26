@@ -1,7 +1,7 @@
 import * as models from './models';
 import * as interfaces from './interfaces';
 import * as types from './dal/models/types';
-import * as dal from './dal';
+import * as dal from './dal/views';
 import * as mappers from './mappers';
 import * as services from './services';
 import * as controllers from './controllers';

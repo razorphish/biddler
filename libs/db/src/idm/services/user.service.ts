@@ -9,14 +9,16 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { AllUserFilters } from '../dal/models/types';
 import { UserInput, UserOutput } from '../interfaces';
 import * as DAL from '../dal/models/user.dal';
-import * as crypter from '../../common/helpers/crypt.helper';
-import { pbkdf2, pbkdf2Sync, randomBytes } from 'crypto';
-import { logging } from '@biddler/logging';
+
+import {
+  compare,
+  generateSaltSync,
+  generateSaltWithPassword
+} from '../../common/helpers/crypt.helper';
 
 @Injectable()
 export class UserService {
-  private readonly HASH_ITERATIONS = 15000;
-  private readonly KEY_LEN = 32;
+  private readonly HASH_ROUNDS = 10;
 
   all(filters: AllUserFilters): Promise<UserOutput[]> {
     const queryFilters = {
@@ -31,7 +33,7 @@ export class UserService {
   }
 
   async create(payload: UserInput): Promise<UserOutput> {
-    const { salt, hash } = await this._generatePasswordHash(payload.password);
+    const { salt, hash } = await generateSaltWithPassword(this.HASH_ROUNDS, payload.password);
     payload.salt = salt;
 
     if (payload.password) {
@@ -47,7 +49,7 @@ export class UserService {
 
   findOrCreate(payload: UserInput): Promise<UserOutput> {
     if (!payload.salt) {
-      payload.salt = crypter.generateSaltSync();
+      payload.salt = generateSaltSync();
     }
     return DAL.findOrCreate(payload);
   }
@@ -61,7 +63,7 @@ export class UserService {
   }
 
   async register(payload: UserInput): Promise<UserOutput> {
-    const { salt, hash } = await this._generatePasswordHash(payload.password);
+    const { salt, hash } = await generateSaltWithPassword(this.HASH_ROUNDS, payload.password);
 
     payload.salt = salt;
     payload.password = hash;
@@ -72,44 +74,10 @@ export class UserService {
   async authenticate(username: string, password: string): Promise<boolean> {
     const user = await DAL.byUsername(username, { attributes: ['username', 'password', 'id'] });
 
-    if (!user || !this._compare(password, user.password)) {
+    if (!user || !compare(password, user.password)) {
       throw new UnauthorizedException('Invalid user');
     }
 
     return true;
-  }
-
-  private _compare(password, hash) {
-    if (!hash.startsWith('pbkdf2_')) {
-      return false;
-    }
-    const parts = hash.split('$');
-    const iterations = +parts[1];
-    const salt = parts[2];
-    const digest = parts[0].split('_')[1];
-
-    return (
-      pbkdf2Sync(password, salt, iterations, this.KEY_LEN, digest).toString('base64') === parts[3]
-    );
-  }
-
-  private async _generatePasswordHash(password: string): Promise<{ salt: string; hash: string }> {
-    const salt = randomBytes(12).toString('base64');
-    const key = await new Promise<string>((resolve, reject) => {
-      pbkdf2(password, salt, this.HASH_ITERATIONS, this.KEY_LEN, 'sha256', (err, result) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(result.toString('base64'));
-        }
-      });
-    });
-
-    const hash = `pbkdf2_sha256$${this.HASH_ITERATIONS}$${salt}$${key}`;
-
-    return {
-      salt,
-      hash
-    };
   }
 }

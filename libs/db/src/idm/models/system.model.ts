@@ -69,7 +69,7 @@ System.init(
       validate: {
         len: {
           args: [0, 64],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('name')
         }
       }
     },
@@ -79,7 +79,7 @@ System.init(
       validate: {
         len: {
           args: [0, 96],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('slug')
         }
       }
     },
@@ -89,7 +89,7 @@ System.init(
       validate: {
         len: {
           args: [0, 64],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('description')
         }
       }
     },
@@ -99,7 +99,7 @@ System.init(
       validate: {
         len: {
           args: [0, 256],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('url')
         }
       }
     },
@@ -116,7 +116,7 @@ System.init(
       validate: {
         len: {
           args: [0, 48],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('createdBy')
         }
       },
       field: COLUMN_NAME.CREATED_BY,
@@ -129,7 +129,7 @@ System.init(
       validate: {
         len: {
           args: [0, 48],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('lastUpdatedBy')
         }
       }
     },

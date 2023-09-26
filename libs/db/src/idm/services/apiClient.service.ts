@@ -9,6 +9,13 @@ import { Injectable } from '@nestjs/common';
 import { AllApiClientFilters } from '../dal/models/types';
 import { ApiClientInput, ApiClientOutput } from '../interfaces';
 import * as DAL from '../dal/models/apiClient.dal';
+import {
+  compare,
+  generateRandomID,
+  generateSaltSync,
+  generateSaltWithPassword,
+  generateSecretKeyWithHash
+} from '../../common/helpers/crypt.helper';
 
 @Injectable()
 export class ApiClientService {
@@ -25,6 +32,15 @@ export class ApiClientService {
   }
 
   create(payload: ApiClientInput): Promise<ApiClientOutput> {
+    // payload.clientID = generateRandomID();
+
+    // const { key, salt, hash } = generateSecretKeyWithHash();
+
+    // (payload.salt = salt), (payload.clientSecret = hash);
+    // const apiClient = await DAL.create(payload);
+    // apiClient.key = key;
+    // return apiClient;
+    payload.clientID = 'none';
     return DAL.create(payload);
   }
 

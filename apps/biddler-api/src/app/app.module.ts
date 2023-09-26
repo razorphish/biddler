@@ -15,7 +15,7 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
 import { MailService } from '../services/mail/mail.service';
 import { MailController } from '../services/mail/mail.controller';
 import path from 'path';
-import { ClientModule } from './auth/client/client.module';
+import { ApiClientModule } from './auth/client/apiClient.module';
 
 @Module({
   providers: [
@@ -76,7 +76,7 @@ import { ClientModule } from './auth/client/client.module';
     AccessTokenModule,
     AuthModule,
     UsersModule,
-    ClientModule
+    ApiClientModule
   ]
 })
 export class AppModule {}

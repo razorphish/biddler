@@ -20,6 +20,10 @@ export class ErrorsInterceptor implements NestInterceptor {
           return throwError(() => err);
         }
 
+        if (err?.name && err.name === 'SequelizeValidationError') {
+          return throwError(() => new BadRequestException(mapSequelizeErrors(err)));
+        }
+
         if (err instanceof Error) {
           if (err.message.indexOf('not found') > -1) {
             return throwError(() => new NotFoundException(err.message));
@@ -45,4 +49,11 @@ export class ErrorsInterceptor implements NestInterceptor {
 
     return cleaner;
   }
+}
+function mapSequelizeErrors(err: any): string {
+  const errObj = {};
+  err.errors.map((er) => {
+    errObj[er.path] = er.message;
+  });
+  return JSON.stringify(errObj);
 }

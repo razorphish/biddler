@@ -11,13 +11,9 @@ export interface ApiClient extends TimestampAttributes {
   statusId: string;
 
   // Attribute(s)
-  audience?: string;
-  subject?: string;
-  secret?: string;
+  homepageURL?: string;
+  clientID?: string;
+  clientSecret?: string;
   salt?: string;
   scopes?: string;
-  allowedIps?: string;
-  restrictedIps?: string;
-  timeToLive?: number;
-  refreshTimeToLive?: number;
 }

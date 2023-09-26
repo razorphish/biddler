@@ -57,7 +57,7 @@ Lookup.init(
       validate: {
         len: {
           args: [1, 32],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('id')
         }
       }
     },
@@ -67,7 +67,7 @@ Lookup.init(
       validate: {
         len: {
           args: [0, 128],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('code')
         }
       }
     },
@@ -78,7 +78,7 @@ Lookup.init(
       validate: {
         len: {
           args: [0, 64],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('group')
         }
       }
     },
@@ -88,7 +88,7 @@ Lookup.init(
       validate: {
         len: {
           args: [0, 128],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('title')
         }
       }
     },
@@ -98,7 +98,7 @@ Lookup.init(
       validate: {
         len: {
           args: [0, 64],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('description')
         }
       }
     },
@@ -124,7 +124,7 @@ Lookup.init(
       validate: {
         len: {
           args: [0, 48],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('createdBy')
         }
       },
       field: COLUMN_NAME.CREATED_BY,
@@ -137,7 +137,7 @@ Lookup.init(
       validate: {
         len: {
           args: [0, 48],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('lastUpdatedBy')
         }
       }
     },

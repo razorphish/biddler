@@ -74,7 +74,7 @@ User.init(
       validate: {
         len: {
           args: [0, 32],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('firstName')
         }
       }
     },
@@ -84,7 +84,7 @@ User.init(
       validate: {
         len: {
           args: [0, 64],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('lastName')
         }
       }
     },
@@ -95,7 +95,7 @@ User.init(
       validate: {
         len: {
           args: [0, 256],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('username')
         }
       }
     },
@@ -106,7 +106,7 @@ User.init(
       validate: {
         len: {
           args: [0, 256],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('email')
         }
       }
     },
@@ -116,7 +116,7 @@ User.init(
       validate: {
         len: {
           args: [0, 64],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('salt')
         }
       }
     },
@@ -126,7 +126,7 @@ User.init(
       validate: {
         len: {
           args: [0, 256],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('password')
         }
       }
     },
@@ -135,7 +135,7 @@ User.init(
       validate: {
         len: {
           args: [0, 48],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('createdBy')
         }
       },
       field: COLUMN_NAME.CREATED_BY,
@@ -148,7 +148,7 @@ User.init(
       validate: {
         len: {
           args: [0, 48],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('lastUpdatedBy')
         }
       }
     },

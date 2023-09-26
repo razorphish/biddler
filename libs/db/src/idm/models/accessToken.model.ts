@@ -104,7 +104,7 @@ AccessToken.init(
       validate: {
         len: {
           args: [0, 1024],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('token')
         }
       }
     },
@@ -114,7 +114,7 @@ AccessToken.init(
       validate: {
         len: {
           args: [0, 512],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('secret')
         }
       }
     },
@@ -124,7 +124,7 @@ AccessToken.init(
       validate: {
         len: {
           args: [0, 256],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('scope')
         }
       }
     },
@@ -140,7 +140,7 @@ AccessToken.init(
       validate: {
         len: {
           args: [0, 256],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('origin')
         }
       }
     },
@@ -159,7 +159,7 @@ AccessToken.init(
       validate: {
         len: {
           args: [0, 512],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('cookie')
         }
       }
     },
@@ -176,7 +176,7 @@ AccessToken.init(
       validate: {
         len: {
           args: [0, 48],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('createdBy')
         }
       },
       field: COLUMN_NAME.CREATED_BY,
@@ -189,7 +189,7 @@ AccessToken.init(
       validate: {
         len: {
           args: [0, 48],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('lastUpdatedBy')
         }
       }
     },
