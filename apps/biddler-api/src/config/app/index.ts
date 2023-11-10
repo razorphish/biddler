@@ -6,5 +6,6 @@ export default registerAs('app', () => ({
   workingDirectory: process.env.PWD || process.cwd(),
   port: parseInt(process.env.APP_PORT),
   apiPrefix: process.env.API_PREFIX,
-  secret: process.env.APP_SECRET
+  secret: process.env.APP_SECRET,
+  version: process.env.APP_VERSION
 }));

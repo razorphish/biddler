@@ -1,7 +1,7 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Optional } from 'sequelize';
 import { Transform } from 'class-transformer';
-import { IsArray, IsNumber, IsOptional, IsBoolean, IsString, IsDate } from 'class-validator';
+import { IsNumber, IsOptional, IsBoolean, IsString } from 'class-validator';
 import { toBoolean, toNumber } from '../../common/helpers/cast.helper';
 
 export type CreateAccessTokenDTO = {

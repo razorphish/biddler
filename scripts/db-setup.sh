@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #####################################################################################
-# Script to scaffold and populate HPTSQL database in a docker container
+# Script to scaffold and populate BiddlerSQL database in a docker container
 #####################################################################################
 PASSWORD="4p+db"
 USER="root"
@@ -34,12 +34,12 @@ if [[ $(which docker) && $(docker --version) ]]; then
     result=$(docker inspect -f "{{.State.Running}}" "$CONTAINER_NAME")
 
     if [[ -z "$result" ]]; then 
-        echo "Docker run failed for hptsql! bye :("
+        echo "Docker run failed for biddlersql! bye :("
         exit 1;
     else
         sleep 5;
         echo "Verifying data..."
-        result=$(docker exec -i $CONTAINER_NAME mysql -u$USER -p$PASSWORD  <<< "select * FROM HPT_DB.ROLE_TYPE;")
+        result=$(docker exec -i $CONTAINER_NAME mysql -u$USER -p$PASSWORD  <<< "select * FROM BIDDLER_DB.ROLE_TYPE;")
 
         if [[ "$result" == *"ROLE_TYPE_CD"* ]]; then 
             echo "\n** Validation Result:** \n$result"
