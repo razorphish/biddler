@@ -15,9 +15,12 @@ interface ApiClientAttributes extends TimestampAttributes {
   applicationId: number;
   systemIssuerId: number;
   tokenTypeId: string;
+  clientTypeId: string;
+  grantTypeId: string;
   statusId: string;
 
   // Attribute(s)
+  applicationName: string;
   homepageURL?: string;
   clientID?: string;
   clientSecret?: string;
@@ -40,9 +43,12 @@ class ApiClient extends Model<ApiClientAttributes, ApiClientInput> implements Ap
   public applicationId!: number;
   public systemIssuerId!: number;
   public tokenTypeId!: string;
+  public clientTypeId!: string;
+  public grantTypeId!: string;
   public statusId!: string;
 
   // Attribute(s)
+  public applicationName!: string;
   public homepageURL!: string;
   public clientID!: string;
   public clientSecret!: string;
@@ -90,10 +96,42 @@ ApiClient.init(
         }
       }
     },
+    clientTypeId: {
+      type: DataTypes.STRING(32),
+      field: COLUMN_NAME.CLIENT_TYPE_ID,
+      allowNull: false,
+      validate: {
+        len: {
+          args: [0, 128],
+          msg: COLUMN_VALIDATION.LENGTH('clientTypeId')
+        }
+      }
+    },
+    grantTypeId: {
+      type: DataTypes.STRING(32),
+      field: COLUMN_NAME.GRANT_TYPE_ID,
+      allowNull: false,
+      validate: {
+        len: {
+          args: [0, 128],
+          msg: COLUMN_VALIDATION.LENGTH('grantTypeId')
+        }
+      }
+    },
     statusId: {
       type: DataTypes.STRING(32),
       field: COLUMN_NAME.STATUS_ID,
       allowNull: false
+    },
+    applicationName: {
+      type: DataTypes.STRING(256),
+      field: 'APP_NAME',
+      validate: {
+        len: {
+          args: [0, 256],
+          msg: COLUMN_VALIDATION.LENGTH('applicationName')
+        }
+      }
     },
     homepageURL: {
       type: DataTypes.STRING(256),
@@ -214,6 +252,24 @@ ApiClient.belongsTo(Lookup, {
   targetKey: 'id',
   foreignKey: 'statusId',
   as: 'status'
+});
+
+ApiClient.belongsTo(Lookup, {
+  targetKey: 'id',
+  foreignKey: 'tokenTypeId',
+  as: 'tokenType'
+});
+
+ApiClient.belongsTo(Lookup, {
+  targetKey: 'id',
+  foreignKey: 'clientTypeId',
+  as: 'clientType'
+});
+
+ApiClient.belongsTo(Lookup, {
+  targetKey: 'id',
+  foreignKey: 'grantTypeId',
+  as: 'grantType'
 });
 
 export default ApiClient;

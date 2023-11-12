@@ -3,6 +3,7 @@ import { HealthCheckService } from './healthCheck.service';
 import { ApiTags } from '@nestjs/swagger';
 
 import { HealthcheckResponse } from '../../common/interfaces/healthCheck.interface';
+import { Public } from '../../common/decorators/meta/IS_PUBLIC_KEY.meta';
 
 @ApiTags('Health Check')
 @Controller({
@@ -13,6 +14,7 @@ export class HealthCheckController {
   constructor(private readonly service: HealthCheckService) {}
 
   @Get()
+  @Public()
   getHeathcheck(): HealthcheckResponse {
     // added a column
     return this.service.healthCheck();

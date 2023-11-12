@@ -13,7 +13,6 @@ import { MagicAuthGuard } from './magic.guard';
 import { Public } from '../../../../common/decorators/meta/IS_PUBLIC_KEY.meta';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CallbackMagicLinkDTO, CreateMagicLinkDTO } from './types';
-import { IDM } from '@biddler/db';
 
 @ApiTags('Auth: Magic Link')
 @Controller({

@@ -62,11 +62,11 @@ Lookup.init(
       }
     },
     code: {
-      type: DataTypes.STRING(32),
+      type: DataTypes.STRING(64),
       field: 'LKP_CD',
       validate: {
         len: {
-          args: [0, 128],
+          args: [0, 64],
           msg: COLUMN_VALIDATION.LENGTH('code')
         }
       }

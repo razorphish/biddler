@@ -3,7 +3,12 @@ export {
   UpdateAccessTokenDTO,
   FilterAccessTokenDTO
 } from './accessToken.dto';
-export { CreateApiClientDTO, UpdateApiClientDTO, FilterApiClientDTO } from './apiClient.dto';
+export {
+  CreateApiClientDTO,
+  CreateApiClientResponseDTO,
+  UpdateApiClientDTO,
+  FilterApiClientDTO
+} from './apiClient.dto';
 export {
   CreateApplicationDTO,
   UpdateApplicationDTO,

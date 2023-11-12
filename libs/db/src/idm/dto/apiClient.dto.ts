@@ -20,15 +20,38 @@ export class CreateApiClientDTO {
   @IsString()
   tokenTypeId: string;
 
+  @ApiPropertyOptional({
+    description: 'https://oauth.net/2/client-types/',
+    example: 'oct_confidential'
+  })
+  @IsString()
+  clientTypeId: string;
+
+  @ApiPropertyOptional({
+    description: 'https://oauth.net/2/grant-types/',
+    example: 'ogt_authorization_code'
+  })
+  @IsString()
+  grantTypeId: string;
+
   @ApiPropertyOptional({ description: 'Status of record', example: 'st_active' })
   @IsString()
   statusId: string;
 
   // Attribute(s)
+  @ApiPropertyOptional({ description: 'Application Name', example: 'Biddler.production' })
+  @IsString()
+  applicationName: string;
+
   @ApiPropertyOptional({ description: 'Homepage Url', example: 'www.myhomepage.com' })
   @IsString()
   @IsOptional()
   homepageURL?: string;
+}
+
+export class CreateApiClientResponseDTO {
+  clientId: string;
+  key: string;
 }
 
 export type UpdateApiClientDTO = Optional<

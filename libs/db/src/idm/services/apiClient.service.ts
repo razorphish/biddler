@@ -10,10 +10,9 @@ import { AllApiClientFilters } from '../dal/models/types';
 import { ApiClientInput, ApiClientOutput } from '../interfaces';
 import * as DAL from '../dal/models/apiClient.dal';
 import {
-  compare,
+  generateHash,
   generateRandomID,
-  generateSaltSync,
-  generateSaltWithPassword,
+  generateSecretKey,
   generateSecretKeyWithHash
 } from '../../common/helpers/crypt.helper';
 
@@ -31,17 +30,18 @@ export class ApiClientService {
     return DAL.byId(id, filters);
   }
 
-  create(payload: ApiClientInput): Promise<ApiClientOutput> {
-    // payload.clientID = generateRandomID();
+  async create(payload: ApiClientInput): Promise<ApiClientOutput> {
+    payload.clientID = generateRandomID();
 
-    // const { key, salt, hash } = generateSecretKeyWithHash();
+    // Key with secret
+    const { key, salt, hash } = generateSecretKeyWithHash();
 
-    // (payload.salt = salt), (payload.clientSecret = hash);
-    // const apiClient = await DAL.create(payload);
-    // apiClient.key = key;
-    // return apiClient;
-    payload.clientID = 'none';
-    return DAL.create(payload);
+    // No real need to store the salt here since its appended to hash
+    // but it is simply for ease of access
+    (payload.salt = salt), (payload.clientSecret = hash);
+    const apiClient = await DAL.create(payload);
+    apiClient.key = key;
+    return apiClient;
   }
 
   deleteById(id: number): Promise<boolean> {

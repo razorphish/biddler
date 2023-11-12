@@ -1,14 +1,7 @@
-import {
-  Module,
-  MiddlewareConsumer,
-  RequestMethod,
-  UnauthorizedException,
-  Logger
-} from '@nestjs/common';
+import { Module, MiddlewareConsumer, RequestMethod, Logger } from '@nestjs/common';
 import { OauthServer } from './oauth.server';
 import { OauthController } from './oauth.controller';
 import { ensureLoggedIn } from 'connect-ensure-login';
-import { ClientModel } from '../models/client.model';
 import { Request, Response } from 'express';
 
 @Module({

@@ -94,15 +94,15 @@ export function generateSecretKey(size = 32, format: BufferEncoding = 'base64') 
   return buffer.toString(format);
 }
 
-export function generateSecretKeyHash(key) {
-  const salt = randomBytes(8).toString('hex');
+export function generateSecretKeyHashWithSalt(key) {
+  const salt = randomBytes(16).toString('hex');
   const buffer = scryptSync(key, salt, 64) as Buffer;
   return { hash: `${buffer.toString('hex')}.${salt}`, salt };
 }
 
 export function generateSecretKeyWithHash(size = 32, format: BufferEncoding = 'base64') {
   const key = generateSecretKey(size, format);
-  const { hash, salt } = generateSecretKeyHash(key);
+  const { hash, salt } = generateSecretKeyHashWithSalt(key);
   return {
     key,
     hash,

@@ -14,7 +14,7 @@ export class ApiClientController {
   @Get()
   @ApiOperation({
     summary: 'Gets all [ApiClient]s',
-    description: 'List of all available reports access token'
+    description: 'List of all available access token'
   })
   async all(@Query() filters: IDM.dtos.FilterApiClientDTO): Promise<IDM.interfaces.ApiClient[]> {
     return (await this.service.all(filters)).map(IDM.mappers.toApiClient);
@@ -23,7 +23,7 @@ export class ApiClientController {
   @Get('page')
   @ApiOperation({
     summary: 'Paginated list of [ApiClient]s',
-    description: 'List of all available report access token'
+    description: 'List of all available access token'
   })
   async paginate(
     @Query() filters: IDM.dtos.FilterApiClientDTO
@@ -36,10 +36,10 @@ export class ApiClientController {
 
   @Get(':id')
   @ApiOperation({
-    summary: 'Gets [ReportApiClient] by id',
-    description: 'Retrieves a single report access token by its id'
+    summary: 'Gets [ApiClient] by id',
+    description: 'Retrieves a single access token by its id'
   })
-  @ApiParam({ name: 'id', description: 'Id of report access token instance to get', example: 1 })
+  @ApiParam({ name: 'id', description: 'Id of access token instance to get', example: 1 })
   async byId(
     @Param('id') id: number,
     @Query() filters: IDM.dtos.FilterApiClientDTO
@@ -50,21 +50,27 @@ export class ApiClientController {
   @Post()
   @Public()
   @ApiOperation({
-    summary: 'Create a single [ReportApiClient]',
-    description: 'Creates a single report access token instance'
+    summary: 'Create a single [ApiClient]',
+    description: 'Creates a single access token instance'
   })
-  async create(@Body() payload: IDM.dtos.CreateApiClientDTO): Promise<IDM.interfaces.ApiClient> {
-    return IDM.mappers.toApiClient(await this.service.create(payload));
+  async create(
+    @Body() payload: IDM.dtos.CreateApiClientDTO
+  ): Promise<IDM.dtos.CreateApiClientResponseDTO> {
+    const apiClient = IDM.mappers.toApiClient(await this.service.create(payload));
+    return {
+      clientId: apiClient.clientID,
+      key: apiClient.key
+    };
   }
 
   @Delete(':id')
   @ApiOperation({
-    summary: 'Delete a single [ReportApiClient]',
-    description: 'Delete a single report access token instance by its id'
+    summary: 'Delete a single [ApiClient]',
+    description: 'Delete a single access token instance by its id'
   })
   @ApiParam({
     name: 'id',
-    description: 'Id of report access token instance to delete',
+    description: 'Id of access token instance to delete',
     example: 1
   })
   async deleteById(@Param('id') id: number): Promise<boolean> {
@@ -75,12 +81,12 @@ export class ApiClientController {
 
   @Patch(':id')
   @ApiOperation({
-    summary: 'Updates a single [ReportApiClient]',
-    description: 'Updates a single report instance by its id'
+    summary: 'Updates a single [ApiClient]',
+    description: 'Updates a single client instance by its id'
   })
   @ApiParam({
     name: 'id',
-    description: 'Id of report access token instance to update',
+    description: 'Id of access token instance to update',
     example: 1
   })
   async update(
