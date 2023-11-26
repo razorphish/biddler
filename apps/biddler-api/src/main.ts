@@ -9,6 +9,7 @@ import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app/app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as session from 'express-session';
+import * as passport from 'passport';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
@@ -25,8 +26,11 @@ async function bootstrap() {
   // Added express session for 'local' auth
   app.use(
     session.default({
+      cookie: {
+        maxAge: 86400000
+      },
       secret: configService.getOrThrow('app.secret'),
-      resave: true,
+      resave: false,
       saveUninitialized: false
     })
   );

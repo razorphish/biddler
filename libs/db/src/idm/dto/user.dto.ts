@@ -88,17 +88,17 @@ export class LoginUserDTO {
   @IsString()
   public password: string;
 
-  @ApiPropertyOptional({
-    description: 'ClientID',
-    example: '0oa2hl2inow5Uqc6c357'
-  })
-  @IsString()
-  public client_id: string;
+  // @ApiPropertyOptional({
+  //   description: 'ClientID',
+  //   example: '0oa2hl2inow5Uqc6c357'
+  // })
+  // @IsString()
+  // public client_id: string;
 
-  @ApiPropertyOptional({
-    description: 'Client Secret',
-    example: 'E9E9458449AB5C73FCEEBA916E1A4'
-  })
-  @IsString()
-  public client_secret: string;
+  // @ApiPropertyOptional({
+  //   description: 'Client Secret',
+  //   example: 'E9E9458449AB5C73FCEEBA916E1A4'
+  // })
+  // @IsString()
+  // public client_secret: string;
 }

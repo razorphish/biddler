@@ -1,12 +1,12 @@
 import { Request } from 'express';
-import { StrategyOption, StrategyOptionWithRequest, Profile } from 'passport-facebook';
+import { StrategyOptions, StrategyOptionsWithRequest, Profile } from 'passport-facebook';
 
 type FacebookAuthStrategyOptionsWithoutRequest = {
-  [K in keyof StrategyOption]: StrategyOption[K];
+  [K in keyof StrategyOptions]: StrategyOptions[K];
 };
 
 type FacebookAuthStrategyOptionsWithRequest = {
-  [K in keyof StrategyOptionWithRequest]: StrategyOptionWithRequest[K];
+  [K in keyof StrategyOptionsWithRequest]: StrategyOptionsWithRequest[K];
 };
 
 export type FacebookAuthModuleOptions =

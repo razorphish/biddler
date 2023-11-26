@@ -70,7 +70,10 @@ export const byEmail = async (email: string, filters?: AllUserFilters): Promise<
   return model;
 };
 
-export const byUsername = async (username: string, filters?: AllUserFilters): Promise<UserOutput> => {
+export const byUsername = async (
+  username: string,
+  filters?: AllUserFilters
+): Promise<UserOutput> => {
   const model = await User.findOne({
     where: {
       username
@@ -78,10 +81,6 @@ export const byUsername = async (username: string, filters?: AllUserFilters): Pr
     ...(filters?.attributes && { attributes: filters?.attributes }),
     logging: DbConfig.LOGGING
   });
-
-  if (!model) {
-    throw new Error(`not found:  cannot find by email: ${username}`);
-  }
 
   return model;
 };

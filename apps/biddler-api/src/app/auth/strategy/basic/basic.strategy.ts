@@ -1,18 +1,19 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, Logger } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { LocalAuthResult } from './local.types';
-import { Strategy } from 'passport-local';
-import { UserService } from 'libs/db/src/idm/services';
+import { BasicAuthResult } from './basic.types';
+import { BasicStrategy } from 'passport-http';
+import { IDM } from '@biddler/db';
 import { compare } from 'bcrypt';
 
 @Injectable()
-export class LocalAuthStrategy extends PassportStrategy(Strategy) {
-  constructor(private readonly _service: UserService) {
+export class BasicAuthStrategy extends PassportStrategy(BasicStrategy, 'basic') {
+  constructor(private readonly _service: IDM.services.UserService) {
     super();
   }
 
-  async validate(username: string, password: string) {
+  async verify(username: string, password: string, done: void) {
+    Logger.log('LOG *** userRepo.authenticate [Strategy:Basic]');
     // 1. Authenticate
     const user = await this._service.byUsername(username, {
       attributes: { include: ['username', 'password', 'id'] }
@@ -34,6 +35,6 @@ export class LocalAuthStrategy extends PassportStrategy(Strategy) {
       lastName: user.lastName,
       username: user.username,
       email: user.email
-    } as LocalAuthResult;
+    } as BasicAuthResult;
   }
 }

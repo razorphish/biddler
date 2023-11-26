@@ -11,6 +11,7 @@ export interface ApiClient extends TimestampAttributes {
   clientTypeId: string;
   grantTypeId: string;
   statusId: string;
+  userId: number;
 
   // Attribute(s)
   applicationName: string;

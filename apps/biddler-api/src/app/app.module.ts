@@ -15,6 +15,8 @@ import { MailService } from '../services/mail/mail.service';
 import { MailController } from '../services/mail/mail.controller';
 import path from 'path';
 import { ApiClientModule } from './auth/client/apiClient.module';
+import { PassportModule } from '@nestjs/passport';
+import { OauthModule } from './auth/servers/oauth/oauth.module';
 
 @Module({
   providers: [
@@ -29,6 +31,7 @@ import { ApiClientModule } from './auth/client/apiClient.module';
       load: [appConfig, authConfig, mailConfig],
       envFilePath: ['.env']
     }),
+    PassportModule.register({ session: true }),
     MailerModule.forRootAsync({
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => {
@@ -71,6 +74,7 @@ import { ApiClientModule } from './auth/client/apiClient.module';
         };
       }
     }),
+    OauthModule,
     HealthCheckModule,
     AuthModule,
     UsersModule,

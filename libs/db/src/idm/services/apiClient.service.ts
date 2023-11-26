@@ -9,12 +9,7 @@ import { Injectable } from '@nestjs/common';
 import { AllApiClientFilters } from '../dal/models/types';
 import { ApiClientInput, ApiClientOutput } from '../interfaces';
 import * as DAL from '../dal/models/apiClient.dal';
-import {
-  generateHash,
-  generateRandomID,
-  generateSecretKey,
-  generateSecretKeyWithHash
-} from '../../common/helpers/crypt.helper';
+import { generateRandomID, generateSecretKeyWithHash } from '../../common/helpers/crypt.helper';
 
 @Injectable()
 export class ApiClientService {
@@ -30,15 +25,19 @@ export class ApiClientService {
     return DAL.byId(id, filters);
   }
 
+  byClientID(clientID: string, filters?: AllApiClientFilters): Promise<ApiClientOutput> {
+    return DAL.byClientID(clientID, filters);
+  }
+
   async create(payload: ApiClientInput): Promise<ApiClientOutput> {
     payload.clientID = generateRandomID();
 
     // Key with secret
-    const { key, salt, hash } = generateSecretKeyWithHash();
+    const { key, hash, salt } = generateSecretKeyWithHash();
 
     // No real need to store the salt here since its appended to hash
     // but it is simply for ease of access
-    (payload.salt = salt), (payload.clientSecret = hash);
+    (payload.salt = salt), (payload.clientSecret = key), (payload.clientSecretHash = hash);
     const apiClient = await DAL.create(payload);
     apiClient.key = key;
     return apiClient;

@@ -9,6 +9,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { AllUserFilters } from '../dal/models/types';
 import { UserInput, UserOutput } from '../interfaces';
 import * as DAL from '../dal/models/user.dal';
+import { compareSync } from '../../common/helpers/crypt.helper';
 
 import {
   compare,
@@ -30,6 +31,10 @@ export class UserService {
 
   byId(id: number, filters?: AllUserFilters): Promise<UserOutput> {
     return DAL.byId(id, filters);
+  }
+
+  byUsername(username: string, filters?: AllUserFilters): Promise<UserOutput> {
+    return DAL.byUsername(username, filters);
   }
 
   async create(payload: UserInput): Promise<UserOutput> {
@@ -71,13 +76,22 @@ export class UserService {
     return DAL.create(payload);
   }
 
-  async authenticate(username: string, password: string): Promise<boolean> {
-    const user = await DAL.byUsername(username, { attributes: ['username', 'password', 'id'] });
+  async authenticate(username: string, password: string): Promise<boolean | UserOutput> {
+    const user = await DAL.byUsername(username, {
+      attributes: { include: ['username', 'password', 'id'] }
+    });
 
-    if (!user || !compare(password, user.password)) {
+    // 2. Determine if user exists
+    if (!user) {
+      throw new UnauthorizedException('User does not exist');
+    }
+
+    // 3. Check password
+    const compareHash = await compare(password, user.password);
+    if (!compareHash) {
       throw new UnauthorizedException('Invalid user');
     }
 
-    return true;
+    return user;
   }
 }

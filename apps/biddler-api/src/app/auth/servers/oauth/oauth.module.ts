@@ -1,7 +1,9 @@
 import { Module, MiddlewareConsumer, RequestMethod, Logger } from '@nestjs/common';
 import { OauthServer } from './oauth.server';
 import { OauthController } from './oauth.controller';
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import { ensureLoggedIn } from 'connect-ensure-login';
+import passport = require('passport');
 import { Request, Response } from 'express';
 
 @Module({
@@ -41,24 +43,29 @@ export class OauthModule {
           }
         )
       )
-      .forRoutes({ path: 'dialog/authorize', method: RequestMethod.GET });
+      .forRoutes({ path: 'auth/oauth/dialog/authorize', method: RequestMethod.GET });
 
     consumer.apply(ensureLoggedIn(), this.oauthServer.server.decision()).forRoutes({
-      path: 'dialog/authorize/decision',
+      path: 'auth/oauth/dialog/authorize/decision',
       method: RequestMethod.POST
     });
 
     consumer
       .apply(
         (req: Request, res: Response, next) => {
-          Logger.log(req.body, req.query);
+          Logger.log('*** oauth.Module authenticate');
+          //Logger.log(req.body, req.query);
           next(false);
         },
+        passport.authenticate(['oauth2-client-password'], {
+          passReqToCallback: true,
+          session: false
+        }),
         this.oauthServer.server.token(),
         this.oauthServer.server.errorHandler()
       )
       .forRoutes({
-        path: 'oauth/token',
+        path: 'auth/oauth/token',
         method: RequestMethod.POST
       });
 

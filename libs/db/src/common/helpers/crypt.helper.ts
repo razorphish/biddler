@@ -110,7 +110,7 @@ export function generateSecretKeyWithHash(size = 32, format: BufferEncoding = 'b
   };
 }
 
-export function compareSecretKeys(storedKey, suppliedKey) {
+export function compareSecretKeys(suppliedKey, storedKey) {
   const [hashedPassword, salt] = storedKey.split('.');
 
   const buffer = scryptSync(suppliedKey, salt, 64) as Buffer;

@@ -1,5 +1,6 @@
 import { Module, DynamicModule, Provider, Type } from '@nestjs/common';
 import { ModuleOptionsFactory, ModuleAsyncOptions } from './types';
+import { IDM } from '@biddler/db';
 
 export interface INestHybridAuthModule<T> {
   forRoot(options: T): DynamicModule;
@@ -27,7 +28,8 @@ export function createHybridAuthModule<T>(
             provide: providerToken,
             useValue: options
           },
-          strategy
+          strategy,
+          IDM.services.UserService
         ]
       };
     }
@@ -35,7 +37,7 @@ export function createHybridAuthModule<T>(
     static forRootAsync(options: ModuleAsyncOptions<ModuleOptionsFactory<T>, T>): DynamicModule {
       return {
         module: NestHybridAuthModule,
-        providers: [...this.createAsyncProviders(options), strategy]
+        providers: [...this.createAsyncProviders(options), strategy, IDM.services.UserService]
       };
     }
 

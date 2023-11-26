@@ -47,6 +47,11 @@ export class CreateApiClientDTO {
   @IsString()
   @IsOptional()
   homepageURL?: string;
+
+  @ApiPropertyOptional({ description: 'Id of current logged in user', example: 1 })
+  @IsNumber()
+  @IsOptional()
+  userId: number;
 }
 
 export class CreateApiClientResponseDTO {

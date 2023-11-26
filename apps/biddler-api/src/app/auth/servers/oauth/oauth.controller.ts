@@ -1,9 +1,11 @@
-import { Controller, Get, Res, Req, Render, Post } from '@nestjs/common';
+import { Controller, Get, Res, Req, Render, Post, Body } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
+import { FilterTokenDTO } from './oauth.dto';
+import { Public } from '../../../../common/decorators/meta/IS_PUBLIC_KEY.meta';
 
 @Controller()
 export class OauthController {
-  @Get('dialog/authorize')
+  @Get('auth/oauth/dialog/authorize')
   @Render('dialog')
   @ApiOperation({
     summary: 'Authorizes a client token',
@@ -17,13 +19,14 @@ export class OauthController {
     };
   }
 
-  @Post('dialog/authorize/decision')
+  @Post('auth/oauth/dialog/authorize/decision')
   decision() {
     return;
   }
 
-  @Post('oauth/token')
-  token() {
+  @Post('auth/oauth/token')
+  @Public()
+  token(@Body() filters: FilterTokenDTO) {
     return;
   }
 }

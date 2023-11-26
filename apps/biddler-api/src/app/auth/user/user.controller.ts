@@ -1,8 +1,8 @@
-import { Body, Controller, Post } from '@nestjs/common';
-import { UseClientPasswordAuth } from '../strategy/client-password';
+import { Body, Controller, Post, Request } from '@nestjs/common';
 import { IDM } from '@biddler/db';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Public } from '../../../common/decorators/meta/IS_PUBLIC_KEY.meta';
+import { UseLocalAuth } from '../strategy/local/local.guard';
 
 @ApiTags('Auth: User')
 @Controller({
@@ -24,12 +24,13 @@ export class UserController {
 
   @Public()
   @Post('login')
-  @UseClientPasswordAuth()
+  @UseLocalAuth()
   @ApiOperation({
     summary: 'Logins user to enter system',
     description: 'Logins the user to system'
   })
-  login(@Body() loginDto: IDM.dtos.LoginUserDTO) {
-    return this.userService.authenticate(loginDto.username, loginDto.password);
+  login(@Body() loginDto: IDM.dtos.LoginUserDTO, @Request() req) {
+    console.log('req.isAuthenticated()', req.isAuthenticated());
+    return req.user;
   }
 }

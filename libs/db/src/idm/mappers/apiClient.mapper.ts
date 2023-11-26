@@ -12,6 +12,7 @@ export const toApiClient = (output: ApiClientOutput): ApiClient => {
     clientTypeId: output.clientTypeId,
     grantTypeId: output.grantTypeId,
     statusId: output.statusId,
+    userId: output.userId,
 
     // Attribute(s)
     applicationName: output.applicationName,

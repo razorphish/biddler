@@ -1,8 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { UsersModule } from '../users/users.module';
-import { PassportModule } from '@nestjs/passport';
-import { LocalStrategy } from './strategy/local/local.strategy';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './strategy/jwt/jwt.strategy';
@@ -30,11 +28,13 @@ import { LinkedinAuthConfig } from './strategy/linkedIn/linkedin.config';
 import { LinkedinController } from './strategy/linkedIn/linkedin.controller';
 import { ClientPasswordAuthStrategy } from './strategy/client-password/client-password.strategy';
 import { UserController } from './user/user.controller';
+import { LocalAuthStrategy } from './strategy/local/local.strategy';
+import { BasicAuthModule } from './strategy/basic';
+import { BasicAuthConfig } from './strategy/basic/basic.config';
 
 @Module({
   imports: [
     UsersModule,
-    PassportModule,
     JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => {
@@ -63,13 +63,18 @@ import { UserController } from './user/user.controller';
     LinkedinAuthModule.forRootAsync({
       inject: [ConfigService],
       useClass: LinkedinAuthConfig
+    }),
+    BasicAuthModule.forRootAsync({
+      inject: [ConfigService],
+      useClass: BasicAuthConfig
     })
   ],
   providers: [
-    LocalStrategy,
     JwtStrategy,
     MagicAuthStrategy,
     ClientPasswordAuthStrategy,
+    LocalAuthStrategy,
+    //BasicAuthStrategy,
     IDM.services.ApiClientService,
     IDM.services.AccessTokenService,
     IDM.services.UserService,

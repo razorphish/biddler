@@ -4,7 +4,7 @@ import BiddlerLibrary from '../../global/biddler';
 import { TimestampAttributes } from '../../global/interfaces/timeStampAttributes.interface';
 import { COLUMN_NAME, COLUMN_VALIDATION, DEFAULT_VALUE } from '../../common/db.enum';
 import { COLUMN_ALIAS } from '../../common/db.enum';
-import Lookup from './lookup.model';
+import { Lookup, User } from '.';
 import { generateRandomID, generateSecretKeyWithHash } from '../../common/helpers/crypt.helper';
 
 interface ApiClientAttributes extends TimestampAttributes {
@@ -12,6 +12,7 @@ interface ApiClientAttributes extends TimestampAttributes {
   id: string;
 
   // Foreign Key(s)
+  userId: number;
   applicationId: number;
   systemIssuerId: number;
   tokenTypeId: string;
@@ -40,6 +41,7 @@ class ApiClient extends Model<ApiClientAttributes, ApiClientInput> implements Ap
   public id!: string;
 
   // Foreign Key(s)
+  public userId!: number;
   public applicationId!: number;
   public systemIssuerId!: number;
   public tokenTypeId!: string;
@@ -73,6 +75,11 @@ ApiClient.init(
       field: 'API_CLIENT_ID',
       primaryKey: true,
       autoIncrement: true,
+      allowNull: false
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+      field: 'USER_ID',
       allowNull: false
     },
     applicationId: {
@@ -145,15 +152,15 @@ ApiClient.init(
     },
     clientID: {
       type: DataTypes.STRING(36),
-      field: 'CLIENT_ID',
-      set() {
-        this.setDataValue('clientID', generateRandomID());
+      field: 'CLIENT_ID'
+      // set() {
+      //   this.setDataValue('clientID', generateRandomID());
 
-        const { key, salt, hash } = generateSecretKeyWithHash();
-        this.setDataValue('salt', salt);
-        this.setDataValue('clientSecretHash', hash);
-        this.setDataValue('clientSecret', key);
-      }
+      //   const { key, salt, hash } = generateSecretKeyWithHash();
+      //   this.setDataValue('salt', salt);
+      //   this.setDataValue('clientSecretHash', hash);
+      //   this.setDataValue('clientSecret', key);
+      // }
     },
     clientSecret: {
       type: DataTypes.VIRTUAL()
@@ -270,6 +277,12 @@ ApiClient.belongsTo(Lookup, {
   targetKey: 'id',
   foreignKey: 'grantTypeId',
   as: 'grantType'
+});
+
+ApiClient.belongsTo(User, {
+  targetKey: 'id',
+  foreignKey: 'userId',
+  as: 'user'
 });
 
 export default ApiClient;

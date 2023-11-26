@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import * as oauth2orize from 'oauth2orize';
 import * as cuid from 'cuid';
 import { ClientModel } from '../models/client.model';
@@ -17,10 +17,12 @@ export class OauthServer {
 
   constructor() {
     this.server.serializeClient((client: ClientModel, done) => {
+      Logger.log('*** server.authenticate [Exchange: Serialize Client]');
       done(null, client.clientId);
     });
 
     this.server.deserializeClient((id, done) => {
+      Logger.log('*** server.authenticate [Exchange: Deserialize Client]');
       // ::DBOperation
       // if (id === DummyClient.clientId) {
       //   done(null, DummyClient);
@@ -33,6 +35,7 @@ export class OauthServer {
 
     this.server.grant(
       oauth2orize.grant.code((client, redirectUri, user, res, req, issued) => {
+        Logger.log('*** server.authorize [Exchange: Grant Code]');
         const code = cuid.default();
 
         this.grantCodes[code] = {
@@ -48,6 +51,7 @@ export class OauthServer {
     // Exchnage authorization codes for access tokens
     this.server.exchange(
       oauth2orize.exchange.code((client, code, redirectUri, body, authInfo, issued) => {
+        Logger.log('*** server.authorize.exchange [Exchange: Code]');
         const grantCode = this.grantCodes[code];
         if (!grantCode) {
           return issued(new UnauthorizedException('Invalid Grant Code'));
@@ -71,6 +75,7 @@ export class OauthServer {
     // Exchange client credentials for access tokens
     this.server.exchange(
       oauth2orize.exchange.clientCredentials((client, scope, done) => {
+        Logger.log('LOG *** server.authorize [Exchange: Client Credentials]');
         //  Validate the client
       })
     );
@@ -78,7 +83,13 @@ export class OauthServer {
     // Exchange Username/Password for access tokens
     this.server.exchange(
       oauth2orize.exchange.password((client, username, password, scope, done) => {
-        // Validate client
+        Logger.log('client', client);
+        Logger.log('username', username);
+        Logger.log('password', password);
+        Logger.log('scope', scope);
+        Logger.log('password');
+
+        Logger.log('*** server.authorize [Exchange: Password]');
       })
     );
 
@@ -86,12 +97,14 @@ export class OauthServer {
     this.server.exchange(
       oauth2orize.exchange.refreshToken((client, refreshToken, scope, done) => {
         // Validate refresh token
+        Logger.log('*** server.authorize [Exchange: Refresh Token]');
       })
     );
 
     // Authorization code
     this.server.exchange(
       oauth2orize.exchange.authorizationCode((client, code, redirectUri, body, authInfo, done) => {
+        Logger.log('*** server.authorize [Exchange:Authorization Code]');
         // Validate Authorizaiton Code
       })
     );

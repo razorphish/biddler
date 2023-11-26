@@ -28,5 +28,13 @@ export default registerAs('auth', () => ({
   linkedinClientID: process.env.LINKEDIN_CLIENT_ID,
   linkedinClientSecret: process.env.LINKEDIN_CLIENT_SECRET,
   linkedinCallbackURL: process.env.LINKEDIN_CALLBACK_URL,
-  linkedinScope: process.env.LINKEDIN_SCOPE.split(' ')
+  linkedinScope: process.env.LINKEDIN_SCOPE.split(' '),
+  clientPasswordPassReqToCallback: process.env.CLIENT_PASSWORD_PASS_REQ_TO_CALLBACK,
+  localUsernameField: process.env.LOCAL_USERNAME_FIELD,
+  localPasswordField: process.env.LOCAL_PASSWORD_FIELD,
+  localSession: process.env.LOCAL_SESSION,
+  localPassReqToCallback: process.env.LOCAL_PASS_REQ_TO_CALLBACK,
+  localBadRequestMessage: process.env.LOCAL_BAD_REQUEST_MESSAGE,
+  basicRealm: process.env.BASIC_REALM,
+  basicPassReqToCallback: process.env.BASIC_PASS_REQ_TO_CALLBACK
 }));
