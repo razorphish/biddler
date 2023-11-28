@@ -14,6 +14,7 @@ export interface User extends TimestampAttributes {
   email: string;
   salt?: string;
   password?: string;
+  basicPassword?: string;
 
   // Children
   //userRoles?: UserRole[] | null;

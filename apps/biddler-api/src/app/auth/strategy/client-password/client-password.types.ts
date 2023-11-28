@@ -1,3 +1,4 @@
+import { IDM } from '@biddler/db';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { StrategyOptionsWithRequestInterface } from 'passport-oauth2-client-password';
 
@@ -21,4 +22,6 @@ export interface ClientPasswordAuthResult {
   expires_in?: number;
   refresh_token?: string;
   scope?: string;
+  originalRequest?: Request;
+  user?: IDM.interfaces.UserOutput;
 }

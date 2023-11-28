@@ -19,7 +19,6 @@ export class OktaAuthGuard extends AuthGuard(['okta']) {
   }
 
   handleRequest(err, req, info) {
-    console.log('...handleRequest', err, req, info);
     if (err || !req.profile) {
       throw err || new UnauthorizedException();
     }

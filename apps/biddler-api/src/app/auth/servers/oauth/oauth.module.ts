@@ -5,13 +5,24 @@ import { OauthController } from './oauth.controller';
 import { ensureLoggedIn } from 'connect-ensure-login';
 import passport = require('passport');
 import { Request, Response } from 'express';
+import { IDM } from '@biddler/db';
 
 @Module({
-  providers: [OauthServer],
+  providers: [
+    OauthServer,
+    IDM.services.UserService,
+    IDM.services.AccessTokenService,
+    IDM.services.ApiClientService,
+    IDM.services.ApplicationService,
+    IDM.services.EnvironmentService
+  ],
   controllers: [OauthController]
 })
 export class OauthModule {
-  constructor(private oauthServer: OauthServer) {}
+  constructor(
+    private oauthServer: OauthServer,
+    private readonly _userService: IDM.services.UserService
+  ) {}
 
   configure(consumer: MiddlewareConsumer) {
     consumer
@@ -52,14 +63,20 @@ export class OauthModule {
 
     consumer
       .apply(
-        (req: Request, res: Response, next) => {
+        async (req: Request, res: Response, next) => {
           Logger.log('*** oauth.Module authenticate');
+          const user = await this._userService.byUsername(req.body.username, {
+            attributes: { include: ['username', 'password', 'id'] }
+          });
+          user.basicPassword = req.body.password;
+          req.user = user;
           //Logger.log(req.body, req.query);
+          //Logger.log(req.user['firstName']);
           next(false);
         },
         passport.authenticate(['oauth2-client-password'], {
-          passReqToCallback: true,
-          session: false
+          session: false,
+          passReqToCallback: true
         }),
         this.oauthServer.server.token(),
         this.oauthServer.server.errorHandler()

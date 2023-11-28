@@ -1,8 +1,9 @@
-import { Body, Controller, Post, Request } from '@nestjs/common';
+import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
 import { IDM } from '@biddler/db';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags, ApiBearerAuth, ApiHeader } from '@nestjs/swagger';
 import { Public } from '../../../common/decorators/meta/IS_PUBLIC_KEY.meta';
-import { UseLocalAuth } from '../strategy/local/local.guard';
+import { UseBasicAuth } from '../strategy/basic';
+import { UseClientPasswordAuth } from '../strategy/client-password';
 
 @ApiTags('Auth: User')
 @Controller({
@@ -24,12 +25,20 @@ export class UserController {
 
   @Public()
   @Post('login')
-  @UseLocalAuth()
+  @ApiHeader({
+    name: 'authorization',
+    description: '** Cannot use SWAGGER to test this endpoint.  Please use POSTMAN',
+    required: true,
+    example: 'Basic YWxhZGRpbjpvcGVuc2VzYW1l'
+  })
+  // @UseClientPasswordAuth()
+  @UseBasicAuth()
   @ApiOperation({
     summary: 'Logins user to enter system',
-    description: 'Logins the user to system'
+    description: 'Logins the user to system',
+    operationId: 'login'
   })
-  login(@Body() loginDto: IDM.dtos.LoginUserDTO, @Request() req) {
+  login(@Request() req) {
     console.log('req.isAuthenticated()', req.isAuthenticated());
     return req.user;
   }

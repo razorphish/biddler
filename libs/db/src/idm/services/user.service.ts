@@ -5,14 +5,14 @@
  * @author Antonio Marasco
  * --------------------------------------------------------
  */
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { AllUserFilters } from '../dal/models/types';
 import { UserInput, UserOutput } from '../interfaces';
 import * as DAL from '../dal/models/user.dal';
-import { compareSync } from '../../common/helpers/crypt.helper';
 
 import {
   compare,
+  compareSync,
   generateSaltSync,
   generateSaltWithPassword
 } from '../../common/helpers/crypt.helper';
@@ -83,11 +83,26 @@ export class UserService {
 
     // 2. Determine if user exists
     if (!user) {
-      throw new UnauthorizedException('User does not exist');
+      throw new NotFoundException('User does not exist');
     }
 
     // 3. Check password
     const compareHash = await compare(password, user.password);
+    if (!compareHash) {
+      throw new UnauthorizedException('Invalid user');
+    }
+
+    return user;
+  }
+
+  authenticateSync(user: UserOutput): boolean | UserOutput {
+    // 1. Determine if user exists
+    if (!user) {
+      throw new NotFoundException('User does not exist');
+    }
+
+    // 2. Check password
+    const compareHash = compareSync(user.basicPassword, user.password);
     if (!compareHash) {
       throw new UnauthorizedException('Invalid user');
     }

@@ -11,7 +11,6 @@ import { MagicMiddleware } from './middleware/magic.middleware';
 import { ConfigService } from '@nestjs/config';
 import { MagicMailService } from './strategy/magic/magic.mailer.service';
 import { OktaController } from './strategy/okta/okta.controller';
-//import { OktaMiddleware } from './middleware/okta.middleware';
 import { OktaAuthModule } from './strategy/okta/okta.module';
 import { OktaAuthConfig } from './strategy/okta/okta.config';
 import { FacebookController } from './strategy/facebook/facebook.controller';
@@ -26,11 +25,12 @@ import { GithubAuthConfig } from './strategy/github/github.config';
 import { LinkedinAuthModule } from './strategy/linkedIn';
 import { LinkedinAuthConfig } from './strategy/linkedIn/linkedin.config';
 import { LinkedinController } from './strategy/linkedIn/linkedin.controller';
-import { ClientPasswordAuthStrategy } from './strategy/client-password/client-password.strategy';
 import { UserController } from './user/user.controller';
 import { LocalAuthStrategy } from './strategy/local/local.strategy';
 import { BasicAuthModule } from './strategy/basic';
 import { BasicAuthConfig } from './strategy/basic/basic.config';
+import { ClientPasswordAuthModule } from './strategy/client-password/client-password.module';
+import { ClientPasswordAuthConfig } from './strategy/client-password/client-password.config';
 
 @Module({
   imports: [
@@ -64,6 +64,10 @@ import { BasicAuthConfig } from './strategy/basic/basic.config';
       inject: [ConfigService],
       useClass: LinkedinAuthConfig
     }),
+    ClientPasswordAuthModule.forRootAsync({
+      inject: [ConfigService],
+      useClass: ClientPasswordAuthConfig
+    }),
     BasicAuthModule.forRootAsync({
       inject: [ConfigService],
       useClass: BasicAuthConfig
@@ -72,7 +76,6 @@ import { BasicAuthConfig } from './strategy/basic/basic.config';
   providers: [
     JwtStrategy,
     MagicAuthStrategy,
-    ClientPasswordAuthStrategy,
     LocalAuthStrategy,
     //BasicAuthStrategy,
     IDM.services.ApiClientService,

@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { ExchangeError } from '../interfaces/error.interface';
 
 @Injectable()
 export class ErrorsInterceptor implements NestInterceptor {

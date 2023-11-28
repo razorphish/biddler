@@ -19,6 +19,7 @@ export class BasicAuthGuard extends AuthGuard('basic') {
       throw err || new UnauthorizedException(info[0]);
     }
 
+    // 'Basic YW50b25pb0BtYXJhcy5jbzo3amglNWEkKURDQCYwbjM=
     return user;
   }
 }

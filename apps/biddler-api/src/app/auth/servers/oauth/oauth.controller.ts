@@ -1,7 +1,7 @@
 import { Controller, Get, Res, Req, Render, Post, Body } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
+import { UseClientPasswordAuth } from '../../strategy/client-password';
 import { FilterTokenDTO } from './oauth.dto';
-import { Public } from '../../../../common/decorators/meta/IS_PUBLIC_KEY.meta';
 
 @Controller()
 export class OauthController {
@@ -25,8 +25,9 @@ export class OauthController {
   }
 
   @Post('auth/oauth/token')
-  @Public()
+  @UseClientPasswordAuth()
   token(@Body() filters: FilterTokenDTO) {
+    //token() {
     return;
   }
 }

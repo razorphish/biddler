@@ -29,7 +29,8 @@ export function createHybridAuthModule<T>(
             useValue: options
           },
           strategy,
-          IDM.services.UserService
+          IDM.services.UserService,
+          IDM.services.ApiClientService
         ]
       };
     }
@@ -37,7 +38,12 @@ export function createHybridAuthModule<T>(
     static forRootAsync(options: ModuleAsyncOptions<ModuleOptionsFactory<T>, T>): DynamicModule {
       return {
         module: NestHybridAuthModule,
-        providers: [...this.createAsyncProviders(options), strategy, IDM.services.UserService]
+        providers: [
+          ...this.createAsyncProviders(options),
+          strategy,
+          IDM.services.UserService,
+          IDM.services.ApiClientService
+        ]
       };
     }
 

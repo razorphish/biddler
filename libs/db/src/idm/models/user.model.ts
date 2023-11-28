@@ -19,6 +19,7 @@ interface UserAttributes extends TimestampAttributes {
   email: string;
   salt?: string;
   password?: string;
+  basicPassword?: string;
 }
 
 export interface UserInput extends Optional<UserAttributes, 'id' | 'createdDate'> {
@@ -42,6 +43,7 @@ class User extends Model<UserAttributes, UserInput> implements UserAttributes {
   public email!: string;
   public salt!: string;
   public password!: string;
+  public basicPassword!: string;
 
   // User stamp(s)
   public createdBy!: string;
@@ -129,6 +131,9 @@ User.init(
           msg: COLUMN_VALIDATION.LENGTH('password')
         }
       }
+    },
+    basicPassword: {
+      type: DataTypes.VIRTUAL()
     },
     createdBy: {
       type: DataTypes.STRING(48),
