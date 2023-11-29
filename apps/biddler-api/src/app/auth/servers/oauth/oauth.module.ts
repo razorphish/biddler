@@ -74,10 +74,10 @@ export class OauthModule {
           //Logger.log(req.user['firstName']);
           next(false);
         },
-        passport.authenticate(['oauth2-client-password'], {
-          session: false,
-          passReqToCallback: true
-        }),
+        // passport.authenticate(['oauth2-client-password'], {
+        //   session: false,
+        //   passReqToCallback: true
+        // }),
         this.oauthServer.server.token(),
         this.oauthServer.server.errorHandler()
       )

@@ -5,11 +5,23 @@
  * @author Antonio Marasco
  * --------------------------------------------------------
  */
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  Logger,
+  NotFoundException,
+  UnauthorizedException
+} from '@nestjs/common';
 import { AllApiClientFilters } from '../dal/models/types';
 import { ApiClientInput, ApiClientOutput } from '../interfaces';
 import * as DAL from '../dal/models/apiClient.dal';
-import { generateRandomID, generateSecretKeyWithHash } from '../../common/helpers/crypt.helper';
+import {
+  compareSecretKeys,
+  generateRandomID,
+  generateSecretKeyWithHash
+} from '../../common/helpers/crypt.helper';
+import { mapLookup } from '../../common/helpers/util.hellper';
+import { AuthenticateApiClientDTO } from '../dto/apiClient.dto';
 
 @Injectable()
 export class ApiClientService {
@@ -19,6 +31,92 @@ export class ApiClientService {
       ...filters
     };
     return DAL.all(queryFilters);
+  }
+
+  async authenticate(
+    clientID: string,
+    clientSecret: string,
+    grantType: string,
+    request?: Request
+  ): Promise<AuthenticateApiClientDTO> {
+    Logger.log('[Strategy:ClientPassword] authenticate(): Checking for ClientID');
+    if (!clientID) {
+      return {
+        error: new BadRequestException('Missing "clientID" parameter', {
+          description: 'invalid_request'
+        })
+      };
+    }
+
+    Logger.log('[Strategy:ClientPassword] authenticate(): Check for grant type');
+    if (!grantType) {
+      return {
+        error: new BadRequestException('Missing "grant_type" parameter', {
+          description: 'invalid_request'
+        })
+      };
+    }
+
+    // Get Api client
+    const apiClient = await DAL.byClientID(clientID, {
+      attributes: {
+        include: ['clientSecretHash', 'grantTypeId', 'statusId', 'scopes']
+      }
+    });
+
+    Logger.log('[Strategy:ClientPassword] authenticate(): Make sure client exists in system');
+    if (!apiClient) {
+      return {
+        error: new NotFoundException('Client not found in system', {
+          description: 'invalid_client'
+        })
+      };
+    }
+
+    // Status check
+    Logger.log('[Strategy:ClientPassword] authenticate(): Determine client is active');
+    if (!mapLookup(apiClient.statusId, 'active')) {
+      return {
+        error: new BadRequestException(`Client has either expired or has been suspended`, {
+          description: 'invalid_client'
+        })
+      };
+    }
+
+    // Grant type match
+    Logger.log(
+      '[Strategy:ClientPassword] authenticate(): Ensure grant type matches requested grant type'
+    );
+    if (!mapLookup(apiClient.grantTypeId, grantType)) {
+      return {
+        error: new BadRequestException(`invalid_grant: Grant type '${grantType}' not supported`, {
+          description: 'invalid_grant'
+        })
+      };
+    }
+
+    // TODO:
+    // Check scope
+
+    // Check the password
+    Logger.log('[Strategy:ClientPassword] authenticate(): Validate Credentials');
+    const passwordCheck = await compareSecretKeys(clientSecret, apiClient.clientSecretHash);
+    if (!passwordCheck) {
+      return {
+        error: new UnauthorizedException(`Access denied`, {
+          description: 'invalid_client'
+        })
+      };
+    }
+
+    Logger.log('[Strategy:ClientPassword] authenticate(): OK SUCCESS');
+    return {
+      user: {
+        clientID: clientID,
+        name: apiClient.applicationName
+      },
+      info: request
+    };
   }
 
   byId(id: number, filters?: AllApiClientFilters): Promise<ApiClientOutput> {

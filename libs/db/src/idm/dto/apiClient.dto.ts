@@ -1,6 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsNumber, IsObject, IsOptional, IsString } from 'class-validator';
 import { Optional } from 'sequelize';
 import { toBoolean, toNumber } from '../../common/helpers/cast.helper';
 
@@ -91,4 +91,31 @@ export class FilterApiClientDTO {
   @IsBoolean()
   @IsOptional()
   public includeDeleted?: boolean;
+}
+
+export class AuthenciatedUserDTO {
+  public clientID: string;
+  public name: string;
+}
+export class AuthenticateApiClientDTO {
+  @ApiPropertyOptional({
+    description: 'Exception that is thrown on authentication'
+  })
+  @IsOptional()
+  @IsObject()
+  public error?: Error;
+
+  @ApiPropertyOptional({
+    description: 'Authenticated  user'
+  })
+  @IsObject()
+  @IsOptional()
+  public user?: AuthenciatedUserDTO;
+
+  @ApiPropertyOptional({
+    description: 'Supplemental information regarding authentication'
+  })
+  @IsObject()
+  @IsOptional()
+  public info?: object;
 }

@@ -16,7 +16,10 @@ export class OauthServer {
     [key: string]: { clientId: string; username: string };
   } = {};
 
-  constructor(private readonly _userService: IDM.services.UserService) {
+  constructor(
+    private readonly _userService: IDM.services.UserService,
+    private readonly _tokenService: IDM.services.AccessTokenService
+  ) {
     this.server.serializeClient((client, done) => {
       Logger.log('server.authenticate [Exchange: Serialize Client]');
       done(null, client.clientId);
@@ -84,10 +87,10 @@ export class OauthServer {
 
     // Exchange Username/Password for access tokens
     this.server.exchange(
-      oauth2orize.exchange.password((client, username, password, scope, issued) => {
+      oauth2orize.exchange.password(async (client, username, password, scope, issued) => {
         Logger.log('server.authorize [Exchange: Password]');
         try {
-          const user = this._userService.authenticateSync(client.user);
+          const user = await this._userService.authenticate(username, password);
 
           if (user) {
             return issued(null, '1234', '12345', { expires_in: 3600, scope: 'read_only' });

@@ -116,6 +116,7 @@ export class ClientPasswordAuthStrategy extends PassportStrategy(
 
     // TODO:
     // Check scope
+    // const requestScopes = typeof request.scopes === 'string' ? [request.scopes] : request.scopes;
 
     // Check the password
     Logger.log('[Strategy:ClientPassword] validate(): Validate Credentials');
