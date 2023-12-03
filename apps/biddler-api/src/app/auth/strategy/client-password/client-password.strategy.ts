@@ -100,7 +100,7 @@ export class ClientPasswordAuthStrategy extends PassportStrategy(
     Logger.log(
       '[Strategy:ClientPassword] validate(): Ensure grant type matches requested grant type'
     );
-    if (!mapLookup(apiClient.grantTypeId, request.body['grant_type'])) {
+    if (!(apiClient.grants.indexOf(request.body['grant_type']) > -1)) {
       return issued(
         new BadRequestException(
           `invalid_grant: Grant type '${request.body['grant_type']}' not supported`,

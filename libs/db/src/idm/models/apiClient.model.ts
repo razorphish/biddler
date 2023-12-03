@@ -5,23 +5,23 @@ import { TimestampAttributes } from '../../global/interfaces/timeStampAttributes
 import { COLUMN_NAME, COLUMN_VALIDATION, DEFAULT_VALUE } from '../../common/db.enum';
 import { COLUMN_ALIAS } from '../../common/db.enum';
 import { Lookup, User } from '.';
-import { generateRandomID, generateSecretKeyWithHash } from '../../common/helpers/crypt.helper';
+import SystemIssuer, { SystemIssuerOutput } from './systemIssuer.model';
 
 interface ApiClientAttributes extends TimestampAttributes {
   // Primary Key(s)
-  id: string;
+  id: number;
 
   // Foreign Key(s)
-  userId: number;
-  applicationId: number;
-  systemIssuerId: number;
-  tokenTypeId: string;
-  clientTypeId: string;
-  grantTypeId: string;
-  statusId: string;
+  userId?: number;
+  applicationId?: number;
+  systemIssuerId?: number;
+  tokenTypeId?: string;
+  clientTypeId?: string;
+  statusId?: string;
 
   // Attribute(s)
   applicationName: string;
+  grants?: string;
   homepageURL?: string;
   clientID?: string;
   clientSecret?: string;
@@ -33,12 +33,13 @@ interface ApiClientAttributes extends TimestampAttributes {
 export interface ApiClientInput
   extends Optional<ApiClientAttributes, 'id' | 'createdDate' | 'lastUpdatedDate'> {}
 export interface ApiClientOutput extends Required<ApiClientAttributes> {
+  systemIssuer?: SystemIssuerOutput;
   key?: string;
 }
 
 class ApiClient extends Model<ApiClientAttributes, ApiClientInput> implements ApiClientAttributes {
   // Primary Key(s)
-  public id!: string;
+  public id!: number;
 
   // Foreign Key(s)
   public userId!: number;
@@ -46,11 +47,11 @@ class ApiClient extends Model<ApiClientAttributes, ApiClientInput> implements Ap
   public systemIssuerId!: number;
   public tokenTypeId!: string;
   public clientTypeId!: string;
-  public grantTypeId!: string;
   public statusId!: string;
 
   // Attribute(s)
   public applicationName!: string;
+  public grants!: string;
   public homepageURL!: string;
   public clientID!: string;
   public clientSecret!: string;
@@ -80,25 +81,28 @@ ApiClient.init(
     userId: {
       type: DataTypes.INTEGER,
       field: 'USER_ID',
-      allowNull: false
+      allowNull: true
     },
     applicationId: {
       type: DataTypes.INTEGER,
       field: 'APLCTN_ID',
-      allowNull: false
+      allowNull: false,
+      defaultValue: 1
     },
     systemIssuerId: {
       type: DataTypes.INTEGER,
       field: 'SYS_ISSUER_ID',
-      allowNull: false
+      allowNull: false,
+      defaultValue: 1
     },
     tokenTypeId: {
       type: DataTypes.STRING(32),
       field: COLUMN_NAME.TOKEN_TYPE_ID,
       allowNull: false,
+      defaultValue: 'tt_access',
       validate: {
         len: {
-          args: [0, 128],
+          args: [0, 32],
           msg: COLUMN_VALIDATION.LENGTH('tokenTypeId')
         }
       }
@@ -107,21 +111,11 @@ ApiClient.init(
       type: DataTypes.STRING(32),
       field: COLUMN_NAME.CLIENT_TYPE_ID,
       allowNull: false,
+      defaultValue: 'oct_confidential',
       validate: {
         len: {
-          args: [0, 128],
+          args: [0, 32],
           msg: COLUMN_VALIDATION.LENGTH('clientTypeId')
-        }
-      }
-    },
-    grantTypeId: {
-      type: DataTypes.STRING(32),
-      field: COLUMN_NAME.GRANT_TYPE_ID,
-      allowNull: false,
-      validate: {
-        len: {
-          args: [0, 128],
-          msg: COLUMN_VALIDATION.LENGTH('grantTypeId')
         }
       }
     },
@@ -138,6 +132,24 @@ ApiClient.init(
           args: [0, 256],
           msg: COLUMN_VALIDATION.LENGTH('applicationName')
         }
+      }
+    },
+    grants: {
+      type: DataTypes.STRING(256),
+      field: 'GRANTS',
+      allowNull: false,
+      defaultValue: 'client_credentials;password',
+      validate: {
+        len: {
+          args: [0, 256],
+          msg: COLUMN_VALIDATION.LENGTH('grants')
+        }
+      },
+      get() {
+        return this.getDataValue('grants').split(';');
+      },
+      set(val: string[]) {
+        this.setDataValue('grants', val.join(';'));
       }
     },
     homepageURL: {
@@ -273,10 +285,10 @@ ApiClient.belongsTo(Lookup, {
   as: 'clientType'
 });
 
-ApiClient.belongsTo(Lookup, {
+ApiClient.belongsTo(SystemIssuer, {
   targetKey: 'id',
-  foreignKey: 'grantTypeId',
-  as: 'grantType'
+  foreignKey: 'systemIssuerId',
+  as: 'systemIssuer'
 });
 
 ApiClient.belongsTo(User, {

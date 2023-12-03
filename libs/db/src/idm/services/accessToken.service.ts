@@ -20,6 +20,14 @@ export class AccessTokenService {
     return DAL.all(queryFilters);
   }
 
+  byAccessToken(accessToken: string, filters?: AllAccessTokenFilters): Promise<AccessTokenOutput> {
+    return DAL.byAccessToken(accessToken, filters);
+  }
+
+  byRefreshToken(accessToken: string, filters?: AllAccessTokenFilters): Promise<AccessTokenOutput> {
+    return DAL.byRefreshToken(accessToken, filters);
+  }
+
   byId(id: number, filters?: AllAccessTokenFilters): Promise<AccessTokenOutput> {
     return DAL.byId(id, filters);
   }

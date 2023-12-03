@@ -17,11 +17,15 @@ import path from 'path';
 import { ApiClientModule } from './auth/client/apiClient.module';
 import { PassportModule } from '@nestjs/passport';
 import { OauthModule } from './auth/servers/oauth/oauth.module';
+import { OAuth2Module } from './auth/servers/oauth2';
+import { UserLoader } from './auth/servers/oauth2/validators/user.loader';
+import { UserValidator } from './auth/servers/oauth2/validators/user.validator';
+import { IDM } from '@biddler/db';
 
 @Module({
   providers: [
     { provide: APP_INTERCEPTOR, useClass: ErrorsInterceptor },
-    { provide: APP_GUARD, useClass: JwtAuthGuard },
+    // { provide: APP_GUARD, useClass: JwtAuthGuard },
     MailService
   ],
   controllers: [MailController],
@@ -31,7 +35,7 @@ import { OauthModule } from './auth/servers/oauth/oauth.module';
       load: [appConfig, authConfig, mailConfig],
       envFilePath: ['.env']
     }),
-    PassportModule.register({ session: true }),
+    // PassportModule.register({ session: true }),
     MailerModule.forRootAsync({
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => {
@@ -74,11 +78,18 @@ import { OauthModule } from './auth/servers/oauth/oauth.module';
         };
       }
     }),
-    OauthModule,
-    HealthCheckModule,
-    AuthModule,
-    UsersModule,
-    ApiClientModule
+    OAuth2Module.forRootAsync({
+      inject: [IDM.services.UserService],
+      useFactory: (userService: IDM.services.UserService) => ({
+        userLoader: new UserLoader(),
+        userValidator: new UserValidator(userService)
+      })
+    }),
+    //OauthModule,
+    HealthCheckModule
+    //AuthModule,
+    //UsersModule,
+    //ApiClientModule
   ]
 })
 export class AppModule {}

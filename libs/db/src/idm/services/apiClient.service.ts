@@ -22,6 +22,7 @@ import {
 } from '../../common/helpers/crypt.helper';
 import { mapLookup } from '../../common/helpers/util.hellper';
 import { AuthenticateApiClientDTO } from '../dto/apiClient.dto';
+import { SystemIssuer } from '../models';
 
 @Injectable()
 export class ApiClientService {
@@ -87,7 +88,7 @@ export class ApiClientService {
     Logger.log(
       '[Strategy:ClientPassword] authenticate(): Ensure grant type matches requested grant type'
     );
-    if (!mapLookup(apiClient.grantTypeId, grantType)) {
+    if (!(apiClient.grants.indexOf(grantType) > -1)) {
       return {
         error: new BadRequestException(`invalid_grant: Grant type '${grantType}' not supported`, {
           description: 'invalid_grant'
@@ -124,6 +125,14 @@ export class ApiClientService {
   }
 
   byClientID(clientID: string, filters?: AllApiClientFilters): Promise<ApiClientOutput> {
+    filters = filters || {
+      include: [
+        {
+          model: SystemIssuer,
+          as: 'systemIssuer'
+        }
+      ]
+    };
     return DAL.byClientID(clientID, filters);
   }
 

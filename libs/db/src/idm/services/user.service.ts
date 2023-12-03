@@ -76,7 +76,7 @@ export class UserService {
     return DAL.create(payload);
   }
 
-  async authenticate(username: string, password: string): Promise<boolean | UserOutput> {
+  async authenticate(username: string, password: string): Promise<UserOutput> {
     const user = await DAL.byUsername(username, {
       attributes: { include: ['username', 'password', 'id'] }
     });

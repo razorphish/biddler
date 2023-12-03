@@ -26,6 +26,56 @@ export const all = async (filters?: AllAccessTokenFilters): Promise<AccessTokenO
 };
 
 /**
+ * @description Gets token by access token value
+ * @author Antonio Marasco
+ * @date 11/29/2023
+ * @param accessToken
+ * @param [filters]
+ * @returns {*}
+ */
+export const byAccessToken = async (
+  accessToken: string,
+  filters?: AllAccessTokenFilters
+): Promise<AccessTokenOutput> => {
+  const model = await AccessToken.findOne({
+    where: { token: accessToken },
+    ...(filters?.attributes && { attributes: filters?.attributes }),
+    logging: DbConfig.LOGGING
+  });
+
+  if (!model) {
+    throw new Error(`not found:  cannot find by access token: ${accessToken}`);
+  }
+
+  return model;
+};
+
+/**
+ * @description gets Access token by refresh token
+ * @author Antonio Marasco
+ * @date 12/01/2023
+ * @param accessToken
+ * @param [filters]
+ * @returns {*}
+ */
+export const byRefreshToken = async (
+  refreshToken: string,
+  filters?: AllAccessTokenFilters
+): Promise<AccessTokenOutput> => {
+  const model = await AccessToken.findOne({
+    where: { refreshToken: refreshToken },
+    ...(filters?.attributes && { attributes: filters?.attributes }),
+    logging: DbConfig.LOGGING
+  });
+
+  if (!model) {
+    throw new Error(`not found:  cannot find by refresh token: ${refreshToken}`);
+  }
+
+  return model;
+};
+
+/**
  * @description
  * @author Antonio Marasco
  * @date 05/25/2023

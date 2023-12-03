@@ -59,6 +59,8 @@ export const byClientID = async (
   filters?: AllApiClientFilters
 ): Promise<ApiClientOutput> => {
   const model = await ApiClient.findOne({
+    ...(filters?.include && { include: filters?.include }),
+    ...(filters?.attributes && { attributes: filters?.attributes }),
     where: { clientID: clientID },
     ...(filters?.attributes && { attributes: filters?.attributes }),
     logging: DbConfig.LOGGING

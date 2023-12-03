@@ -7,6 +7,7 @@ import { toBoolean, toNumber } from '../../common/helpers/cast.helper';
 export type CreateAccessTokenDTO = {
   // Foreign Key(s)
   userId?: number;
+  clientId: number;
   statusId: string;
   tokenTypeId: string;
   schemeTypeId: string;

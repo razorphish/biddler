@@ -69,7 +69,8 @@ export class MagicAuthStrategy extends PassportStrategy(MagicLoginStrategy) {
       token: token,
       scope: '*',
       expireDate: payload.exp,
-      origin: payload.iss
+      origin: payload.iss,
+      clientId: 1
     });
 
     return user;
