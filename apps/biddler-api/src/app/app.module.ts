@@ -25,7 +25,7 @@ import { IDM } from '@biddler/db';
 @Module({
   providers: [
     { provide: APP_INTERCEPTOR, useClass: ErrorsInterceptor },
-    // { provide: APP_GUARD, useClass: JwtAuthGuard },
+    //{ provide: APP_GUARD, useClass: JwtAuthGuard },
     MailService
   ],
   controllers: [MailController],
