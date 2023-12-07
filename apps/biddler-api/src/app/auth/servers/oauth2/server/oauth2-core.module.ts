@@ -18,6 +18,8 @@ import { Oauth2Controller } from '../ui/controller';
 // import { TypeOrmModule } from '@nestjs/typeorm';
 import { CqrsModule } from '@nestjs/cqrs';
 import { IDM } from '@biddler/db';
+import { JwtModule } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
 export const CommandHandlers = [CreateClientHandler, CreateAccessTokenHandler];
 
@@ -81,8 +83,17 @@ export class Oauth2CoreModule implements OnModuleInit {
     return {
       module: Oauth2CoreModule,
       imports: [
-        CqrsModule
+        CqrsModule,
         //TypeOrmModule.forFeature([ClientEntity, AccessTokenEntity])
+        JwtModule.registerAsync({
+          inject: [ConfigService],
+          useFactory: async (configService: ConfigService) => {
+            return {
+              secret: configService.getOrThrow('auth.jwtSecret'),
+              signOptions: { expiresIn: configService.getOrThrow('auth.jwtExpiresIn') }
+            };
+          }
+        })
       ],
       controllers: [Oauth2Controller],
       providers: [
@@ -126,8 +137,17 @@ export class Oauth2CoreModule implements OnModuleInit {
       module: Oauth2CoreModule,
       imports: [
         ...(options.imports || []),
-        CqrsModule
+        CqrsModule,
         // TypeOrmModule.forFeature([ClientEntity, AccessTokenEntity])
+        JwtModule.registerAsync({
+          inject: [ConfigService],
+          useFactory: async (configService: ConfigService) => {
+            return {
+              secret: configService.getOrThrow('auth.jwtSecret'),
+              signOptions: { expiresIn: configService.getOrThrow('auth.jwtExpiresIn') }
+            };
+          }
+        })
       ],
       providers: [
         ...providers,

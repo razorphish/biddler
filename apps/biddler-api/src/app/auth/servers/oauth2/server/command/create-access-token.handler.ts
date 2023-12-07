@@ -1,7 +1,7 @@
 import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
+import { JwtService } from '@nestjs/jwt';
 import { Inject } from '@nestjs/common';
 import { CreateAccessTokenCommand } from './create-access-token.command';
-import * as crypto from 'crypto';
 import { AccessTokenCreatedEvent } from '../event';
 import { IDM } from '@biddler/db';
 
@@ -12,6 +12,7 @@ export class CreateAccessTokenHandler implements ICommandHandler<CreateAccessTok
     private readonly accessTokenRepository: IDM.services.AccessTokenService,
     @Inject('ApiClientService')
     private readonly clientRepository: IDM.services.ApiClientService,
+    private readonly jwtService: JwtService,
     private readonly eventBus: EventBus
   ) {}
 
@@ -48,8 +49,18 @@ export class CreateAccessTokenHandler implements ICommandHandler<CreateAccessTok
       now + client.systemIssuer.refreshTokenTimeToLive * 1000
     );
     accessToken.expireDate = new Date(exp);
-    accessToken.refreshToken = crypto.randomBytes(32).toString('hex');
-    accessToken.token = crypto.randomBytes(32).toString('hex');
+    // accessToken.refreshToken = crypto.randomBytes(32).toString('hex');
+    // accessToken.token = crypto.randomBytes(32).toString('hex');
+
+    const payload = {
+      clientID: command.clientId,
+      iat: command.iat,
+      scope: command.scope,
+      userId: command.userId
+    };
+    accessToken.refreshToken = this.jwtService.sign(payload);
+    accessToken.token = this.jwtService.sign(payload);
+
     if (command.userId) {
       accessToken.userId = +command.userId;
     }

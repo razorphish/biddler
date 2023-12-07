@@ -11,6 +11,7 @@ import {
 import { OAuth2Request, OAuth2Response } from '../dto';
 import { Oauth2GrantStrategyRegistry } from '../../domain/strategy';
 import { IDM } from '@biddler/db';
+import { Public } from '../../../../../../common/decorators/meta/IS_PUBLIC_KEY.meta';
 
 @Controller('oauth2')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -28,6 +29,7 @@ export class Oauth2Controller {
   ) {}
 
   @Post('token')
+  @Public()
   async token(@Body() request: OAuth2Request): Promise<OAuth2Response> {
     const client = await this.clientRepository.byClientID(request.clientId);
     if (!(await this.strategyRegistry.validate(request, client))) {

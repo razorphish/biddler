@@ -1,7 +1,6 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { Oauth2CoreModule } from './oauth2-core.module';
 import { Oauth2AsyncOptionsInterface, OAuth2Options } from './interfaces';
-import { IDM } from '@biddler/db';
 
 @Module({})
 export class OAuth2Module {

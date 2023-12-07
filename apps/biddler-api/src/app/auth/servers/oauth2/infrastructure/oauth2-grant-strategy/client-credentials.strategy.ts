@@ -1,6 +1,5 @@
 import { Oauth2GrantStrategy, Oauth2GrantStrategyInterface } from '../../domain/strategy';
 import { OAuth2Request, OAuth2Response } from '../../ui/dto';
-// import { Inject } from '@nestjs/common';
 import { CreateAccessTokenCommand } from '../../server/command';
 import { CommandBus } from '@nestjs/cqrs';
 import { IDM } from '@biddler/db';
