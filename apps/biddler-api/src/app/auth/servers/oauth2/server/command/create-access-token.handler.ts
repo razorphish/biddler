@@ -55,8 +55,7 @@ export class CreateAccessTokenHandler implements ICommandHandler<CreateAccessTok
     const payload = {
       clientID: command.clientId,
       iat: command.iat,
-      scope: command.scope,
-      userId: command.userId
+      scope: command.scope
     };
     accessToken.refreshToken = this.jwtService.sign(payload);
     accessToken.token = this.jwtService.sign(payload);
