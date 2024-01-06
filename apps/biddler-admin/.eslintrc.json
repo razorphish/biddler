@@ -13,7 +13,7 @@
         "plugin:prettier/recommended"
       ],
       "parserOptions": {
-        "project": true,
+        // "project": true,
         "tsconfigRootDir": "./"
       },
       "rules": {

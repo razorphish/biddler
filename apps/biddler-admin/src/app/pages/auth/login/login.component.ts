@@ -1,22 +1,24 @@
-import { CommonModule } from '@angular/common';
-import { Component, Input, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '../../../lib/services';
+import { NgForm } from '@angular/forms';
+import { AppSettings } from '../../../service/app-settings.service';
 
 @Component({
-    standalone: true,
-    imports: [CommonModule],
+    selector: 'biddler-login',
     templateUrl: './login.component.html',
 })
-export class LoginComponent {
-    @Input() returnUrl!: string;
+export class LoginComponent implements OnInit, OnDestroy {
+    constructor(private router: Router, public appSettings: AppSettings) {}
 
-    private readonly _router = inject(Router);
-    private readonly _authService = inject(AuthService);
+    ngOnInit() {
+        this.appSettings.appEmpty = true;
+    }
 
-    login(): void {
-        this._authService.login();
+    ngOnDestroy() {
+        this.appSettings.appEmpty = false;
+    }
 
-        this._router.navigate([this.returnUrl ?? `/`]);
+    formSubmit(f: NgForm) {
+        this.router.navigate(['']);
     }
 }
