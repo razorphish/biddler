@@ -24,3 +24,5 @@ CODE_OF_CONDUCT.md
 angular.json.config
 nx.json
 tsconfig.base.json
+
+/.nx/cache
