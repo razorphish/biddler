@@ -31,6 +31,7 @@ export class UserController {
     required: true,
     example: 'Basic YWxhZGRpbjpvcGVuc2VzYW1l'
   })
+  
   // @UseClientPasswordAuth()
   @UseBasicAuth()
   @ApiOperation({
