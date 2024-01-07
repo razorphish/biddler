@@ -65,7 +65,7 @@
     "rxjs": "^7.8.0",
     "sequelize": "^6.31.1",
     "tslib": "^2.3.0",
-    "zone.js": "~0.13.0"
+    "zone.js": "^0.14.2"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^17.0.8",
@@ -82,6 +82,7 @@
     "@nrwl/workspace": "17.2.8",
     "@nx/angular": "17.2.8",
     "@nx/cypress": "17.2.8",
+    "@nx/eslint": "17.2.8",
     "@nx/eslint-plugin": "17.2.8",
     "@nx/jest": "17.2.8",
     "@nx/js": "17.2.8",
@@ -110,12 +111,12 @@
     "jest-environment-jsdom": "^29.4.1",
     "jest-environment-node": "^29.4.1",
     "jest-preset-angular": "13.1.5",
+    "lint-staged": "^15.2.0",
     "nx": "17.2.8",
     "prettier": "^2.6.2",
     "sequelize-cli": "^6.6.1",
     "ts-jest": "^29.1.0",
     "ts-node": "10.9.1",
-    "typescript": "5.2.2",
-    "@nx/eslint": "17.2.8"
+    "typescript": "5.2.2"
   }
 }
