@@ -27,5 +27,8 @@ export interface AllAddressTypeFilters extends ListFilters {
 export interface AllPermissionFilters extends ListFilters {}
 export interface AllRoleFilters extends ListFilters {}
 export interface AllRolePermissionFilters extends ListFilters {}
-export interface AllStatusFilters extends ListFilters {}
+export interface AllLookupFilters extends ListFilters {
+  orderBySortOrder?: boolean;
+  checkEffectiveDate?: boolean;
+}
 export interface AllUserFilters extends ListFilters {}

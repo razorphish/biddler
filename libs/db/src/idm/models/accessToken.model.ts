@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-empty-interface */
 import { DataTypes, Model, Optional } from 'sequelize';
 import BiddlerLibrary from '../../global/biddler';
-import { Lookup, User } from '../../idm/models';
+import { ApiClient, Lookup, User } from '../../idm/models';
 import { TimestampAttributes } from '../../global/interfaces/timeStampAttributes.interface';
 import { COLUMN_ALIAS, COLUMN_NAME, COLUMN_VALIDATION, DEFAULT_VALUE } from '../../common/db.enum';
+import { ApiClientOutput } from './apiClient.model';
 
 interface AccessTokenAttributes extends TimestampAttributes {
   // Primary Key(s)
@@ -10,13 +12,15 @@ interface AccessTokenAttributes extends TimestampAttributes {
 
   // Foreign Key(s)
   userId?: number;
+  clientId: number;
   statusId: string;
   tokenTypeId: string;
-  schemeTypeId: string;
+  schemeTypeId?: string;
 
   // Attribute(s)
   token: string;
-  secret?: string;
+  refreshToken?: string;
+  //secret?: string;
   scope?: string;
   expiresIn?: number;
   origin?: string;
@@ -24,13 +28,15 @@ interface AccessTokenAttributes extends TimestampAttributes {
   ipAddress?: string;
   cookie?: string;
   expireDate?: Date;
+  refreshTokenExpireDate?: Date;
+  issuedDate?: Date;
 }
 
-export type AccessTokenInput = Optional<
-  AccessTokenAttributes,
-  'id' | 'token' | 'createdDate' | 'lastUpdatedDate'
->;
-export type AccessTokenOutput = Required<AccessTokenAttributes>;
+export interface AccessTokenInput
+  extends Optional<AccessTokenAttributes, 'id' | 'token' | 'createdDate' | 'lastUpdatedDate'> {}
+export interface AccessTokenOutput extends Required<AccessTokenAttributes> {
+  client?: ApiClientOutput;
+}
 
 class AccessToken
   extends Model<AccessTokenAttributes, AccessTokenInput>
@@ -41,12 +47,14 @@ class AccessToken
 
   // Foreign Key(s)
   public userId!: number;
+  public clientId!: number;
   public statusId!: string;
   public tokenTypeId!: string;
   public schemeTypeId!: string;
 
   // Attribute(s)
   public token!: string;
+  public refreshToken!: string;
   public secret!: string;
   public scope!: string;
   public expiresIn!: number;
@@ -55,6 +63,8 @@ class AccessToken
   public ipAddress!: string;
   public cookie!: string;
   public expireDate!: Date;
+  public refreshTokenExpireDate!: Date;
+  public issuedDate!: Date;
 
   // User stamp(s)
   public createdBy!: string;
@@ -79,6 +89,10 @@ AccessToken.init(
       type: DataTypes.INTEGER,
       field: 'USER_ID'
     },
+    clientId: {
+      type: DataTypes.INTEGER,
+      field: 'API_CLIENT_ID'
+    },
     statusId: {
       type: DataTypes.STRING(32),
       allowNull: false,
@@ -93,7 +107,7 @@ AccessToken.init(
       type: DataTypes.STRING(32),
       allowNull: false,
       field: 'SCHM_TYP_LKP_ID',
-      defaultValue: 'ascii'
+      defaultValue: 'tst_ascii'
     },
     token: {
       type: DataTypes.STRING(1024),
@@ -102,17 +116,17 @@ AccessToken.init(
       validate: {
         len: {
           args: [0, 1024],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('token')
         }
       }
     },
-    secret: {
-      type: DataTypes.STRING(512),
-      field: 'TKN_SCRT',
+    refreshToken: {
+      type: DataTypes.STRING(1024),
+      field: 'RFRSH_TKN',
       validate: {
         len: {
-          args: [0, 512],
-          msg: COLUMN_VALIDATION.LENGTH
+          args: [0, 1024],
+          msg: COLUMN_VALIDATION.LENGTH('refreshToken')
         }
       }
     },
@@ -122,7 +136,7 @@ AccessToken.init(
       validate: {
         len: {
           args: [0, 256],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('scope')
         }
       }
     },
@@ -138,7 +152,7 @@ AccessToken.init(
       validate: {
         len: {
           args: [0, 256],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('origin')
         }
       }
     },
@@ -157,7 +171,7 @@ AccessToken.init(
       validate: {
         len: {
           args: [0, 512],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('cookie')
         }
       }
     },
@@ -165,12 +179,20 @@ AccessToken.init(
       type: DataTypes.DATE,
       field: 'EXPIR_DT'
     },
+    refreshTokenExpireDate: {
+      type: DataTypes.DATE,
+      field: 'RFRSH_TKN_EXPIR_DT'
+    },
+    issuedDate: {
+      type: DataTypes.DATE,
+      field: 'ISSUED_DT'
+    },
     createdBy: {
       type: DataTypes.STRING(48),
       validate: {
         len: {
           args: [0, 48],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('createdBy')
         }
       },
       field: COLUMN_NAME.CREATED_BY,
@@ -183,7 +205,7 @@ AccessToken.init(
       validate: {
         len: {
           args: [0, 48],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('lastUpdatedBy')
         }
       }
     },
@@ -221,6 +243,12 @@ AccessToken.belongsTo(User, {
   targetKey: 'id',
   foreignKey: 'userId',
   as: 'user'
+});
+
+AccessToken.belongsTo(ApiClient, {
+  targetKey: 'id',
+  foreignKey: 'clientId',
+  as: 'client'
 });
 
 AccessToken.belongsTo(Lookup, {

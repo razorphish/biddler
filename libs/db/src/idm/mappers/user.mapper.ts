@@ -1,7 +1,7 @@
 import { User, UserOutput } from '../interfaces';
 
-export const toUser = (output: UserOutput): User => {
-  return {
+export const toUser = (output: UserOutput, secure = true): User => {
+  const user = {
     // Primary Key(s)
     id: output.id,
 
@@ -25,4 +25,10 @@ export const toUser = (output: UserOutput): User => {
     lastUpdatedDate: output.lastUpdatedDate,
     deletedAt: output.deletedAt
   };
+
+  if (secure) {
+    delete user['password'];
+    delete user['salt'];
+  }
+  return user;
 };

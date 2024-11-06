@@ -1,7 +1,11 @@
-export enum COLUMN_VALIDATION {
-  LENGTH = 'String length is not in this range',
-  MAX = 'String length is beyond max range'
-}
+export const COLUMN_VALIDATION = {
+  LENGTH: (field = 'unknown') : string => {
+    return `String length is not in this range for column[${field}]`;
+  },
+  MAX: (field = 'unknown') : string => {
+    return `String length is beyond max range for column [${field}]`;
+  }
+};
 
 export enum COLUMN_NAME {
   DELETED_AT = 'DLTD_AT',
@@ -13,7 +17,9 @@ export enum COLUMN_NAME {
   STATUS_ID = 'STUS_LKP_ID',
   EFFECTIVE_START_DATE = 'EFCTV_STRT_DT',
   EFFECTIVE_END_DATE = 'EFCTV_END_DT',
-  TOKEN_TYPE_ID = 'TOKN_TYP_LKP_ID'
+  TOKEN_TYPE_ID = 'TOKN_TYP_LKP_ID',
+  CLIENT_TYPE_ID = 'CLIENT_TYP_LKP_ID',
+  GRANT_TYPE_ID = 'GRANT_TYP_LKP_ID'
 }
 
 export enum COLUMN_ALIAS {
@@ -24,5 +30,6 @@ export enum COLUMN_ALIAS {
 }
 
 export enum DEFAULT_VALUE {
-  BY = 'SYSTEM'
+  BY = 'SYSTEM',
+  STATUS = 'st_active'
 }

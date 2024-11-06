@@ -3,12 +3,25 @@
 
 <head>
   <meta charset="utf-8" />
-  <title>biddler-admin</title>
-  <base href="/" />
   <meta
+    http-equiv="content-type"
+    content="text/html; charset=UTF8"
+  >
+  <title>Biddler</title>
+  <base href="/">
+  <meta
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     name="viewport"
-    content="width=device-width, initial-scale=1"
   />
+  <meta
+    content=""
+    name="description"
+  />
+  <meta
+    content=""
+    name="author"
+  />
+
   <link
     rel="icon"
     type="image/x-icon"
@@ -16,9 +29,20 @@
   />
 </head>
 
-<body>
-  <biddler-root></biddler-root>
-  Hello Man, Anaya!!!
+<body
+  detect-scroll
+  (onScroll)="handleScroll($event)"
+>
+  <biddler-root>
+    <!-- BEGIN #loader -->
+    <div
+      id="loader"
+      class="app-loader"
+    >
+      <span class="spinner"></span>
+    </div>
+    <!-- END #loader -->
+  </biddler-root>
 </body>
 
 </html>

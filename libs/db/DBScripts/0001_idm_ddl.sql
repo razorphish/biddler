@@ -6,7 +6,7 @@ USE `BIDDLER_IDM_DB` ;
 -- Record Status
 CREATE TABLE BIDDLER_IDM_DB.LKP_INFO (
   LKP_ID          varchar(32)   NOT NULL,
-  LKP_CD          VARCHAR(32)   NOT NULL,
+  LKP_CD          VARCHAR(64)   NOT NULL,
   LKP_GRP_NAME    VARCHAR(64)   NOT NULL,
   LKP_TITLE       VARCHAR(128)  DEFAULT NULL,
   LKP_DESC        VARCHAR(256)  DEFAULT NULL,
@@ -138,8 +138,8 @@ CREATE TABLE BIDDLER_IDM_DB.SYS_ISSUER (
   STUS_LKP_ID         VARCHAR(32) NOT NULL,
   TOKN_TYP_LKP_ID     VARCHAR(32) NOT NULL DEFAULT 'bearer' COMMENT 'Type of token: Default to ''bearer''',
 	ISSUER_NAME         VARCHAR(128) NOT NULL COMMENT 'Issuer Identifier for the Issuer of the response.',
-  TKN_TTL             INT NOT NULL COMMENT '(Time-To-Live) Maximum amount of time (seconds) ACCESS token has to live in application',
-  RFRSH_TKN_TTL       INT NULL COMMENT '(Time-To-Live) Maximum amount of time (seconds) REFRESH token has to live in application',
+  TKN_TTL             INT NOT NULL COMMENT '(Time-To-Live) Maximum amount of time (minutes) ACCESS token has to live in application',
+  RFRSH_TKN_TTL       INT NULL COMMENT '(Time-To-Live) Maximum amount of time (minutes) REFRESH token has to live in application',
   HASH_ALGORITHM      VARCHAR(32) NULL COMMENT 'Algorithm to use when generating tokens',
   ORIGIN              VARCHAR(1024) NULL DEFAULT '*' COMMENT 'CORS ORIGIN Space delimited array of URLs, IP addresses and/or IP Address ranges.  If blank or ''*'' then all are allowed, otherwise ONLY listed IP addresses allowed',
   RESTRICTED_IPS      VARCHAR(1024) NULL COMMENT 'Space delimited array of IP addresses and/or IP Address ranges that are restricted',
@@ -158,35 +158,66 @@ CREATE TABLE BIDDLER_IDM_DB.SYS_ISSUER (
 	CONSTRAINT SYS_ISSUER_FK    FOREIGN KEY (STUS_LKP_ID) REFERENCES BIDDLER_IDM_DB.LKP_INFO(LKP_ID),
   CONSTRAINT SYS_ISSUER_FK_1  FOREIGN KEY (TOKN_TYP_LKP_ID) REFERENCES BIDDLER_IDM_DB.LKP_INFO(LKP_ID),
   CONSTRAINT SYS_ISSUER_FK_2  FOREIGN KEY (SYS_ID) REFERENCES BIDDLER_IDM_DB.SYS_INFO(SYS_ID) ON DELETE CASCADE ON UPDATE CASCADE
-) COMMENT='The system'' token issuer manager.  A system can contain multiple issuers with different configurations defined depending on client needs';
+) COMMENT='The system token issuer manager.  A system can contain multiple issuers with different configurations defined depending on client needs';
 
+-- User INfo
+CREATE TABLE BIDDLER_IDM_DB.USER_INFO (
+  USER_ID         INT NOT NULL AUTO_INCREMENT,
+  STUS_LKP_ID     VARCHAR(32) NOT NULL,
+  FIRST_NAME      VARCHAR(32) NULL,
+  LAST_NAME       VARCHAR(64) NULL,
+  USER_NAME       VARCHAR(256) NOT NULL,
+  EMAIL           VARCHAR(256) NOT NULL,
+  SALT            VARCHAR(64) NULL,
+  PWD             VARCHAR(256) NULL,
+  CREATD_DT       DATETIME NOT NULL, 
+  CREATD_BY       VARCHAR(48) NULL DEFAULT 'SYSTEM', 
+  LAST_UPDATD_DT  DATETIME NOT NULL, 
+  LAST_UPDATD_BY  VARCHAR(48) NULL DEFAULT 'SYSTEM', 
+  DLTD_AT         DATETIME NULL DEFAULT NULL, 
+  CONSTRAINT USER_INFO_PK PRIMARY KEY (USER_ID),
+  CONSTRAINT USER_INFO_FK FOREIGN KEY (STUS_LKP_ID) REFERENCES BIDDLER_IDM_DB.LKP_INFO(LKP_ID)
+) ;
 
 -- CLIENT
 CREATE TABLE BIDDLER_IDM_DB.API_CLIENT (
-	API_CLIENT_ID       CHAR(36) NOT NULL,
+	API_CLIENT_ID       INT auto_increment NOT NULL,
+  USER_ID             INT NOT NULL,
   APLCTN_ID           INT NOT NULL,
   SYS_ISSUER_ID       INT NOT NULL,
-  TOKN_TYP_LKP_ID     VARCHAR(32) NOT NULL COMMENT 'Type of token issued to client',
-  STUS_LKP_ID         VARCHAR(32) NOT NULL,
-  CLIENT_AUD          VARCHAR(48) NULL COMMENT 'Audience (aud) that this ID Token is intended for.',
-	CLIENT_SUB          CHAR(36) NULL COMMENT 'Subject Identifier (sub) on token. A locally unique and never reassigned identifier within the Issuer for the End-User, which is intended to be consumed by the Client. ',
-  KEY_SECRET_HASH     VARCHAR(128) NULL COMMENT 'Client secret key HASH for generating access tokens', 
-  KEY_SALT            VARCHAR(255) NULL COMMENT 'Client secret key salt used to formulate access tokens',
-  SCOPES              VARCHAR(2048) NULL COMMENT 'Space-delimited array of scopes',
-  ALLOWED_IPS         VARCHAR(1024) NOT NULL DEFAULT '*' COMMENT 'Space delimited array of IP addresses and/or IP Address ranges.  If blank or ''*'' then all are allowed, otherwise ONLY listed IP addresses allowed',
-  RESTRICTED_IPS      VARCHAR(1024) NOT NULL DEFAULT '-' COMMENT 'Space delimited array of IP addresses and/or IP Address ranges that are restricted. If blank or ''-'' then there are no restrictions',  
-  TKN_TTL             INT NULL COMMENT '(Time-To-Live) Maximum amount of time (seconds) ACCESS token has to live in application',
-  RFRSH_TKN_TTL       INT NULL COMMENT '(Time-To-Live) Maximum amount of time (seconds) REFRESH token has to live in application',
-  CREATD_DT           DATETIME NOT NULL,
-	CREATD_BY           VARCHAR(48) NULL DEFAULT 'SYSTEM',
-	LAST_UPDATD_DT      DATETIME NOT NULL,
-	LAST_UPDATD_BY      VARCHAR(48) NULL DEFAULT 'SYSTEM',
-  DLTD_AT             DATETIME NULL DEFAULT NULL,
+  TOKN_TYP_LKP_ID     VARCHAR(32)   NOT NULL COMMENT 'Type of token issued to client',
+  CLIENT_TYP_LKP_ID   VARCHAR(32)   NOT NULL COMMENT 'https://oauth.net/2/client-types/',
+  -- GRANT_TYP_LKP_ID    VARCHAR(256) NOT NULL COMMENT 'https://oauth.net/2/grant-types/',
+  STUS_LKP_ID         VARCHAR(32)   NOT NULL DEFAULT 'st_active',
+  APP_NAME            VARCHAR(256)  NOT NULL,
+  GRANTS              VARCHAR(256)  NOT NULL COMMENT 'https://oauth.net/2/grant-types/',
+  HOME_PG_URL         VARCHAR(256)  NOT NULL,
+  AUTH_URLS_REDRCT    VARCHAR(1024) NULL COMMENT 'space delimited urls for redirects',
+  CLIENT_ID           VARCHAR(36)   NULL COMMENT 'Client ID as the user name that allows you to use OAuth 2.0 as an authentication method.',
+  CLIENT_SECRET_HASH  VARCHAR(256)  NULL COMMENT 'The password that allows your CLIENT ID to use OAuth 2.0 as an authentication method.',
+
+  -- CLIENT_AUD          VARCHAR(48) NULL COMMENT 'Audience (aud) that this ID Token is intended for.',
+	-- CLIENT_SUB          CHAR(36) NULL COMMENT 'Subject Identifier (sub) on token. A locally unique and never reassigned identifier within the Issuer for the End-User, which is intended to be consumed by the Client. ',
+  -- KEY_SECRET_HASH     VARCHAR(128) NULL COMMENT 'Client secret key HASH for generating access tokens', 
+  SALT                VARCHAR(256)  NULL COMMENT 'Client secret key salt used to formulate access tokens',
+  SCOPES              VARCHAR(256)  NULL COMMENT 'Space-delimited array of scopes',
+  -- ALLOWED_IPS         VARCHAR(1024) NOT NULL DEFAULT '*' COMMENT 'Space delimited array of IP addresses and/or IP Address ranges.  If blank or ''*'' then all are allowed, otherwise ONLY listed IP addresses allowed',
+  -- RESTRICTED_IPS      VARCHAR(1024) NOT NULL DEFAULT '-' COMMENT 'Space delimited array of IP addresses and/or IP Address ranges that are restricted. If blank or ''-'' then there are no restrictions',  
+  -- TKN_TTL             INT NULL COMMENT '(Time-To-Live) Maximum amount of time (seconds) ACCESS token has to live in application',
+  -- RFRSH_TKN_TTL       INT NULL COMMENT '(Time-To-Live) Maximum amount of time (seconds) REFRESH token has to live in application',
+  CREATD_DT           DATETIME      NOT NULL,
+	CREATD_BY           VARCHAR(48)   NULL DEFAULT 'SYSTEM',
+	LAST_UPDATD_DT      DATETIME      NOT NULL,
+	LAST_UPDATD_BY      VARCHAR(48)   NULL DEFAULT 'SYSTEM',
+  DLTD_AT             DATETIME      NULL DEFAULT NULL,
   CONSTRAINT API_CLIENT_PK    PRIMARY KEY (API_CLIENT_ID),
 	CONSTRAINT API_CLIENT_FK    FOREIGN KEY (STUS_LKP_ID) REFERENCES BIDDLER_IDM_DB.LKP_INFO(LKP_ID),
   CONSTRAINT API_CLIENT_FK_1  FOREIGN KEY (TOKN_TYP_LKP_ID) REFERENCES BIDDLER_IDM_DB.LKP_INFO(LKP_ID),
-  CONSTRAINT API_CLIENT_FK_2  FOREIGN KEY (APLCTN_ID) REFERENCES BIDDLER_IDM_DB.APLCTN_INFO(APLCTN_ID) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT API_CLIENT_FK_3  FOREIGN KEY (SYS_ISSUER_ID) REFERENCES BIDDLER_IDM_DB.SYS_ISSUER(SYS_ISSUER_ID) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT API_CLIENT_FK_2  FOREIGN KEY (CLIENT_TYP_LKP_ID) REFERENCES BIDDLER_IDM_DB.LKP_INFO(LKP_ID),
+  -- CONSTRAINT API_CLIENT_FK_3  FOREIGN KEY (GRANT_TYP_LKP_ID) REFERENCES BIDDLER_IDM_DB.LKP_INFO(LKP_ID),
+  CONSTRAINT API_CLIENT_FK_4  FOREIGN KEY (APLCTN_ID) REFERENCES BIDDLER_IDM_DB.APLCTN_INFO(APLCTN_ID) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT API_CLIENT_FK_5  FOREIGN KEY (SYS_ISSUER_ID) REFERENCES BIDDLER_IDM_DB.SYS_ISSUER(SYS_ISSUER_ID) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT API_CLIENT_FK_6  FOREIGN KEY (USER_ID) REFERENCES BIDDLER_IDM_DB.USER_INFO(USER_ID) ON DELETE CASCADE ON UPDATE CASCADE
 ) COMMENT='The applications'' client manager for identity management';
 
 -- CREATE TABLE BIDDLER_IDM_DB.ACNT_INFO (
@@ -241,24 +272,6 @@ CREATE TABLE BIDDLER_IDM_DB.API_CLIENT (
 --   CONSTRAINT ROLE_PERMSN_FK_2 FOREIGN KEY (STUS_LKP_ID)  REFERENCES BIDDLER_IDM_DB.LKP_INFO (LKP_ID)
 -- ) ;
 
-
-CREATE TABLE BIDDLER_IDM_DB.USER_INFO (
-  USER_ID         INT NOT NULL AUTO_INCREMENT,
-  STUS_LKP_ID     VARCHAR(32) NOT NULL,
-  FIRST_NAME      VARCHAR(32) NULL,
-  LAST_NAME       VARCHAR(64) NULL,
-  USR_NAME        VARCHAR(256) NOT NULL,
-  EMAIL           VARCHAR(256) NOT NULL,
-  SALT            CHAR(64) NOT NULL,
-  PWD             CHAR(64) NOT NULL,
-  CREATD_DT       DATETIME NOT NULL, 
-  CREATD_BY       VARCHAR(48) NULL DEFAULT 'SYSTEM', 
-  LAST_UPDATD_DT  DATETIME NOT NULL, 
-  LAST_UPDATD_BY  VARCHAR(48) NULL DEFAULT 'SYSTEM', 
-  DLTD_AT         DATETIME NULL DEFAULT NULL, 
-  CONSTRAINT USER_INFO_PK PRIMARY KEY (USER_ID),
-  CONSTRAINT USER_INFO_FK FOREIGN KEY (STUS_LKP_ID) REFERENCES BIDDLER_IDM_DB.LKP_INFO(LKP_ID)
-) ;
 
 
 -- CREATE TABLE BIDDLER_IDM_DB.ACNT_USER (
@@ -341,11 +354,12 @@ CREATE TABLE BIDDLER_IDM_DB.USER_INFO (
 CREATE TABLE BIDDLER_IDM_DB.ACS_TOKN (
   ACS_TOKN_ID     INT auto_increment NOT NULL,
   USER_ID         INT NULL COMMENT 'User Id',
+  API_CLIENT_ID   INT NULL COMMENT 'Client Id',
   STUS_LKP_ID     VARCHAR(32) NOT NULL,
   TOKN_TYP_LKP_ID  VARCHAR(32) NOT NULL COMMENT 'self-signed jwt, access, id, refresh, bearer, federated',
-  SCHM_TYP_LKP_ID VARCHAR(32) DEFAULT 'ascii' NOT NULL COMMENT 'pci, ascii',
+  SCHM_TYP_LKP_ID VARCHAR(32) DEFAULT 'tst_ascii' NOT NULL COMMENT 'pci, ascii',
   TKN             VARCHAR(1024) NOT NULL COMMENT 'Access token',
-  TKN_SCRT        VARCHAR(512) NULL COMMENT 'Access token secret',
+  RFRSH_TKN       VARCHAR(1024) NULL COMMENT 'Refresh token',
   SCOPE           VARCHAR(256) NULL,
   EXPIRS_IN       INT NULL DEFAULT 3600,
   ORIGN           VARCHAR(256) DEFAULT '*',
@@ -353,6 +367,8 @@ CREATE TABLE BIDDLER_IDM_DB.ACS_TOKN (
   IP_ADRS         VARCHAR(64) NULL COMMENT 'IP Address (if Applicable) of token issuee',
   COOKIE          VARCHAR(512) NULL,
   EXPIR_DT        DATETIME NULL,
+  RFRSH_TKN_EXPIR_DT DATETIME NULL,
+  ISSUED_DT       DATETIME NULL,
   CREATD_DT       DATETIME NOT NULL, 
   CREATD_BY       VARCHAR(48) NULL DEFAULT 'SYSTEM', 
   LAST_UPDATD_DT  DATETIME NOT NULL, 
@@ -362,5 +378,6 @@ CREATE TABLE BIDDLER_IDM_DB.ACS_TOKN (
   CONSTRAINT ACS_TOKN_FK    FOREIGN KEY (STUS_LKP_ID)      REFERENCES BIDDLER_IDM_DB.LKP_INFO(LKP_ID),
   CONSTRAINT ACS_TOKN_FK_1  FOREIGN KEY (TOKN_TYP_LKP_ID)   REFERENCES BIDDLER_IDM_DB.LKP_INFO(LKP_ID),
   CONSTRAINT ACS_TOKN_FK_2  FOREIGN KEY (SCHM_TYP_LKP_ID)  REFERENCES BIDDLER_IDM_DB.LKP_INFO(LKP_ID),
-  CONSTRAINT ACS_TOKN_FK_3  FOREIGN KEY (USER_ID)  REFERENCES BIDDLER_IDM_DB.USER_INFO(USER_ID)
+  CONSTRAINT ACS_TOKN_FK_3  FOREIGN KEY (USER_ID)  REFERENCES BIDDLER_IDM_DB.USER_INFO(USER_ID),
+  CONSTRAINT ACS_TOKN_FK_4  FOREIGN KEY (API_CLIENT_ID)  REFERENCES BIDDLER_IDM_DB.API_CLIENT(API_CLIENT_ID)
 ) COMMENT = 'Access token for different authentication forms';

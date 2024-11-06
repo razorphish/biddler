@@ -8,15 +8,30 @@ import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app/app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as session from 'express-session';
+import * as passport from 'passport';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
+
   const configService = app.get(ConfigService);
 
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
       whitelist: true
+    })
+  );
+
+  // Added express session for 'local' auth
+  app.use(
+    session.default({
+      cookie: {
+        maxAge: 86400000
+      },
+      secret: configService.getOrThrow('app.secret'),
+      resave: false,
+      saveUninitialized: false
     })
   );
 
@@ -35,14 +50,14 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('docs', app, document);
 
-  await app.listen(configService.get('app.port'));
+  await app.listen(configService.getOrThrow('app.port'));
 
-  console.log('Hello World');
+  Logger.log('==============Hello World===============');
 
   Logger.log(
-    `🚀 Application [Biddler-api] is running on: http://localhost:${configService.get(
-      'app.port'
-    )}/${configService.get('app.apiPrefix')}`
+    `🚀 Application [Biddler-api] is running on: ${configService.getOrThrow(
+      'app.apiPrefix'
+    )} on port ${configService.getOrThrow('app.port')}`
   );
 }
 

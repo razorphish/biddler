@@ -1,4 +1,7 @@
+import { Op } from 'sequelize';
 import Lookup, { LookupInput, LookupOutput } from '../../models/lookup.model';
+import { AllLookupFilters } from './types';
+import { DbConfig } from '../../../common/constants/biddler.const';
 
 /**
  * @description Gets status by Id(PK)
@@ -45,6 +48,22 @@ export const update = async (id: string, payload: Partial<LookupInput>): Promise
   return updatedModel;
 };
 
-export const all = async (): Promise<LookupOutput[]> => {
-  return Lookup.findAll({});
+export const all = async (filters?: AllLookupFilters): Promise<LookupOutput[]> => {
+  const _date = Date.now();
+  return Lookup.findAll({
+    ...(filters?.attributes && { attributes: filters?.attributes }),
+    where: {
+      ...(filters?.isDeleted && { deletedAt: { [Op.not]: null } }),
+      ...(filters?.status && { statusId: { [Op.eq]: filters.status } }),
+      ...(filters?.checkEffectiveDate && {
+        [Op.and]: {
+          effectiveStartDate: { [Op.lte]: { _date } },
+          effectiveEndDate: { [Op.gte]: { _date } }
+        }
+      })
+    },
+    ...(filters?.orderBySortOrder && { order: [['sortOrder', 'ASC']] }),
+    ...((filters?.isDeleted || filters?.includeDeleted) && { paranoid: false }),
+    logging: DbConfig.LOGGING
+  });
 };

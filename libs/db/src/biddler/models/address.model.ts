@@ -86,7 +86,7 @@ Address.init(
       validate: {
         len: {
           args: [0, 128],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('line1')
         }
       }
     },
@@ -96,7 +96,7 @@ Address.init(
       validate: {
         len: {
           args: [0, 128],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('line2')
         }
       }
     },
@@ -106,7 +106,7 @@ Address.init(
       validate: {
         len: {
           args: [0, 128],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('line3')
         }
       }
     },
@@ -116,7 +116,7 @@ Address.init(
       validate: {
         len: {
           args: [0, 56],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('city')
         }
       }
     },
@@ -126,7 +126,7 @@ Address.init(
       validate: {
         len: {
           args: [0, 48],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('state')
         }
       }
     },
@@ -136,7 +136,7 @@ Address.init(
       validate: {
         len: {
           args: [0, 32],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('stateFips')
         }
       }
     },
@@ -146,7 +146,7 @@ Address.init(
       validate: {
         len: {
           args: [0, 32],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('stateId')
         }
       }
     },
@@ -156,7 +156,7 @@ Address.init(
       validate: {
         len: {
           args: [0, 96],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('county')
         }
       }
     },
@@ -166,7 +166,7 @@ Address.init(
       validate: {
         len: {
           args: [0, 32],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('countyFips')
         }
       }
     },
@@ -176,7 +176,7 @@ Address.init(
       validate: {
         len: {
           args: [0, 96],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('country')
         }
       }
     },
@@ -186,7 +186,7 @@ Address.init(
       validate: {
         len: {
           args: [0, 20],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('postalCode')
         }
       }
     },
@@ -196,7 +196,7 @@ Address.init(
       validate: {
         len: {
           args: [0, 4],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('postalCode4')
         }
       }
     },
@@ -223,7 +223,7 @@ Address.init(
       validate: {
         len: {
           args: [0, 48],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('createdBy')
         }
       },
       field: COLUMN_NAME.CREATED_BY,
@@ -236,7 +236,7 @@ Address.init(
       validate: {
         len: {
           args: [0, 48],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('lastUpdatedBy')
         }
       }
     },

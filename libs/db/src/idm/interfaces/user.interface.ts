@@ -5,15 +5,16 @@ export interface User extends TimestampAttributes {
   id: number;
 
   // Foreign Key(s)
-  statusId: string;
+  statusId?: string;
 
   // Attribute(s)
   firstName: string;
   lastName: string;
   username: string;
   email: string;
-  salt: string;
+  salt?: string;
   password?: string;
+  basicPassword?: string;
 
   // Children
   //userRoles?: UserRole[] | null;

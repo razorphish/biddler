@@ -10,15 +10,16 @@ interface UserAttributes extends TimestampAttributes {
   id: number;
 
   // Foreign Key(s)
-  statusId: string;
+  statusId?: string;
 
   // Attribute(s)
   firstName?: string;
   lastName?: string;
   username: string;
   email: string;
-  salt: string;
+  salt?: string;
   password?: string;
+  basicPassword?: string;
 }
 
 export interface UserInput extends Optional<UserAttributes, 'id' | 'createdDate'> {
@@ -42,6 +43,7 @@ class User extends Model<UserAttributes, UserInput> implements UserAttributes {
   public email!: string;
   public salt!: string;
   public password!: string;
+  public basicPassword!: string;
 
   // User stamp(s)
   public createdBy!: string;
@@ -60,12 +62,13 @@ User.init(
       allowNull: false,
       field: 'USER_ID',
       primaryKey: true,
-      autoIncrement: false
+      autoIncrement: true
     },
     statusId: {
       type: DataTypes.STRING(32),
       allowNull: false,
-      field: COLUMN_NAME.STATUS_ID
+      field: COLUMN_NAME.STATUS_ID,
+      defaultValue: DEFAULT_VALUE.STATUS
     },
     firstName: {
       type: DataTypes.STRING(32),
@@ -73,7 +76,7 @@ User.init(
       validate: {
         len: {
           args: [0, 32],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('firstName')
         }
       }
     },
@@ -83,7 +86,7 @@ User.init(
       validate: {
         len: {
           args: [0, 64],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('lastName')
         }
       }
     },
@@ -94,7 +97,7 @@ User.init(
       validate: {
         len: {
           args: [0, 256],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('username')
         }
       }
     },
@@ -105,38 +108,39 @@ User.init(
       validate: {
         len: {
           args: [0, 256],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('email')
         }
       }
     },
     salt: {
       type: DataTypes.STRING(64),
       field: 'SALT',
-      allowNull: false,
       validate: {
         len: {
           args: [0, 64],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('salt')
         }
       }
     },
     password: {
-      type: DataTypes.STRING(64),
-      allowNull: false,
+      type: DataTypes.STRING(256),
       field: 'PWD',
       validate: {
         len: {
-          args: [0, 64],
-          msg: COLUMN_VALIDATION.LENGTH
+          args: [0, 256],
+          msg: COLUMN_VALIDATION.LENGTH('password')
         }
       }
+    },
+    basicPassword: {
+      type: DataTypes.VIRTUAL()
     },
     createdBy: {
       type: DataTypes.STRING(48),
       validate: {
         len: {
           args: [0, 48],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('createdBy')
         }
       },
       field: COLUMN_NAME.CREATED_BY,
@@ -149,13 +153,12 @@ User.init(
       validate: {
         len: {
           args: [0, 48],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('lastUpdatedBy')
         }
       }
     },
     createdDate: {
       type: DataTypes.DATE,
-      allowNull: false,
       field: COLUMN_NAME.CREATED_DT
     },
     lastUpdatedDate: {
@@ -168,6 +171,14 @@ User.init(
     }
   },
   {
+    defaultScope: {
+      attributes: {
+        exclude: ['password', 'salt']
+      }
+    },
+    scopes: {
+      withPasswordAndSalt: {}
+    },
     sequelize: BiddlerLibrary.dbs.biddler_idm_db,
     tableName: 'USER_INFO',
     modelName: 'User',
@@ -182,6 +193,7 @@ User.init(
 );
 
 // Hooks
+
 // References
 User.belongsTo(Lookup, {
   targetKey: 'id',

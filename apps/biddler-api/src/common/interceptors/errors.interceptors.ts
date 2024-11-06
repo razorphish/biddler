@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { ExchangeError } from '../interfaces/error.interface';
 
 @Injectable()
 export class ErrorsInterceptor implements NestInterceptor {
@@ -18,6 +19,10 @@ export class ErrorsInterceptor implements NestInterceptor {
       catchError((err) => {
         if (err instanceof HttpException) {
           return throwError(() => err);
+        }
+
+        if (err?.name && err.name === 'SequelizeValidationError') {
+          return throwError(() => new BadRequestException(mapSequelizeErrors(err)));
         }
 
         if (err instanceof Error) {
@@ -45,4 +50,11 @@ export class ErrorsInterceptor implements NestInterceptor {
 
     return cleaner;
   }
+}
+function mapSequelizeErrors(err: any): string {
+  const errObj = {};
+  err.errors.map((er) => {
+    errObj[er.path] = er.message;
+  });
+  return JSON.stringify(errObj);
 }

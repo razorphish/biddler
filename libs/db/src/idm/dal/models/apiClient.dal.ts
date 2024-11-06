@@ -47,6 +47,33 @@ export const byId = async (id: number, filters?: AllApiClientFilters): Promise<A
 };
 
 /**
+ * @description Gets api client by id
+ * @author Antonio Marasco
+ * @date 05/25/2023
+ * @param id
+ * @param [filters]
+ * @returns {*}
+ */
+export const byClientID = async (
+  clientID: string,
+  filters?: AllApiClientFilters
+): Promise<ApiClientOutput> => {
+  const model = await ApiClient.findOne({
+    ...(filters?.include && { include: filters?.include }),
+    ...(filters?.attributes && { attributes: filters?.attributes }),
+    where: { clientID: clientID },
+    ...(filters?.attributes && { attributes: filters?.attributes }),
+    logging: DbConfig.LOGGING
+  });
+
+  if (!model) {
+    throw new Error(`not found:  cannot find by api client ID: ${clientID}`);
+  }
+
+  return model;
+};
+
+/**
  * @description Creates api client
  * @author Antonio Marasco
  * @date 05/25/2023
