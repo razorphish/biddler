@@ -16,7 +16,18 @@ export class HealthCheckController {
   @Get()
   @Public()
   getHeathcheck(): HealthcheckResponse {
-    // added a column
     return this.service.healthCheck();
+  }
+
+  @Get('hackerrank')
+  @Public()
+  getHackerRank() {
+
+    fetch('https://663ba508fee6744a6ea26c9e.mockapi.io/api/v1/users')
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data[0])
+    })
+
   }
 }
