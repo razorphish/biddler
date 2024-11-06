@@ -1,9 +1,17 @@
 import { TimestampAttributes } from '../../global/interfaces/timeStampAttributes.interface';
 
-export interface System extends Omit<TimestampAttributes, 'lastUpdatedDate' | 'lastUpdatedBy'> {
+export interface System extends TimestampAttributes {
   // Primary Key(s)
-  id: number;
+  id: string;
+
+  // Foreign Key(s)
+  statusId: string;
 
   // Attribute(s)
+  name: string;
+  slug: string;
   description?: string;
+  url?: string;
+  effectiveStartDate?: Date;
+  effectiveEndDate?: Date;
 }

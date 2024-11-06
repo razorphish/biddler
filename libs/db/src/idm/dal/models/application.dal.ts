@@ -1,6 +1,6 @@
 import { Op } from 'sequelize';
 import { ApplicationInput, ApplicationOutput } from '../../models/application.model';
-import { AllApplicationFilters } from '../types';
+import { AllApplicationFilters } from './types';
 import { DbConfig } from '../../common/idm.const';
 import { Application } from '../../models';
 import { isNil } from 'lodash';

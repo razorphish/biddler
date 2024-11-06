@@ -1,0 +1,42 @@
+name: CI
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Derive appropriate SHAs for base and head for `nx affected` commands
+        id: setSHAS
+        uses: nrwl/nx-set-shas@v3
+        with:
+          main-branch-name: 'master'
+      - run: npm ci
+
+      - run: npx prettier --write .
+      - run: npx nx format:write
+      - run: npx prettier --check .
+      - run: npx nx format:check --verbose
+      - run: npx nx affected -t lint --parallel=3
+      - run: npx nx affected -t test --parallel=3 --configuration=ci 
+      - run: npx nx affected -t build --parallel=3 
+  # deploy:
+  #   runs-on: ubuntu-latest
+  #   if: '!contains(github.event.head_commit.message, "[skip ci]")'
+  #   steps:
+  #       - name: Checkout
+  #         uses: actions/checkout@v2
+  #       - name: Deploy to Vercel Action
+  #         uses: BetaHuhn/deploy-to-vercel-action@v1
+  #         with:
+  #           GITHUB_TOKEN: ${{ secrets.GH_BIDDLER }}
+  #           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+  #           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  #           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}

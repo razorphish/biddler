@@ -21,9 +21,9 @@ export {
   AccountUser,
   AccountUserRole,
   Address,
+  Lookup,
   Permission,
   Role,
   RolePermission,
-  Lookup,
   User
 };

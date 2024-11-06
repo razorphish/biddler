@@ -1,6 +1,6 @@
 import { Op } from 'sequelize';
 import { ApiClientInput, ApiClientOutput } from '../../models/apiClient.model';
-import { AllApiClientFilters } from '../types';
+import { AllApiClientFilters } from './types';
 import { DbConfig } from '../../common/idm.const';
 import { ApiClient } from '../../models';
 import { isNil } from 'lodash';
@@ -41,6 +41,33 @@ export const byId = async (id: number, filters?: AllApiClientFilters): Promise<A
 
   if (!model) {
     throw new Error(`not found:  cannot find by id: ${id}`);
+  }
+
+  return model;
+};
+
+/**
+ * @description Gets api client by id
+ * @author Antonio Marasco
+ * @date 05/25/2023
+ * @param id
+ * @param [filters]
+ * @returns {*}
+ */
+export const byClientID = async (
+  clientID: string,
+  filters?: AllApiClientFilters
+): Promise<ApiClientOutput> => {
+  const model = await ApiClient.findOne({
+    ...(filters?.include && { include: filters?.include }),
+    ...(filters?.attributes && { attributes: filters?.attributes }),
+    where: { clientID: clientID },
+    ...(filters?.attributes && { attributes: filters?.attributes }),
+    logging: DbConfig.LOGGING
+  });
+
+  if (!model) {
+    throw new Error(`not found:  cannot find by api client ID: ${clientID}`);
   }
 
   return model;

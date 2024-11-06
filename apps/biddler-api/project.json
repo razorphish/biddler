@@ -16,7 +16,8 @@
         "tsConfig": "apps/biddler-api/tsconfig.app.json",
         "assets": ["apps/biddler-api/src/assets"],
         "isolatedConfig": true,
-        "webpackConfig": "apps/biddler-api/webpack.config.js"
+        "webpackConfig": "apps/biddler-api/webpack.config.js",
+        "generatePackageJson": true
       },
       "configurations": {
         "development": {},
@@ -39,25 +40,19 @@
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "outputs": ["{options.outputFile}"],
-      "options": {
-        "lintFilePatterns": ["apps/biddler-api/**/*.ts"]
-      }
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
     },
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "apps/biddler-api/jest.config.ts",
-        "passWithNoTests": true
-      },
-      "configurations": {
-        "ci": {
-          "ci": true,
-          "codeCoverage": true
-        }
+        "jestConfig": "apps/biddler-api/jest.config.ts"
       }
+    },
+    "docker-build": {
+      "dependsOn": ["build"],
+      "command": "docker build -f apps/biddler-api/Dockerfile . -t biddler-api"
     }
   },
   "tags": []

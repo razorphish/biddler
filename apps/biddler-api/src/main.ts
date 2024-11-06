@@ -3,19 +3,61 @@
  * This is only a minimal backend to get started.
  */
 
-import { Logger } from '@nestjs/common';
+import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-
+import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app/app.module';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as session from 'express-session';
+import * as passport from 'passport';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  const globalPrefix = 'api';
-  app.setGlobalPrefix(globalPrefix);
-  const port = process.env.PORT || 3000;
-  await app.listen(port);
+  const app = await NestFactory.create(AppModule, { cors: true });
+
+  const configService = app.get(ConfigService);
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true
+    })
+  );
+
+  // Added express session for 'local' auth
+  app.use(
+    session.default({
+      cookie: {
+        maxAge: 86400000
+      },
+      secret: configService.getOrThrow('app.secret'),
+      resave: false,
+      saveUninitialized: false
+    })
+  );
+
+  app.enableShutdownHooks();
+  app.enableVersioning({
+    type: VersioningType.URI
+  });
+
+  const options = new DocumentBuilder()
+    .setTitle('Biddler: API')
+    .setDescription('Biddler Api')
+    .setVersion('1.0')
+    .addBearerAuth()
+    .build();
+
+  const document = SwaggerModule.createDocument(app, options);
+  SwaggerModule.setup('docs', app, document);
+
+  await app.listen(configService.getOrThrow('app.port'));
+
+  Logger.log('==============Hello World===============');
+
   Logger.log(
-    `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`
+    `🚀 Application [Biddler-api] is running on: ${configService.getOrThrow(
+      'app.apiPrefix'
+    )} on port ${configService.getOrThrow('app.port')}`
   );
 }
 

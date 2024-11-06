@@ -1,9 +1,6 @@
 import { Optional } from 'sequelize';
 
 export type CreateApplicationDTO = {
-  // Primary Key
-  id: string;
-
   //Foreign keys
   statusId: string;
 

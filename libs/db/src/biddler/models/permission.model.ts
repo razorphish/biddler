@@ -64,7 +64,7 @@ Permission.init(
       validate: {
         len: {
           args: [0, 48],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('createdBy')
         }
       },
       field: COLUMN_NAME.CREATED_BY,
@@ -97,8 +97,8 @@ Permission.init(
 //Hooks
 //references
 Permission.belongsTo(Lookup, {
-  foreignKey: 'id',
-  targetKey: 'statusId',
+  foreignKey: 'statusId',
+  targetKey: 'id',
   as: 'status'
 });
 

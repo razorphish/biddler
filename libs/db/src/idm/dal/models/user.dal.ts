@@ -1,6 +1,6 @@
 import { Op } from 'sequelize';
 import { UserInput, UserOutput } from '../../models/user.model';
-import { AllUserFilters } from '../types';
+import { AllUserFilters } from './types';
 import { DbConfig } from '../../common/idm.const';
 import { User } from '../../models';
 import { isNil } from 'lodash';
@@ -47,6 +47,45 @@ export const byId = async (id: number, filters?: AllUserFilters): Promise<UserOu
 };
 
 /**
+ * @description Gets user by Email
+ * @author Antonio Marasco
+ * @date 05/25/2023
+ * @param id
+ * @param [filters]
+ * @returns {*}
+ */
+export const byEmail = async (email: string, filters?: AllUserFilters): Promise<UserOutput> => {
+  const model = await User.findOne({
+    where: {
+      email
+    },
+    ...(filters?.attributes && { attributes: filters?.attributes }),
+    logging: DbConfig.LOGGING
+  });
+
+  if (!model) {
+    throw new Error(`not found:  cannot find by email: ${email}`);
+  }
+
+  return model;
+};
+
+export const byUsername = async (
+  username: string,
+  filters?: AllUserFilters
+): Promise<UserOutput> => {
+  const model = await User.findOne({
+    where: {
+      username
+    },
+    ...(filters?.attributes && { attributes: filters?.attributes }),
+    logging: DbConfig.LOGGING
+  });
+
+  return model;
+};
+
+/**
  * @description Creates user
  * @author Antonio Marasco
  * @date 05/25/2023
@@ -54,7 +93,19 @@ export const byId = async (id: number, filters?: AllUserFilters): Promise<UserOu
  * @returns {*} Newly created user
  */
 export const create = async (payload: UserInput): Promise<UserOutput> => {
-  const output = await User.create(payload, { logging: DbConfig.LOGGING });
+  const user = await User.findAll({
+    where: { [Op.or]: [{ email: payload.email }, { username: payload.username }] },
+    logging: DbConfig.LOGGING
+  });
+
+  if (user && user.length > 0) {
+    throw new Error('User exists in system');
+  }
+
+  const output = await User.create(payload, {
+    logging: DbConfig.LOGGING
+  });
+
   return output;
 };
 
@@ -72,7 +123,7 @@ export const deleteById = async (id: number): Promise<boolean> => {
 };
 
 /**
- * @description Finds or creates a user based on criteria
+ * @description Finds or creates a user based on criteria.  All new users get a salt
  * @author Antonio Marasco
  * @date 05/25/2023
  * @param payload
@@ -81,9 +132,10 @@ export const deleteById = async (id: number): Promise<boolean> => {
 export const findOrCreate = async (payload: UserInput): Promise<UserOutput> => {
   const [model] = await User.findOrCreate({
     where: {
-      id: payload.id
+      [Op.or]: [{ ...(payload?.id && { id: payload.id }) }, { email: payload.email }]
     },
-    defaults: payload
+    defaults: payload,
+    logging: DbConfig.LOGGING
   });
 
   return model;

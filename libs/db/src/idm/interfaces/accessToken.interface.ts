@@ -1,3 +1,4 @@
+import { ApiClient } from '.';
 import { TimestampAttributes } from '../../global/interfaces/timeStampAttributes.interface';
 
 export interface AccessToken extends TimestampAttributes {
@@ -5,19 +6,25 @@ export interface AccessToken extends TimestampAttributes {
   id: number;
 
   // Foreign Key(s)
-  userId: number;
+  userId?: number;
+  clientId: number;
   statusId: string;
+  tokenTypeId: string;
+  schemeTypeId?: string;
 
   // Attribute(s)
-  name: string;
-  accessToken: string;
-  timeToLive?: number;
+  token: string;
+  refreshToken?: string;
   scope?: string;
-  type?: string;
   expiresIn?: number;
   origin?: string;
   forceRefresh?: boolean;
-  cookie?: string;
   ipAddress?: string;
+  cookie?: string;
   expireDate?: Date;
+  refreshTokenExpireDate?: Date;
+  issuedDate?: Date;
+
+  // References
+  client?: ApiClient;
 }

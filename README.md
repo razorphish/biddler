@@ -12,10 +12,120 @@ Run `nx serve biddler` for a dev server. Navigate to http://localhost:4200/. The
 
 Run `nx graph` to see a diagram of the dependencies of the projects.
 
+Run `nx affected:graph --base=master` to see diagram of affected projects
+
 ## Remote caching
 
 Run `npx nx connect-to-nx-cloud` to enable [remote caching](https://nx.app) and make CI faster.
 
+## Add permissions to scripts
+
+chmod +x the_file_name
+
+## Deploy NODEJS Apps
+https://nx.dev/recipes/node/node-server-fly-io#setup-docker
+
+Add following line to project.json in your node project
+```bash
+"generatePackageJson": true
+```
+
+To setup a new nodejs app for deployment
+```bash
+npx nx g @nx/node:setup-docker
+```
+
+Install flyctl - This is the Fly.io CLI.
+Create an account with fly auth signup or fly auth
+
+# Build Docker
+```bash
+npx nx docker-build biddler-api      
+```
+
+```bash
+fly launch --no-deploy
+```
+
+## Create DB 
+
+```bash
+cd db/[DatabaseProject]
+
+# Run `fly launch` to create an app
+fly launch
+
+# Create a volume named "mysqldata" within our app "biddler-db"
+fly volumes create biddlerdata --size 10 # gb
+
+# Set secrets:
+# MYSQL_PASSWORD      - password set for user $MYSQL_USER
+# MYSQL_ROOT_PASSWORD - password set for user "root"
+fly secrets set MYSQL_PASSWORD=password MYSQL_ROOT_PASSWORD=password
+
+##***************################################
+# Update db/[DatabaseApp]/fly.toml to following settings
+##############BEGIN FLY.TOML################################
+app = "my-mysql"
+kill_signal = "SIGINT"
+kill_timeout = 5
+
+# If copy/paste'ing, adjust this
+# to the region you're deploying to
+primary_region = "bos"
+
+[processes]
+app = "--datadir /data/mysql 
+  --default-authentication-plugin mysql_native_password 
+  --performance-schema=OFF 
+  --innodb-buffer-pool-size 64M"
+
+[mounts]
+  source="mysqldata"
+  destination="/data"
+
+[env]
+  MYSQL_DATABASE = "some_db"
+  MYSQL_USER = "non_root_user"
+
+# As of 04/25/2023:
+# MySQL 8.0.33 has a bug in it
+# so avoid that specific version
+[build]
+  image = "mysql:8.0.32"
+
+##############END FLY.TOML################################
+
+# Deploy (initial)
+fly deploy
+
+# Best to add additional RAM for MySQL (after INITIAL deploy)
+# Give the vm 2GB of ram
+fly scale memory 2048
+```
+
+## Build and deploy to fly.io
+```bash
+nx build biddler-api
+flyctl deploy --dockerfile ./apps/biddler-api/Dockerfile --config ./apps/biddler-api/fly.toml
+```
+# Run Docker
+```bash
+# Make available to outside fly organization 
+docker run -p 8080:8080 -t biddler-api
+```
+
+# Connect to mySql using Dbeaver
+```bash
+flyctl proxy 13306:3306 -a biddler-db
+```
+
+Set up normal connection in Dbeaver using mysql library
+Set 'Server Host' to localhost and set 'Port' to '13306', set Database name to database name
+# Add Environment Variables
+
+```bash
+fly secrets set BIDDLER_DB_DATABASE_USERNAME=mysql
 ## Further help
 
 Visit the [Nx Documentation](https://nx.dev) to learn more.

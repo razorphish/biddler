@@ -3,7 +3,7 @@ import { DataTypes, Model, Optional } from 'sequelize';
 import { Lookup } from '.';
 import BiddlerLibrary from '../../global/biddler';
 import { COLUMN_ALIAS, COLUMN_NAME, COLUMN_VALIDATION, DEFAULT_VALUE } from '../../common/db.enum';
-import { TimestampAttributes } from '../interfaces/timestampAttributes.interface';
+import { TimestampAttributes } from '../../global/interfaces';
 
 interface AddressAttributes extends TimestampAttributes {
   id: number;
@@ -26,7 +26,8 @@ interface AddressAttributes extends TimestampAttributes {
   density?: string;
 }
 
-export interface AddressInput extends Optional<AddressAttributes, 'id'> {}
+export interface AddressInput
+  extends Optional<AddressAttributes, 'id' | 'createdDate' | 'lastUpdatedDate'> {}
 export interface AddressOutput extends Required<AddressAttributes> {}
 
 class Address extends Model<AddressAttributes, AddressInput> implements AddressAttributes {
@@ -71,7 +72,7 @@ Address.init(
     typeId: {
       type: DataTypes.STRING(32),
       allowNull: false,
-      field: 'ADDR_TYPE_CD'
+      field: 'ADDR_TYPE_LKP_ID'
     },
     statusId: {
       type: DataTypes.STRING(32),
@@ -85,7 +86,7 @@ Address.init(
       validate: {
         len: {
           args: [0, 128],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('line1')
         }
       }
     },
@@ -95,7 +96,7 @@ Address.init(
       validate: {
         len: {
           args: [0, 128],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('line2')
         }
       }
     },
@@ -105,7 +106,7 @@ Address.init(
       validate: {
         len: {
           args: [0, 128],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('line3')
         }
       }
     },
@@ -115,7 +116,7 @@ Address.init(
       validate: {
         len: {
           args: [0, 56],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('city')
         }
       }
     },
@@ -125,7 +126,7 @@ Address.init(
       validate: {
         len: {
           args: [0, 48],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('state')
         }
       }
     },
@@ -135,7 +136,7 @@ Address.init(
       validate: {
         len: {
           args: [0, 32],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('stateFips')
         }
       }
     },
@@ -145,7 +146,7 @@ Address.init(
       validate: {
         len: {
           args: [0, 32],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('stateId')
         }
       }
     },
@@ -155,7 +156,7 @@ Address.init(
       validate: {
         len: {
           args: [0, 96],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('county')
         }
       }
     },
@@ -165,7 +166,7 @@ Address.init(
       validate: {
         len: {
           args: [0, 32],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('countyFips')
         }
       }
     },
@@ -175,7 +176,7 @@ Address.init(
       validate: {
         len: {
           args: [0, 96],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('country')
         }
       }
     },
@@ -185,7 +186,7 @@ Address.init(
       validate: {
         len: {
           args: [0, 20],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('postalCode')
         }
       }
     },
@@ -195,7 +196,7 @@ Address.init(
       validate: {
         len: {
           args: [0, 4],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('postalCode4')
         }
       }
     },
@@ -222,7 +223,7 @@ Address.init(
       validate: {
         len: {
           args: [0, 48],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('createdBy')
         }
       },
       field: COLUMN_NAME.CREATED_BY,
@@ -235,7 +236,7 @@ Address.init(
       validate: {
         len: {
           args: [0, 48],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('lastUpdatedBy')
         }
       }
     },
@@ -257,6 +258,7 @@ Address.init(
     sequelize: BiddlerLibrary.dbs.biddler_db,
     tableName: 'ADDR_INFO',
     modelName: 'Address',
+    schema: 'BIDDLER_DB',
     freezeTableName: true,
     timestamps: true,
     deletedAt: COLUMN_ALIAS.DLTD_AT,
@@ -268,9 +270,9 @@ Address.init(
 
 // Hooks
 // References
-Address.hasOne(Lookup, {
-  foreignKey: 'id',
-  sourceKey: 'statusId',
+Address.belongsTo(Lookup, {
+  foreignKey: 'statusId',
+  targetKey: 'id',
   as: 'status'
 });
 

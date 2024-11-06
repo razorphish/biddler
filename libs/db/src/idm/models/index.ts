@@ -1,25 +1,14 @@
-import Status from './status.model';
-import System from './system.model';
-import AccessToken from './accessToken.model';
+import Lookup from './lookup.model';
+
+import Environment from './environment.model';
 import User from './user.model';
-import UserRole from './userRole.model';
-import Role from './role.model';
-import Permission from './permission.model';
-import RolePermission from './rolePermission.model';
 import ApiClient from './apiClient.model';
 import Application from './application.model';
+import System from './system.model';
+import SystemIssuer from './systemIssuer.model';
 
-export {
-  AccessToken,
-  ApiClient,
-  Application,
-  Role,
-  Permission,
-  RolePermission,
-  Status,
-  System,
-  User,
-  UserRole
-};
+import AccessToken from './accessToken.model';
+
+export { AccessToken, ApiClient, Application, Environment, Lookup, System, SystemIssuer, User };
 
 // External relationships
