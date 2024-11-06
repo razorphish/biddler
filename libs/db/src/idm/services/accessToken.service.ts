@@ -1,18 +1,50 @@
-import { AllAccessTokenFilters } from '../dal/types';
-import jwt from 'jsonwebtoken';
-import { oAuthConfig } from '../common/auth-config.const';
-import { AccessTokenPayload } from '../models';
-import { AccessTokenOutput } from '../models/accessToken.model';
-import * as accessTokenDAL from '../dal/models/accessToken.dal';
+/**
+ * --------------------------------------------------------
+ * @file Service Layer: Access Token
+ * @description Service layer should be used for data manipulation on/from payload
+ * @author Antonio Marasco
+ * --------------------------------------------------------
+ */
+import { Injectable } from '@nestjs/common';
+import { AllAccessTokenFilters } from '../dal/models/types';
+import { AccessTokenInput, AccessTokenOutput } from '../interfaces';
+import * as DAL from '../dal/models/accessToken.dal';
 
-export const byToken = (token: string): AccessTokenPayload => {
-  return jwt.verify(
-    token,
-    oAuthConfig.JWT_SIG_PUB_KEY,
-    oAuthConfig.JWTSignOptions
-  ) as AccessTokenPayload;
-};
+@Injectable()
+export class AccessTokenService {
+  all(filters: AllAccessTokenFilters): Promise<AccessTokenOutput[]> {
+    const queryFilters = {
+      // attributes: ['id', 'title', 'sortOrder', 'statusId', 'description', 'icon'],
+      ...filters
+    };
+    return DAL.all(queryFilters);
+  }
 
-export const all = (filters: AllAccessTokenFilters): Promise<AccessTokenOutput[]> => {
-  return accessTokenDAL.all(filters);
-};
+  byAccessToken(accessToken: string, filters?: AllAccessTokenFilters): Promise<AccessTokenOutput> {
+    return DAL.byAccessToken(accessToken, filters);
+  }
+
+  byRefreshToken(accessToken: string, filters?: AllAccessTokenFilters): Promise<AccessTokenOutput> {
+    return DAL.byRefreshToken(accessToken, filters);
+  }
+
+  byId(id: number, filters?: AllAccessTokenFilters): Promise<AccessTokenOutput> {
+    return DAL.byId(id, filters);
+  }
+
+  create(payload: AccessTokenInput): Promise<AccessTokenOutput> {
+    return DAL.create(payload);
+  }
+
+  deleteById(id: number): Promise<boolean> {
+    return DAL.deleteById(id);
+  }
+
+  paginate(filters: AllAccessTokenFilters): Promise<{ rows: AccessTokenOutput[]; count: number }> {
+    return DAL.paginate(filters);
+  }
+
+  update(id: number, payload: Partial<AccessTokenInput>): Promise<AccessTokenOutput> {
+    return DAL.update(id, payload);
+  }
+}

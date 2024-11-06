@@ -1,4 +1,4 @@
-import { TimestampAttributes } from './timestampAttributes.interface';
+import { TimestampAttributes } from '../../global/interfaces';
 
 export interface Permission extends Omit<TimestampAttributes, 'lastUpdatedBy' | 'lastUpdatedDate'> {
   // Primary Key(s)

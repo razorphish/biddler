@@ -2,17 +2,25 @@ import { TimestampAttributes } from '../../global/interfaces/timeStampAttributes
 
 export interface ApiClient extends TimestampAttributes {
   // Primary Key(s)
-  id: string;
+  id: number;
+
+  // References
 
   // Foreign Key(s)
   applicationId: number;
   systemIssuerId: number;
   tokenTypeId: string;
+  clientTypeId: string;
   statusId: string;
+  userId: number;
 
   // Attribute(s)
-  audience: string;
-  secret: string;
+  grants: string;
+  applicationName: string;
+  homepageURL?: string;
+  clientID?: string;
+  clientSecret?: string;
   salt?: string;
-  scopes: string;
+  scopes?: string;
+  key?: string;
 }

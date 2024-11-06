@@ -7,7 +7,7 @@
  */
 import { isNil } from 'lodash';
 import { Op } from 'sequelize';
-import { DbConfig } from '../../../common/biddler.const';
+import { DbConfig } from '../../../common/constants/biddler.const';
 import { AccountUserRole } from '../../models';
 import { AllAccountUserRoleFilters } from './types';
 import { AccountUserRoleInput, AccountUserRoleOutput } from '../../models/accountUserRole.model';

@@ -5,22 +5,28 @@ export const toAccessToken = (output: AccessTokenOutput): AccessToken => {
     // Primary Key(s)
     id: output.id,
 
+    // references
+    client: output.client,
+
     // Foreign Key(s)
     userId: output.userId,
+    clientId: output.clientId,
     statusId: output.statusId,
+    tokenTypeId: output.tokenTypeId,
+    schemeTypeId: output.schemeTypeId,
 
     // Attribute(s)
-    name: output.name,
-    accessToken: output.accessToken,
-    timeToLive: output.timeToLive,
+    token: output.token,
+    refreshToken: output.refreshToken,
     scope: output.scope,
-    type: output.type,
     expiresIn: output.expiresIn,
     origin: output.origin,
     forceRefresh: output.forceRefresh,
-    cookie: output.cookie,
     ipAddress: output.ipAddress,
+    cookie: output.cookie,
     expireDate: output.expireDate,
+    refreshTokenExpireDate: output.refreshTokenExpireDate,
+    issuedDate: output.issuedDate,
 
     // Userstamp(s)
     lastUpdatedBy: output.lastUpdatedBy,

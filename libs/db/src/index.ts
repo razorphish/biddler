@@ -1,1 +1,2 @@
-export * from './lib/db';
+export * as DB from './biddler/';
+export * as IDM from './idm/';

@@ -1,6 +1,6 @@
 import { Op } from 'sequelize';
 import { AccessTokenInput, AccessTokenOutput } from '../../models/accessToken.model';
-import { AllAccessTokenFilters } from '../types';
+import { AllAccessTokenFilters } from './types';
 import { DbConfig } from '../../common/idm.const';
 import { AccessToken } from '../../models';
 import { isNil } from 'lodash';
@@ -23,6 +23,56 @@ export const all = async (filters?: AllAccessTokenFilters): Promise<AccessTokenO
     ...((filters?.isDeleted || filters?.includeDeleted) && { paranoid: false }),
     logging: DbConfig.LOGGING
   });
+};
+
+/**
+ * @description Gets token by access token value
+ * @author Antonio Marasco
+ * @date 11/29/2023
+ * @param accessToken
+ * @param [filters]
+ * @returns {*}
+ */
+export const byAccessToken = async (
+  accessToken: string,
+  filters?: AllAccessTokenFilters
+): Promise<AccessTokenOutput> => {
+  const model = await AccessToken.findOne({
+    where: { token: accessToken },
+    ...(filters?.attributes && { attributes: filters?.attributes }),
+    logging: DbConfig.LOGGING
+  });
+
+  if (!model) {
+    throw new Error(`not found:  cannot find by access token: ${accessToken}`);
+  }
+
+  return model;
+};
+
+/**
+ * @description gets Access token by refresh token
+ * @author Antonio Marasco
+ * @date 12/01/2023
+ * @param accessToken
+ * @param [filters]
+ * @returns {*}
+ */
+export const byRefreshToken = async (
+  refreshToken: string,
+  filters?: AllAccessTokenFilters
+): Promise<AccessTokenOutput> => {
+  const model = await AccessToken.findOne({
+    where: { refreshToken: refreshToken },
+    ...(filters?.attributes && { attributes: filters?.attributes }),
+    logging: DbConfig.LOGGING
+  });
+
+  if (!model) {
+    throw new Error(`not found:  cannot find by refresh token: ${refreshToken}`);
+  }
+
+  return model;
 };
 
 /**

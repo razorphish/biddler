@@ -1,4 +1,5 @@
-export interface Address {
+import { TimestampAttributes } from '../../global/interfaces';
+export interface Address extends TimestampAttributes {
   // Primary Key
   id: number;
 
@@ -24,11 +25,4 @@ export interface Address {
   density?: string;
 
   // Children
-
-  // Timestamps
-  createdDate?: Date;
-  createdBy?: string;
-  lastUpdatedDate?: Date | null;
-  lastUpdatedBy?: string;
-  deletedAt?: Date | null;
 }

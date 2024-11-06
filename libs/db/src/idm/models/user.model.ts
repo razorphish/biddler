@@ -1,31 +1,32 @@
+/* eslint-disable @typescript-eslint/no-empty-interface */
 import { DataTypes, Model, Optional } from 'sequelize';
 import BiddlerLibrary from '../../global/biddler';
 import { COLUMN_NAME, COLUMN_VALIDATION, DEFAULT_VALUE } from '../../common/db.enum';
-import { TimestampAttributes } from '../../global/interfaces/timeStampAttributes.interface';
-import Status from './status.model';
-import { UserRoleInput, UserRoleOutput } from './userRole.model';
+import Lookup from './lookup.model';
+import { TimestampAttributes } from '../../global/interfaces';
 
 interface UserAttributes extends TimestampAttributes {
   // Primary Key(s)
   id: number;
 
   // Foreign Key(s)
-  statusId: string;
+  statusId?: string;
 
   // Attribute(s)
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone?: string;
+  firstName?: string;
+  lastName?: string;
   username: string;
+  email: string;
+  salt?: string;
   password?: string;
+  basicPassword?: string;
 }
 
 export interface UserInput extends Optional<UserAttributes, 'id' | 'createdDate'> {
-  userRoles?: UserRoleInput[];
+  //userRoles?: UserRoleInput[];
 }
 export interface UserOutput extends Required<UserAttributes> {
-  userRoles?: UserRoleOutput[];
+  //userRoles?: UserRoleOutput[];
 }
 
 class User extends Model<UserAttributes, UserInput> implements UserAttributes {
@@ -36,12 +37,13 @@ class User extends Model<UserAttributes, UserInput> implements UserAttributes {
   public statusId!: string;
 
   // Attribute(s)
-  public username!: string;
-  public password!: string;
   public firstName!: string;
   public lastName!: string;
+  public username!: string;
   public email!: string;
-  public phone!: string;
+  public salt!: string;
+  public password!: string;
+  public basicPassword!: string;
 
   // User stamp(s)
   public createdBy!: string;
@@ -60,54 +62,42 @@ User.init(
       allowNull: false,
       field: 'USER_ID',
       primaryKey: true,
-      autoIncrement: false
+      autoIncrement: true
     },
     statusId: {
       type: DataTypes.STRING(32),
       allowNull: false,
-      field: COLUMN_NAME.STATUS_ID
-    },
-    username: {
-      type: DataTypes.STRING(128),
-      allowNull: false,
-      field: 'USER_NAME',
-      validate: {
-        max: {
-          args: [128],
-          msg: COLUMN_VALIDATION.LENGTH
-        }
-      }
-    },
-    password: {
-      type: DataTypes.STRING(256),
-      allowNull: true,
-      field: 'USER_PW',
-      validate: {
-        len: {
-          args: [0, 256],
-          msg: COLUMN_VALIDATION.LENGTH
-        }
-      }
+      field: COLUMN_NAME.STATUS_ID,
+      defaultValue: DEFAULT_VALUE.STATUS
     },
     firstName: {
-      type: DataTypes.STRING(48),
-      allowNull: false,
+      type: DataTypes.STRING(32),
       field: 'FIRST_NAME',
       validate: {
         len: {
-          args: [0, 48],
-          msg: COLUMN_VALIDATION.LENGTH
+          args: [0, 32],
+          msg: COLUMN_VALIDATION.LENGTH('firstName')
         }
       }
     },
     lastName: {
-      type: DataTypes.STRING(96),
-      allowNull: false,
+      type: DataTypes.STRING(64),
       field: 'LAST_NAME',
       validate: {
         len: {
           args: [0, 64],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('lastName')
+        }
+      }
+    },
+    username: {
+      type: DataTypes.STRING(256),
+      allowNull: false,
+      field: 'USER_NAME',
+      validate: {
+        len: {
+          args: [0, 256],
+          msg: COLUMN_VALIDATION.LENGTH('username')
         }
       }
     },
@@ -116,29 +106,41 @@ User.init(
       allowNull: false,
       field: 'EMAIL',
       validate: {
-        max: {
-          args: [256],
-          msg: COLUMN_VALIDATION.MAX
+        len: {
+          args: [0, 256],
+          msg: COLUMN_VALIDATION.LENGTH('email')
         }
       }
     },
-    phone: {
-      type: DataTypes.STRING(15),
-      allowNull: true,
-      field: 'PHNE',
+    salt: {
+      type: DataTypes.STRING(64),
+      field: 'SALT',
       validate: {
         len: {
-          args: [0, 15],
-          msg: COLUMN_VALIDATION.LENGTH
+          args: [0, 64],
+          msg: COLUMN_VALIDATION.LENGTH('salt')
         }
       }
+    },
+    password: {
+      type: DataTypes.STRING(256),
+      field: 'PWD',
+      validate: {
+        len: {
+          args: [0, 256],
+          msg: COLUMN_VALIDATION.LENGTH('password')
+        }
+      }
+    },
+    basicPassword: {
+      type: DataTypes.VIRTUAL()
     },
     createdBy: {
       type: DataTypes.STRING(48),
       validate: {
         len: {
           args: [0, 48],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('createdBy')
         }
       },
       field: COLUMN_NAME.CREATED_BY,
@@ -151,13 +153,12 @@ User.init(
       validate: {
         len: {
           args: [0, 48],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('lastUpdatedBy')
         }
       }
     },
     createdDate: {
       type: DataTypes.DATE,
-      allowNull: false,
       field: COLUMN_NAME.CREATED_DT
     },
     lastUpdatedDate: {
@@ -170,7 +171,15 @@ User.init(
     }
   },
   {
-    sequelize: BiddlerLibrary.dbs.hpt_idm_db,
+    defaultScope: {
+      attributes: {
+        exclude: ['password', 'salt']
+      }
+    },
+    scopes: {
+      withPasswordAndSalt: {}
+    },
+    sequelize: BiddlerLibrary.dbs.biddler_idm_db,
     tableName: 'USER_INFO',
     modelName: 'User',
     schema: 'BIDDLER_IDM_DB',
@@ -184,10 +193,11 @@ User.init(
 );
 
 // Hooks
+
 // References
-User.belongsTo(Status, {
-  foreignKey: 'id',
-  targetKey: 'statusId',
+User.belongsTo(Lookup, {
+  targetKey: 'id',
+  foreignKey: 'statusId',
   as: 'status'
 });
 

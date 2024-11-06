@@ -1,8 +1,10 @@
 export interface TimestampAttributes {
-  //Timestamps
-  createdDate?: Date;
+  // User Stamps
   createdBy?: string;
-  lastUpdatedDate?: Date;
   lastUpdatedBy?: string;
+
+  // Timestamps
+  createdDate?: Date;
+  lastUpdatedDate?: Date;
   deletedAt?: Date;
 }

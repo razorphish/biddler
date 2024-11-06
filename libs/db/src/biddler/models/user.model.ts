@@ -2,7 +2,7 @@ import { DataTypes, Model, Optional } from 'sequelize';
 import BiddlerLibrary from '../../global/biddler';
 import { Lookup } from '.';
 import { COLUMN_ALIAS, COLUMN_NAME, COLUMN_VALIDATION, DEFAULT_VALUE } from '../../common/db.enum';
-import { TimestampAttributes } from '../interfaces/timestampAttributes.interface';
+import { TimestampAttributes } from '../../global/interfaces';
 
 interface UserAttributes extends TimestampAttributes {
   // Primary Key(s)
@@ -94,7 +94,7 @@ User.init(
       validate: {
         len: {
           args: [0, 48],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('createdBy')
         }
       },
       field: COLUMN_NAME.CREATED_BY,
@@ -107,7 +107,7 @@ User.init(
       validate: {
         len: {
           args: [0, 48],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('lastUpdatedBy')
         }
       }
     },
@@ -126,7 +126,7 @@ User.init(
     }
   },
   {
-    sequelize: BiddlerLibrary.dbs.hpt_db,
+    sequelize: BiddlerLibrary.dbs.biddler_db,
     tableName: 'USER_INFO',
     modelName: 'User',
     schema: 'BIDDLER',
@@ -142,8 +142,8 @@ User.init(
 //Hooks
 //references
 User.belongsTo(Lookup, {
-  foreignKey: 'id',
-  targetKey: 'statusId',
+  foreignKey: 'statusId',
+  targetKey: 'id',
   as: 'status'
 });
 

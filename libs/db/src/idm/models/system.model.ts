@@ -2,12 +2,11 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import BiddlerLibrary from '../../global/biddler';
 import { COLUMN_NAME, COLUMN_VALIDATION, DEFAULT_VALUE } from '../../common/db.enum';
-import { TimestampAttributes } from '../../global/interfaces/timeStampAttributes.interface';
-import Status from './status.model';
+import { TimestampAttributes } from '../../global/interfaces';
 
 interface SystemAttributes extends TimestampAttributes {
   // Primary Key(s)
-  id: number;
+  id: string;
 
   // Foreign Key(s)
   statusId: string;
@@ -21,12 +20,12 @@ interface SystemAttributes extends TimestampAttributes {
   effectiveEndDate?: Date;
 }
 
-export interface SystemInput extends Optional<SystemAttributes, 'id' | 'createdDate'> {}
-export interface SystemOutput extends Required<SystemAttributes> {}
+export interface SystemInput extends Optional<SystemAttributes, 'id'> {}
+export interface SystemOutput extends SystemAttributes {}
 
 class System extends Model<SystemAttributes, SystemInput> implements SystemAttributes {
   // Primary Key(s)
-  public id!: number;
+  public id!: string;
 
   // Foreign Key(s)
   public statusId!: string;
@@ -53,10 +52,10 @@ System.init(
   {
     id: {
       type: DataTypes.NUMBER,
+      allowNull: false,
       field: 'SYS_ID',
       primaryKey: true,
-      autoIncrement: true,
-      allowNull: false
+      autoIncrement: true
     },
     statusId: {
       type: DataTypes.STRING(32),
@@ -70,59 +69,54 @@ System.init(
       validate: {
         len: {
           args: [0, 64],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('name')
         }
       }
     },
     slug: {
       type: DataTypes.STRING(96),
       field: 'SYS_NAME_SLUG',
-      allowNull: false,
       validate: {
         len: {
           args: [0, 96],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('slug')
         }
       }
     },
     description: {
       type: DataTypes.STRING(256),
       field: 'SYS_DESC',
-      allowNull: true,
       validate: {
         len: {
-          args: [0, 256],
-          msg: COLUMN_VALIDATION.LENGTH
+          args: [0, 64],
+          msg: COLUMN_VALIDATION.LENGTH('description')
         }
       }
     },
     url: {
       type: DataTypes.STRING(256),
       field: 'SYS_URL',
-      allowNull: true,
       validate: {
         len: {
           args: [0, 256],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('url')
         }
       }
     },
     effectiveStartDate: {
       type: DataTypes.DATE,
-      field: COLUMN_NAME.EFFECTIVE_START_DATE,
-      allowNull: true
+      field: COLUMN_NAME.EFFECTIVE_START_DATE
     },
     effectiveEndDate: {
       type: DataTypes.DATE,
-      field: COLUMN_NAME.EFFECTIVE_END_DATE,
-      allowNull: false
+      field: COLUMN_NAME.EFFECTIVE_END_DATE
     },
     createdBy: {
       type: DataTypes.STRING(48),
       validate: {
         len: {
           args: [0, 48],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('createdBy')
         }
       },
       field: COLUMN_NAME.CREATED_BY,
@@ -135,7 +129,7 @@ System.init(
       validate: {
         len: {
           args: [0, 48],
-          msg: COLUMN_VALIDATION.LENGTH
+          msg: COLUMN_VALIDATION.LENGTH('lastUpdatedBy')
         }
       }
     },
@@ -166,13 +160,6 @@ System.init(
     paranoid: true
   }
 );
-
 // Hooks
 // References
-System.belongsTo(Status, {
-  foreignKey: 'id',
-  targetKey: 'statusId',
-  as: 'status'
-});
-
 export default System;

@@ -1,5 +1,4 @@
-import { TimestampAttributes } from './timestampAttributes.interface';
-
+import { TimestampAttributes } from '../../global/interfaces';
 export interface AccountUser extends TimestampAttributes {
   // Primary Key(s)
   userId: number;

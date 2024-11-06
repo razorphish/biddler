@@ -1,14 +1,14 @@
 import { Op } from 'sequelize';
 import { SystemInput, SystemOutput } from '../../models/system.model';
-import { AllSystemFilters } from '../types';
+import { AllSystemFilters } from './types';
 import { DbConfig } from '../../common/idm.const';
 import { System } from '../../models';
 import { isNil } from 'lodash';
 
 /**
- * @description Export all system(s)
+ * @description Gets all application records
  * @author Antonio Marasco
- * @date 05/25/2023
+ * @date 08/04/2023
  * @param [filters]
  * @returns {*}
  */
@@ -26,9 +26,9 @@ export const all = async (filters?: AllSystemFilters): Promise<SystemOutput[]> =
 };
 
 /**
- * @description Gets system by id
+ * @description Gets environment by id
  * @author Antonio Marasco
- * @date 05/25/2023
+ * @date 08/04/2023
  * @param id
  * @param [filters]
  * @returns {*}
@@ -47,11 +47,11 @@ export const byId = async (id: number, filters?: AllSystemFilters): Promise<Syst
 };
 
 /**
- * @description Creates system
+ * @description Creates environment
  * @author Antonio Marasco
- * @date 05/25/2023
+ * @date 08/04/2023
  * @param payload
- * @returns {*} Newly created system
+ * @returns {*} Newly created environment
  */
 export const create = async (payload: SystemInput): Promise<SystemOutput> => {
   const output = await System.create(payload, { logging: DbConfig.LOGGING });
@@ -59,7 +59,7 @@ export const create = async (payload: SystemInput): Promise<SystemOutput> => {
 };
 
 /**
- * @description Delete system by id
+ * @description Delete by environment id
  * @author Antonio Marasco
  * @date 03/22/2023
  * @param id
@@ -72,9 +72,9 @@ export const deleteById = async (id: number): Promise<boolean> => {
 };
 
 /**
- * @description Finds or creates a system based on criteria
+ * @description Finds or creates a environment based on criteria
  * @author Antonio Marasco
- * @date 05/25/2023
+ * @date 08/04/2023
  * @param payload
  * @returns {*}
  */
@@ -90,9 +90,9 @@ export const findOrCreate = async (payload: SystemInput): Promise<SystemOutput> 
 };
 
 /**
- * @description Paginates system(s) based on filters
+ * @description Paginates environment(s) based on filters
  * @author Antonio Marasco
- * @date 05/25/2023
+ * @date 08/04/2023
  * @param [filters]
  * @returns {*}
  */
@@ -117,11 +117,11 @@ export const paginate = async (
 };
 
 /**
- * @description Updates system
+ * @description Updates environment
  * @author Antonio Marasco
- * @date 05/25/2023
- * @param id Id of system to update
- * @param payload system object
+ * @date 08/04/2023
+ * @param id Id of environment to update
+ * @param payload environment object
  * @returns {*}
  */
 export const update = async (id: number, payload: Partial<SystemInput>): Promise<SystemOutput> => {

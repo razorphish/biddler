@@ -7,7 +7,7 @@
  */
 import { isNil } from 'lodash';
 import { Op } from 'sequelize';
-import { DbConfig } from '../../../common/biddler.const';
+import { DbConfig } from '../../../common/constants/biddler.const';
 import Address from '../../models/address.model';
 import { AllAddressFilters } from './types';
 import { AddressInput, AddressOutput } from '../../interfaces';

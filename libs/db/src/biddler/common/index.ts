@@ -1,3 +1,3 @@
-import * as caster from '../../common/helper/cast.helper';
+import * as caster from '../../common/helpers/cast.helper';
 
 export { caster };
